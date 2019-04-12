@@ -1,0 +1,19 @@
+.comment__body {
+    background-color: #f2f3f5;
+    border-radius: 18px;
+    box-sizing: border-box;
+    color: #90d50c;
+    display: inline-block;
+    line-height: 16px;
+    margin: 0;
+    max-width: 100%;
+    max-height: 100%;
+    word-wrap: break-word;
+    position: relative;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.content {
+    padding: 8px 10px;
+}

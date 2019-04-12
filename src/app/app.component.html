@@ -1,0 +1,11 @@
+<app-header></app-header>
+
+<router-outlet style="background-color: #e9ebee;height: 100%" *ngIf="isOnline;else isOffline"></router-outlet>
+<ng-template #isOffline>
+    <div>
+        <p class="offline-error" i18n="@@offlineMessage">Without connection we can not load anything!&nbsp;&nbsp;&nbsp;
+        </p><span>:&nbsp;)</span>
+    </div>
+</ng-template>
+
+<app-footer></app-footer>

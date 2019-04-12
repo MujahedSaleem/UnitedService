@@ -1,0 +1,131 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+<script>
+    new WOW().init();
+</script>
+
+<div class="view" style="background-image: url('http://mdbootstrap.com/img/Photos/Others/images/91.jpg'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+    <!-- Mask & flexbox options-->
+    <div class="mask rgba-gradient d-flex justify-content-center align-items-center">
+        <!-- Content -->
+        <div class="container">
+            <!--Grid row-->
+            <div class="row mt-5">
+                <!--Grid column-->
+                <div class=" col-md-6 mb-5 mt-md-0 mt-5 white-text text-center text-md-left">
+                    <h1 class=" animatedh1-responsive font-weight-bold wow fadeInLeft" data-wow-delay="0.3s">
+                        Sign up right now!
+                    </h1>
+                    <hr class=" animated hr-light wow fadeInLeft" data-wow-delay="0.3s" />
+                    <h6 class=" animated mb-3 wow fadeInLeft" data-wow-delay="0.3s">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem repellendus quasi fuga nesciunt dolorum nulla magnam veniam sapiente, fugiat! Commodi sequi non animi ea dolor molestiae, quisquam iste, maiores. Nulla.
+                    </h6>
+                    <a mdbBtn color="white" outline="true" mdbWavesEffect class="animated wow fadeInLeft" data-wow-delay="0.3s">Learn more</a
+          >
+        </div>
+        <!--Grid column-->
+        <!--Grid column-->
+        <div class="col-md-6 col-xl-5 mb-4">
+          <!--Form-->
+          <form [formGroup]="registerModel" (ngSubmit)="register()">
+            <mdb-card class="animated wow fadeInRight" data-wow-delay="0.3s">
+              <mdb-card-body>
+                <!--Header-->
+                <div class="text-center">
+                  <h3 class="white-text">
+                    <i class="fas fa-user white-text"></i> Register:
+                  </h3>
+                  <hr class="hr-light" />
+                </div>
+                <!--Body-->
+                <div class="md-form">
+                  <i class="fas fa-user prefix white-text active"></i>
+                  <input
+                    type="text"
+                    id="form3"
+                    class="text-white form-control"
+                    formControlName="userName"
+                    mdbValidate
+                    mdbInput
+                  />
+                  <label for="form3" class="text-white">Your name</label>
+                </div>
+                <div class="md-form">
+                  <i class="fas fa-envelope prefix white-text active"></i>
+                  <input
+                    formControlName="email"
+                    type="email"
+                    id="form2"
+                    class="text-white form-control"
+                    mdbInput
+                    mdbValidate
+                  />
+                  <label for="form2" class="text-white">Your email</label>
+                </div>
+                <div class="md-form">
+                  <i class="fas fa-lock prefix text-white active"></i>
+                  <input
+                    type="password"
+                    formControlName="passwrod"
+                    id="form4"
+                    class="text-white form-control"
+                    mdbInput
+                    mdbValidate
+                  />
+                  <label for="form5" class="text-white">Your password</label>
+                </div>
+                <div class="md-form">
+                  <i class="fas fa-lock prefix text-white active"></i>
+                  <input
+                    type="password"
+                    formControlName="confirmPassword"
+                    id="form5"
+                    class="text-white form-control"
+                    mdbInput
+                    mdbValidate
+                  />
+                  <label for="form5" class="text-white">repete password</label>
+                </div>
+                <div class="text-center mt-4">
+                  <button
+                    mdbBtn
+                    color="indigo"
+                    mdbWavesEffect
+                    [disabled]="!registerModel.valid"
+                  >
+                    Sign up
+                  </button>
+                  <button mdbBtn color="red" (click)="cancel()" mdbWavesEffect>
+                    Cancel
+                  </button>
+
+                  <hr class="hr-light mb-3 mt-4" />
+                  <div
+                    class="inline-ul text-center d-flex justify-content-center"
+                  >
+                    <a class="p-2 m-2 tw-ic">
+                      <i class="fab fa-twitter white-text"></i>
+                    </a>
+                    <a class="p-2 m-2 li-ic">
+                        <i class="fab fa-linkedin-in white-text"> </i>
+                    </a>
+                    <a class="p-2 m-2 ins-ic">
+                        <i class="fab fa-instagram white-text"> </i>
+                    </a>
+                </div>
+            </div>
+            </mdb-card-body>
+            </mdb-card>
+            </form>
+            ` <small><a routerLink="/auth/login">Already have an Account?</a></small>
+
+            <!--/.Form-->
+        </div>
+        <!--Grid column-->
+    </div>
+    <!--Grid row-->
+</div>
+<!-- Content -->
+</div>
+<!-- Mask & flexbox options-->
+</div>
+<!-- Full Page Intro -->

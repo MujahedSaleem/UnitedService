@@ -1,0 +1,51 @@
+@import "../../../styles/mixins";
+@import "../../../styles/colors";
+.hero-header__image,
+mat-card-title,
+mat-card-subtitle,
+.mat-card-image {
+    cursor: pointer;
+}
+
+.hero-card {
+    margin-bottom: 2rem;
+    @include push--auto(2rem);
+}
+
+.progress__spinner {
+    @include push--auto();
+}
+
+a {
+    color: #365899;
+    cursor: pointer;
+    -moz-outline-style: none;
+    text-decoration: none;
+}
+
+@media (max-width: 680px) {
+    .hero-card {
+        width: 80%;
+        min-width: 450px;
+        max-width: 500px;
+        max-height: 239.2 px;
+        @include push--auto();
+    }
+    .mat-card {
+        margin-bottom: 2rem;
+    }
+}
+
+.mat-card-image {
+    margin-bottom: 10px !important;
+}
+
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.example-full-width {
+    width: 100%;
+}

@@ -1,0 +1,35 @@
+.img-thumbnail {
+    margin: 25px;
+    width: 85%;
+    height: 85%;
+}
+
+.card-body {
+    padding: 0 25px;
+}
+
+pre {
+    margin-top: 19px;
+}
+
+.card-footer {
+    padding: 10px 15px;
+    background-color: #fff;
+    border-top: none;
+}
+
+.ddd h1 {
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: center;
+    padding-left: 3em !important;
+    font-size: 3rem;
+}
+
+textarea {
+    font-size: 3rem;
+}
+
+input {
+    font-size: 1.4rem;
+}

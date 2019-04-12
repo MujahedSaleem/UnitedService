@@ -1,0 +1,27 @@
+<mat-card class="hero-card">
+    <mat-card-header>
+        <div (click)="seePostDetails(post)" mat-card-avatar class="hero-header__image" [ngStyle]="{'background-image': 'url(' + post.avatarThumbnailUrl + ')'}"></div>
+        <mat-card-title class="text-primary" (click)="seePostDetails(post)">
+            <a [routerLink]="['/',post.uid]">{{post.name}}</a></mat-card-title>
+        <mat-card-subtitle>{{post.date|timeago:live}}</mat-card-subtitle>
+        <div class="flex-spacer"></div>
+    </mat-card-header>
+
+    <mat-card-content>
+        <div class="text-success m-1">{{post.price}} ₪.‎</div>
+        <div> <i class="fas fa-map-marker-alt m-1"></i> {{post.location}}</div>
+        {{post.description}}
+        <br>
+
+    </mat-card-content>
+    <div class="d-inline"><span style="color:#365899" *ngFor="let item of tags"><a>#{{item}}</a></span></div>
+    <br/>
+    <img *ngIf="post.avatarUrl" mat-card-image (click)="seeHeroDetails(post)" src="{{post.avatarUrl}}">
+
+    <mat-card-actions>
+        <hr>
+        <button mat-button color="primary">Send message <i class="fas fa-envelope"></i></button>
+        <button mat-button [routerLink]="['/posts',post.id]">show Details</button>
+        <hr>
+    </mat-card-actions>
+</mat-card>

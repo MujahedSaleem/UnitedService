@@ -1,0 +1,16 @@
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { PostDetailPageComponent } from './pages/post-detail-page/post-detail-page.component';
+import { PostCreatePageComponent } from './pages/post-create-page/post-create-page.component';
+
+const routes: Routes = [
+    { path: 'create', component: PostCreatePageComponent },
+    { path: ':id', component: PostDetailPageComponent }
+    
+]
+
+@NgModule({
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
+})
+export class PostRoutingModule { }

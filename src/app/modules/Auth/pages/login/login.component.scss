@@ -1,0 +1,28 @@
+@import '../../../../styles/variables.scss';
+h2 {
+    color: $secondary;
+    margin-bottom: 1em;
+}
+
+.form-wrapper {
+    min-width: 40%;
+    margin-bottom: 10%;
+    border: 1px solid $light-grey;
+    padding: 1em 2em;
+    box-shadow: 0 15px 20px $light-grey;
+}
+
+.btn-fb {
+    background-color: #4264aa;
+    color: #fff;
+}
+
+.btn-tw {
+    background-color: #6cb7f0;
+    color: #fff;
+}
+
+.btn-gplus {
+    background-color: #e15f4f;
+    color: #fff;
+}

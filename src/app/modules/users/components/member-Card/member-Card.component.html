@@ -1,0 +1,25 @@
+<div class="card mb-4">
+    <div class="card-img-wrapper">
+        <img src="{{user.photosUrl || '../../../../../../../assets/images/user.png" class="card-img-top" alt="{{user.displayName}}" />
+        <ul class="list-inline member-icons animate text-center">
+            <li class="list-inline-item"><button style="font-size: 20px" class="btn btn-primary " [routerLink]="['/members/', user.id]">
+                <i class="fa fa-user"></i></button></li>
+            <li class="list-inline-item">
+                <button [disabled]="!done" style="font-size: 20px" (click)="like()" class="btn btn-primary">
+              <i class="fa fa-heart" *ngIf="done"></i>
+              <i class="demo-icon icon-spin6 animate-spin" *ngIf="!done"><div id="xe839"></div></i>
+             
+       
+          
+        </button></li>
+            <li class="list-inline-item"><button style="font-size: 20px" class="btn btn-primary ">
+        <i class="fa fa-envelope"></i></button></li>
+        </ul>
+    </div>
+    <div class="card-body p-1">
+        <h6 class="card-title text-center mb-1">
+            <i class="fa fa-user"></i>{{user.displayName}}
+        </h6>
+    </div>
+    <p class="card-text text-muted text-center">{{ user.city }}</p>
+</div>

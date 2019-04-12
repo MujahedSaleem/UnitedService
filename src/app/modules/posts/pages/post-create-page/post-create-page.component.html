@@ -1,0 +1,76 @@
+<!--Section: Magazine v.1-->
+<div class="container" *ngIf="load">
+    <app-hero-loading></app-hero-loading>
+</div>
+<div class="container w-75 " *ngIf="!load" style="margin-top:10rem">
+    <section class="magazine-section ">
+
+        <!-- Section heading -->
+        <h2 class="h1-responsive font-weight-bold text-left ">Tell us what you need done</h2>
+        <!-- Section description -->
+        <p class=" text-left dark-grey-text w-responsive mx-auto ">
+            Contact skilled persones, regular persones within minutes. View profiles, ratings, portfolios and chat with them. Pay the any persone only when you are 100% satisfied with their work. .
+        </p>
+        <form [formGroup]="createModel">
+
+            <div class="row " style=" background: #fff;margin: 2rem; padding:1.25rem;flex:1 1 auto;box-sizing: border-box; box-shadow: 0 0 4px 0 rgba(0,0,0,.08),0 2px 4px 0 rgba(0,0,0,.12);">
+                <div class="col-md-12">
+                    <h4 style="font-weight:bold">Choose a name for your service or project</h4>
+                    <input type="text" id="form3" placeholder="eg: build me website" class="text-white form-control" formControlName="title" mdbValidate mdbInput />
+                </div>
+                <div class="col-md-12 mt-5">
+
+                    <h4 style="font-weight:bold">Tell us more about your project or service</h4>
+                    <p class="dark-grey-text  mb-5">
+                        Start with a bit about things descipe the service or project . </p>
+                    <div class="md-form">
+                        <i class="fas fa-pencil-alt prefix"></i>
+                        <textarea type="text" placeholder="Descripe service or project here" id="form8" class="md-textarea form-control" formControlName="description" mdbValidate mdbInput></textarea>
+                    </div>
+
+                    <div></div>
+                </div>
+                <div class="col-md-12 mt-5">
+
+                    <h4 style="font-weight:bold">Price </h4>
+                    <p class="dark-grey-text  mb-5">
+                        price you may pay in $</p>
+                    <div class="md-form">
+                        <i class="fas fa-pencil-alt prefix"></i>
+                        <input type="number" id="form10" class="md-textarea form-control" formControlName="price" mdbValidate mdbInput/>
+                    </div>
+
+                    <div></div>
+                </div>
+                <div class="col-md-12 mt-5">
+
+                    <h4 style="font-weight:bold">Add some keyword will help people find you </h4>
+                    <p class="dark-grey-text  mb-5">
+                        some word like <b>#water</b> , <b>#programming</b> , <b>#help_me</b>.</p>
+                    <div class="md-form">
+                        <i class="fas fa-pencil-alt prefix"></i>
+                        <input type="text" id="form9" class="md-textarea form-control" formControlName="tags" mdbValidate mdbInput/>
+                    </div>
+
+                    <div></div>
+                </div>
+
+                <div class="col-md-12 mt-5" *ngIf="isworkdone">
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">Well done!</h4>
+                        <p>every thing is very good</p>
+                        <p> we want to remember you only pay person when you're happy with the completed work. </p>
+                    </div>
+                </div>
+
+                <button mdbBtn color="primary" [disabled]="!createModel.valid" (click)="workdone()" mdbWavesEffect>
+                    <div *ngIf="!isworkdone">Next</div>
+                    <div *ngIf="isworkdone">finish</div>
+                </button>
+
+            </div>
+        </form>
+
+    </section>
+</div>
+<!--/Section: Magazine v.1-->
