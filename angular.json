@@ -55,6 +55,8 @@
                             "node_modules/@fortawesome/fontawesome-free/scss/brands.scss",
                             "node_modules/angular-bootstrap-md/scss/bootstrap/bootstrap.scss",
                             "node_modules/angular-bootstrap-md/scss/mdb-free.scss"
+
+
                         ],
                         "stylePreprocessorOptions": {
                             "includePaths": [

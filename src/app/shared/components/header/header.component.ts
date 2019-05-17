@@ -5,6 +5,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UserAuthService } from 'src/app/core/services/user-auth.service';
 import { User } from 'src/app/modules/users/shared/user.model';
+import { UserUtilsService } from 'src/app/core/services/user-utils.service';
 
 @Component({
   selector: 'app-header',
@@ -17,23 +18,26 @@ export class HeaderComponent implements OnInit {
   selectedLanguage: string;
   progressBarMode: string;
   currentUrl: string;
-  user: User;
+  user: User ;
   languages: any[];
   currentState: boolean;
   constructor(@Inject(APP_CONFIG) public appConfig: any,
     private progressBarService: ProgressBarService,
     private router: Router,
     private userAuth: UserAuthService,
+    private userService: UserUtilsService,
     private activatedRoute: ActivatedRoute,
     @Inject(PLATFORM_ID) private platformId: Object) {
     this.languages = [{ name: 'en', label: 'English' }, { name: 'es', label: 'Español' }];
   }
 
   ngOnInit() {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (!user) {
-      this.user = JSON.parse(localStorage.getItem('user'));
+    if(this.userService.userdata){
+       this.userService.userdata.subscribe((user: User) => {
+      this.user = user;
+    }, () => { this.userService.userdata.unsubscribe() });
     }
+   
     if (isPlatformBrowser(this.platformId)) {
       this.selectedLanguage = localStorage.getItem('language') || 'en';
     }
@@ -59,13 +63,17 @@ export class HeaderComponent implements OnInit {
     }
     this.selectedLanguage = language;
   }
-  signOut() {
-    if (!this.userAuth.isUserSignedIn()) {
+  logout() {
+    if (this.userAuth.isUserSignedIn()) {
       this.userAuth.SignOut();
-      this.currentState = true;
+      location.reload();
     }
   }
-  signIn() {
-this.router.navigate(['/auth/login'])
+  login() {
+    this.router.navigate(['/auth/login'])
+  }
+
+  loggedIn() {
+    return this.userAuth.isUserSignedIn();
   }
 }

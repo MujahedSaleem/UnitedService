@@ -3,7 +3,7 @@
         <div (click)="seePostDetails(post)" mat-card-avatar class="hero-header__image" [ngStyle]="{'background-image': 'url(' + post.avatarThumbnailUrl + ')'}"></div>
         <mat-card-title class="text-primary" (click)="seePostDetails(post)">
             <a [routerLink]="['/',post.uid]">{{post.name}}</a></mat-card-title>
-        <mat-card-subtitle>{{post.date|timeago:live}}</mat-card-subtitle>
+        <mat-card-subtitle>{{post.date|date}}</mat-card-subtitle>
         <div class="flex-spacer"></div>
     </mat-card-header>
 
@@ -20,7 +20,7 @@
 
     <mat-card-actions>
         <hr>
-        <button mat-button color="primary">Send message <i class="fas fa-envelope"></i></button>
+        <button *ngIf="canComment" mat-button color="primary" (click)="sendMessage()">Send message <i class="fas fa-envelope"></i></button>
         <button mat-button [routerLink]="['/posts',post.id]">show Details</button>
         <hr>
     </mat-card-actions>

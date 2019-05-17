@@ -6,6 +6,7 @@ import {AppConfig} from './configs/app.config';
 import {UtilsHelperService} from './core/services/utils-helper.service';
 import {DOCUMENT, isPlatformBrowser} from '@angular/common';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import { PresenceService } from './core/services/presence.service';
 
 declare const Modernizr;
 
@@ -22,6 +23,7 @@ export class AppComponent implements OnInit {
               private meta: Meta,
               private snackBar: MatSnackBar,
               private router: Router,
+              public presence: PresenceService,
               private i18n: I18n,
               @Inject(DOCUMENT) doc: Document, @Inject(LOCALE_ID) locale: string, renderer: Renderer2,
               @Inject(PLATFORM_ID) private platformId: Object) {

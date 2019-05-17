@@ -3,7 +3,7 @@
     <mat-card-header>
         <div (click)="seePostDetails(post)" mat-card-avatar class="hero-header__image" [ngStyle]="{'background-image': 'url(' + post.avatarThumbnailUrl + ')'}"></div>
         <mat-card-title class="text-primary" (click)="seePostDetails(post)">{{post.name}}</mat-card-title>
-        <mat-card-subtitle>{{post.date}}</mat-card-subtitle>
+        <mat-card-subtitle>{{post.date|date}}</mat-card-subtitle>
         <div class="flex-spacer"></div>
         <!-- <div class="post-actions">
             {{post.likes}}
@@ -26,7 +26,7 @@
         <hr>
     </mat-card-actions>
     <mat-card-content>
-        <div *ngFor="let item of allComments" class="m-3">
+        <div *ngFor="let item of post.comment" class="m-3">
             <app-comment [Comment]="item"></app-comment>
         </div>
         <div *ngIf="canComment" (keydown)="enter($event)">

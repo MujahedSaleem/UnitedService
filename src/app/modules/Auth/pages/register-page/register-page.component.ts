@@ -55,14 +55,17 @@ export class RegisterPageComponent implements OnInit {
   register() {
     if (this.registerModel.valid) {
       const user: User = Object.assign({}, this.registerModel.value);
-
+      user.displayName = this.registerModel.value.userName;
       // TODO call the auth service
       this.subscriptions.push(
-        this.Authservice.SignUp(user, this.registerModel.value.password).subscribe(success => {
+        this.Authservice.SignUp(user, this.registerModel.value.passwrod).subscribe(success => {
           if (success) {
-            this.Authservice.SignIn(this.model.email, this.registerModel.value.passwrod).subscribe((success) => {
+            this.Authservice.SignIn(user.email, this.registerModel.value.passwrod).subscribe((success) => {
               if (success) {
-                this.route.navigate(['/']);
+                this.userUtiles.createUser(user).finally(() => {
+                  this.route.navigate(['/']);
+
+                })
               } else {
                 this.alertService.showSnackBar('There was a problem signing up, try again.');
               }
@@ -72,9 +75,10 @@ export class RegisterPageComponent implements OnInit {
           }
 
           this.loadingService.isLoading.next(false);
-        })
+        }, () => { this.subscriptions.forEach(x => x.unsubscribe()) })
       );
     } else {
+
       this.alertService.showSnackBar('Please enter a valid name, email and password, try again.');
     }
 

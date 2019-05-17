@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { MessagePageComponent } from './message-page.component';
+import { ChatMainComponent } from './chat-main.component';
 
-describe('MessagePageComponent', () => {
-  let component: MessagePageComponent;
-  let fixture: ComponentFixture<MessagePageComponent>;
+describe('ChatMainComponent', () => {
+  let component: ChatMainComponent;
+  let fixture: ComponentFixture<ChatMainComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MessagePageComponent ]
+      declarations: [ ChatMainComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MessagePageComponent);
+    fixture = TestBed.createComponent(ChatMainComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

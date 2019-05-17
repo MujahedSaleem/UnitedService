@@ -20,6 +20,7 @@ import { PostCardComponent } from './components/post-card/post-card.component';
 import { TimeagoModule } from 'ngx-timeago';
 import { CommentComponent } from '../modules/posts/components/comment/comment.component';
 import { MatIconModule } from '@angular/material';
+import { DropZoneDirective } from './directive/DropZone.directive';
 @NgModule({
   imports: [
     CommonModule,
@@ -31,8 +32,7 @@ import { MatIconModule } from '@angular/material';
     NgxExampleLibraryModule,
     NgxScrollToFirstInvalidModule,
     TimeagoModule.forChild(),
-    MatIconModule
-
+    MatIconModule,
   ],
   declarations: [
     HomePageComponent,

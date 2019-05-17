@@ -1,25 +1,33 @@
 <header>
+    <link rel="manifest" href="../../../../manifest.json">
     <nav>
         <div fxFlex fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center center">
-            <div fxFlex="40" class="d-inline">
+            <div fxFlex="40" class="d-inline-flex">
                 <a mat-raised-button routerLink="/" i18n="@@home">
           Home
         </a>
 
-                <a *ngIf="user" mat-raised-button [routerLink]="['/', user.uid]">
+                <a *ngIf="user" mat-raised-button [routerLink]="['/', user.uid,'edit']">
           {{user.displayName}}
         </a>
+                <a *ngIf="user" mat-raised-button [routerLink]="['/messages']">
+         Messanger
+        </a>
 
-                <div class="d-inline"> <a *ngIf="currentState" mat-raised-button (click)="signOut()">
-            Sign Out
-          </a></div>
-                <div class="d-inline" *ngIf="!currentState"> <a mat-raised-button (click)="signIn()">
+
+                <div class="d-inline"> <a *ngIf="loggedIn()" mat-raised-button (click)="logout()">
+            Sign Out </a>
+                </div>
+
+                <div class="d-inline" *ngIf="!loggedIn()"> <a mat-raised-button (click)="login()">
                         Sign In
-                    </a></div>
+                    </a>
+                </div>
+
 
 
             </div>
-            <div fxFlex class="text--right">
+            <div fxFlex class="d-flex justify-content-end">
                 <app-search-bar></app-search-bar>
                 <button mat-icon-button [matMenuTriggerFor]="matmenu">
           <mat-icon>language</mat-icon>
@@ -38,7 +46,8 @@
             </div>
         </div>
     </nav>
-    <section class="progress-bar">
+    <section class="progress-bar ">
+
         <mat-progress-bar [color]="'primary'" [mode]="progressBarMode">
         </mat-progress-bar>
     </section>

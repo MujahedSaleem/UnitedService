@@ -26,16 +26,13 @@ export class PostDetailPageComponent implements OnInit {
 
   ngOnInit() {
     const postId = this.activatedRoute.snapshot.paramMap.get('id');
-    this.postService.getPost(postId).then(a => {
-      console.log(a.toJSON() as Post)
-   this.post = new Post({id: a.key, ...a.toJSON() as Post})
-    });
+    this.postService.getPost(postId).subscribe(data=>this.post=data);
   }
   goBack(): void {
     this.location.back();
   }
 
   goToTheAnchor(): void {
-    this.router.navigate([`/${AppConfig.routes.heroes}/${this.post.id}`], {fragment: 'heroe-detail'});
+    this.router.navigate([`/${AppConfig.routes.heroes}/${this.post.id}`], { fragment: 'heroe-detail' });
   }
 }

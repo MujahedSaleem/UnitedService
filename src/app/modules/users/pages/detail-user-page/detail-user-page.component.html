@@ -1,0 +1,80 @@
+<div class="container mt-5">
+    <app-hero-loading *ngIf="!user"></app-hero-loading>
+
+    <div *ngIf="user" class="content-wrapper">
+        <div class="row ">
+            <div class="col-sm-4">
+                <h1 class="bold">{{ user.displayName }}'s Profile</h1>
+            </div>
+
+
+        </div>
+        <div class="row">
+            <div class="col-sm-4 ">
+                <div class="card card-fluid">
+                    <img src="{{user.photoURL }}" alt="{{ user.knownAs }}" class="card-img-top img-thumbnail" />
+                    <div class="card-body">
+                        <div>
+                            <strong>Location:</strong>
+                            <p>{{user.city }}</p>
+                        </div>
+                        <div>
+                            <strong>Age:</strong>
+                            <p>{{ user.age }}</p>
+                        </div>
+                        <div>
+                            <strong>Last Active:</strong>
+                            <p *ngIf="presence$ | async as presence" [ngClass]="{
+                                    'alert-success':  presence.status  === 'online',
+                                    'alert-warning': presence.status  === 'away',
+                                    'alert-danger':  presence.status  === 'offline'
+                                }">
+                                {{presence.status}}</p>
+                        </div>
+                        <div>
+                            <strong>Member since:</strong>
+                            <p>{{ user.created |date: 'mediumDate' }}</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm-8 ">
+                <div class="tab-panel">
+                    <mat-tab-group class="member-tabset">
+                        <mat-tab label="Posts" style="background-color:gray !important ">
+
+
+                            <div *ngIf="user.posts" style="background-color:gray !important ">
+                                <app-post-card style="width:90%" *ngFor="let post of user.posts" [id]="post"></app-post-card>
+                            </div>
+
+                        </mat-tab>
+
+                        <mat-tab label="Profile">
+                            <h4>Description:</h4>
+                            <pre>{{user.bio}}</pre>
+
+                            <h4>Intresets</h4>
+                            <pre>{{user.intrest}}</pre>
+                            <h4>Location Details:</h4>
+                            <div class="form-inline">
+                                <label class="center-block" for="city">City : &nbsp; &nbsp; &nbsp;</label>
+                                <pre id="city">{{user.city}}</pre>
+                            </div>
+                            <h4>Personal data :</h4>
+                            <div class="form-inline">
+                                <label for="age">Age : &nbsp; &nbsp; &nbsp;</label>
+                                <pre>{{user.age}}</pre>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label=" Galary">
+                            <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

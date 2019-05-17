@@ -14,6 +14,8 @@ import {registerLocaleData} from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import localeAr from '@angular/common/locales/ar';
 import { RouterModule } from '@angular/router';
+import { AngularFirestore } from 'angularfire2/firestore';
+import { NgxGalleryModule } from 'ngx-gallery';
 
 declare const require;
 
@@ -25,7 +27,10 @@ registerLocaleData(localeAr, 'ar');
   imports: [
     BrowserModule.withServerTransition({appId: 'angularexampleapp'}),
     HttpClientModule,
+
     FirebaseModule,
+    NgxGalleryModule,
+
     NgxExampleLibraryModule.forRoot({
       config: {
         say: 'hello'
@@ -39,7 +44,7 @@ registerLocaleData(localeAr, 'ar');
   declarations: [
     AppComponent
   ],
-  providers: [
+  providers: [AngularFirestore,
     {provide: APP_CONFIG, useValue: AppConfig},
     {provide: ErrorHandler, useClass: SentryErrorHandler},
     {

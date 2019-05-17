@@ -6,6 +6,7 @@ import { UtilsHelperService } from '../../../core/services/utils-helper.service'
 import { PostService } from 'src/app/modules/posts/shared/Post.service';
 import { Post } from 'src/app/modules/posts/shared/post.model';
 import { Subscription } from 'rxjs';
+import { ProgressBarService } from 'src/app/core/services/progress-bar.service';
 
 @Component({
   selector: 'app-home-page',
@@ -20,13 +21,15 @@ export class HomePageComponent implements OnInit, OnDestroy {
   posts: Post[] = null;
   workdone: boolean = false;
 
-  constructor(private postService: PostService) {
+  constructor(private postService: PostService, private progressBarService: ProgressBarService) {
   }
   ngOnInit() {
+    this.progressBarService.increase(); 
     this.subscriptions.push(
       this.postService.getPosts().subscribe((posts: Array<Post>) => {
         this.posts = posts.slice(0, AppConfig.topHeroesLimit);
         this.workdone = true;
+        this.progressBarService.decrease();
 
       }, () => {
         this.workdone = true;

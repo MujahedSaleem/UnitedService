@@ -1,15 +1,33 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AppConfig } from 'src/app/configs/app.config';
-import { MessagePageComponent } from './pages/message-page/message-page.component';
+import { ChatappComponent } from './chatapp/chatapp.component';
+import { VideocallComponent } from './videocall/videocall.component';
+import { SentimentComponent } from './sentiment/sentiment.component';
+import { ChatMainComponent } from './chat-main/chat-main.component';
 
-const routes: Routes = [
-    { path: '', component: MessagePageComponent, pathMatch: 'full' }
-];
+const routes = [
+  {
+    path: ':id',
+    component: ChatappComponent,
+  },
+  {
+    path: 'video-call',
+    component: VideocallComponent,
+  },
+  {
+    path: 'sentiment',
+    component: SentimentComponent,
+  },
+
+  {
+    path: '**',
+    component: ChatMainComponent,
+  }
+]
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [],
-    declarations: [],
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
+  declarations: [],
 })
-export class MessageRouteModule { }
+export class MessageRoutingModule { }

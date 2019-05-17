@@ -10,7 +10,7 @@ export class CommentComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.Comment=this.Comment.trim();
+    this.Comment = this.Comment.trim();
   }
 
 }

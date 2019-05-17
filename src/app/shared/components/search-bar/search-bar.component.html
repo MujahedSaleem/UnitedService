@@ -1,12 +1,13 @@
 <mat-form-field id="search-input">
-  <input matInput placeholder="Look for a hero!" i18n-placeholder="@@findHero"
-         [matAutocomplete]="heroesAutocomplete" [formControl]="heroFormControl">
+    <input matInput placeholder="Look for a hero!" i18n-placeholder="@@findHero" [matAutocomplete]="heroesAutocomplete" [formControl]="postFormControl">
 </mat-form-field>
 
 <mat-autocomplete #heroesAutocomplete="matAutocomplete">
-  <mat-option *ngFor="let hero of filteredHeroes"
-              (onSelectionChange)="searchHero(hero)"
-              [value]="hero.name">
-    {{hero.name}}
-  </mat-option>
+    <mat-option *ngFor="let post of postsFiltered" (onSelectionChange)="searchHero(post)" [value]="post.name">
+        {{post.name}}
+    </mat-option>
 </mat-autocomplete>
+<br>
+<!-- <mat-slide-toggle [checked]="tags === 'true' ? true : false" (change)="setValue( i , $event )">
+    enable tags?
+</mat-slide-toggle> -->

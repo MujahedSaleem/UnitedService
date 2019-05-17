@@ -11,7 +11,7 @@ export class Post {
   date:Date;
   title:string;
   location: string;
-  comment: Map<string, string> ;
+  comment: Array<string> ;
 
   constructor(post: any = {}) {
     this.id = post.id;
@@ -20,14 +20,15 @@ export class Post {
     this.name = post.name ;
     this.closed = post.closed || false;
     this.avatarUrl = post.avatarUrl || '';
-    this.avatarThumbnailUrl = post.avatarThumbnailUrl || '../../../../assets/images/user.png';
+    this.avatarThumbnailUrl = post.avatarThumbnailUrl || '../../../../../../../assets/images/user.png';
     this.price = post.price || 0;
     this.tags = post.tags || {};
     this.description = post.description || '';
-    this.date = post.date || Date.now();
+    this.date =  post.date ||post.date.toDate();
     this.location = post.location;
     if(post.comment){
-    this.comment = new Map(Object.entries(post.comment)) ;
+    this.comment =new Array<string>();
+    // new Map(Object.entries(post.comment)) 
     }
   }
   

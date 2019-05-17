@@ -4,27 +4,40 @@ import { AppConfig } from 'src/app/configs/app.config';
 import { User } from 'src/app/modules/users/shared/user.model';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
 import { LoggerService } from './logger.service';
 import { isPlatformBrowser } from '@angular/common';
-import { map, tap, catchError, filter } from 'rxjs/operators';
+import { map, tap, catchError, filter, finalize } from 'rxjs/operators';
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { AngularFirestoreCollection, AngularFirestoreDocument, AngularFirestore } from 'angularfire2/firestore';
+import { PostService } from 'src/app/modules/posts/shared/Post.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserUtilsService {
-  private usersCollection: AngularFireList<User>;
-  constructor(public afd: AngularFireDatabase,
+
+  public userdata: BehaviorSubject<any>;
+  private usersCollection: AngularFirestoreCollection<User>;
+  private chatsContainerCollection: AngularFirestoreDocument<any>;
+  CUrrentUser: User;
+  sederId: string;
+  constructor(private db: AngularFirestore, public afd: AngularFireDatabase,
     public router: Router,
     public ngZone: NgZone,
+    private postService: PostService,
     private Logger: LoggerService,
     private i18n: I18n,
     @Inject(PLATFORM_ID) private platformId: Object) {
-    this.usersCollection = this.afd.list<User>(AppConfig.routes.users, user =>
-      user.orderByKey()
-    );
+    this.usersCollection = this.db.collection(AppConfig.routes.users);
+    let x: User = JSON.parse(localStorage.getItem('user'));
+    if ( x != null) {
+      x.chats = this.objectToMap(x.chats);
+      this.userdata = new BehaviorSubject<any>(x);
+    }
+
   }
+
   private static handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error); // log to console instead
@@ -37,6 +50,9 @@ export class UserUtilsService {
       return of(result as T);
     };
   }
+  // setMainPhoto(photoid, userID){
+  //  this.db.collection(AppConfig.routes.users).doc(userID).update({photoURL:})
+  // }
 
   checkIfUserCanVote(): boolean {
     if (isPlatformBrowser(this.platformId)) {
@@ -44,13 +60,24 @@ export class UserUtilsService {
     }
     return false;
   }
+  private objectToMap(obj) {
 
+    if (obj instanceof Map) {
+      return obj;
+    }
+    let x = new Map<string, string>();
+    Object.keys(obj).forEach(key => {
+      x.set(key, obj[key]);
+    });
+    return x;
+  }
   getUsers(): Observable<User[]> {
+
     return this.usersCollection.snapshotChanges([])
       .pipe(
         map((actions) => {
           return actions.map((action) => {
-            return new User({ id: action.key, ...action.payload.val() as User });
+            return new User({ id: action.payload.doc.id, ...action.payload.doc.data() as User });
           });
         }),
         tap(() => LoggerService.log(`fetched Users`)),
@@ -58,66 +85,108 @@ export class UserUtilsService {
       );
   }
 
-  getUser(id: string): Promise<firebase.database.DataSnapshot> {
-    return this.afd.database.ref(`${AppConfig.routes.users}`).child(id).once('value', value => {
-      return new User({ uid: value.key, ...value.val() });
+  getUser(id: string): Observable<User | string> {
+    return this.db.collection(`${AppConfig.routes.users}`).doc(id).snapshotChanges()
+      .pipe(map(data => {
+        console.log({ uid: id, ...data.payload.data() })
+        if (data.payload.exists) {
+          let x = new User({ uid: id, ...data.payload.data() });
+          return x;
+        } else {
+          return ('null');
+        }
+      }), catchError(err => {
+        return of(err);
+      }));
+
+  }
+  getUserPromise(id: string): Promise<User> {
+    return this.db.collection(`${AppConfig.routes.users}`).doc(id).ref.get().then(data => {
+      return new User({ uid: id, ...data.data() });
+
+    });
+
+  }
+  setMainPhoto(photoUrl) {
+
+    let x: User = this.userdata.value;
+    x.photoURL = photoUrl;
+    this.updateUser(x);
+    this.postService.updatePosts(this.userdata.value.uid, photoUrl);
+  }
+  deletePhoto(photoURL: string) {
+    let xs = new Subscription();
+    xs.add(this.userdata.pipe(map(user => {
+      const index = user.photos.indexOf(photoURL, 0);
+      if (index > -1) {
+        let x = user;
+        x.photos.splice(index, 1);
+        this.updateUser(x).then(a => xs.unsubscribe());
+
+      }
+
+    }), finalize(() => xs.unsubscribe())).subscribe());
+
+
+  }
+  addPhoto(url: string): void {
+    let x: User = this.userdata.value;
+    if (x.photos === undefined || x.photos === null) {
+      x.photos = [];
+
     }
-    );
+    x.photos.push(url);
+    this.updateUser(x);
   }
   getUserChanges(id: string): Observable<User> {
+    this.db.collection(AppConfig.routes.users).doc(id).snapshotChanges().pipe(
+      map((data) => {
+        this.userdata.next(data);
+      }
+      ),
+      tap(() => LoggerService.log('changes fetched')),
+      catchError(UserUtilsService.handleError('getChanges', []))
+    );
 
-    return new Observable(subscriber => {
-      const ref = this.afd.database.ref(`${AppConfig.routes.users}/${id}`);
+    return this.userdata.asObservable();
 
-      const callbackFn = ref.on('value',
-        // emit a value from the Observable when firebase data changes
-        (snapshot) => subscriber.next(snapshot.val()),
-
-        // error out the Observable if there is an error
-        // such as permission denied
-        error => subscriber.error(error)
-      );
-
-      // The function passed to Observable.create can return a callback function
-      // which will be called when the observable we created is unsubscribed from.
-      // Just as we used `ref.on()` previously our callback function calls `ref.off`
-      // to tell firebase that we are no longer interested in the changes
-      return () => ref.off('value', callbackFn);
-    });
   }
 
   createUser(user: User) {
     user.created = new Date(Date.now());
-    return this.afd.database.ref(`${AppConfig.routes.users}/${user.uid}`).set(JSON.parse(JSON.stringify(user)));
+    return this.db.collection(`${AppConfig.routes.users}`).doc(`${user.uid}`).set(JSON.parse(JSON.stringify(user)));
   }
 
   updateUser(user: User): Promise<void> {
     const u: User = JSON.parse(localStorage.getItem('user'));
+    let x: any = user;
+
     if (user.uid === u.uid) {
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('user', JSON.stringify(x));
     }
-    return this.afd.database.ref(`${AppConfig.routes.users}/${user.uid}`).
-      update(JSON.parse(JSON.stringify(user))).then(() => {
+    console.log(x)
+    return this.db.collection(`${AppConfig.routes.users}`).doc(`${user.uid}`).
+      update(JSON.parse(JSON.stringify(Object.assign({}, x)))).then(() => {
         LoggerService.log(`updated hero w/ id=${user.uid}`);
         this.Logger.showSnackBar(this.i18n({ value: 'Saved', id: '@@saved' }));
+        this.userdata.next(user);
       });
   }
 
-  // deleteUser(id: string): Promise<void> {
-  //   return this.afs.doc(`${AppConfig.routes.posts}/${id}`).delete();
-  // }
+  deleteUser(id: string): Promise<void> {
+    const user: User = JSON.parse(localStorage.getItem('user'));
+    user.disabled = true;
+    return this.updateUser(user);
+  }
 
-  getProfilePicUrl() {
-    // TODO 4: Return the user's profile pic URL.
+  getProfilePicUrl(): String {
+    const user: User = JSON.parse(localStorage.getItem('user'));
+
+    return user.photoURL;
   }
   getUserName() {
-    const user:User = JSON.parse(localStorage.getItem('user'));
+    const user: User = JSON.parse(localStorage.getItem('user'));
     return user.displayName;
-  }
-  getUserData(id: string): Promise<User> {
-    return this.afd.database.ref(AppConfig.routes.users).child(id).once('value').then(data => {
-      return new User({ id: data.key, ...data.val() });
-    });
   }
 
 

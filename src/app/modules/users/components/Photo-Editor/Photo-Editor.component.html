@@ -1,0 +1,56 @@
+<div class="row">
+    <div class="col-sm-2" *ngFor="let photo of photos">
+        <img src="{{photo}}" class="img-thumbnail p1" alt="">
+        <div class="text-center">
+            <button type="button" class="btn btn-sm mr-2" (click)="setMainPhoto(photo)" [disabled]="photo.isMain" [ngClass]="isMain(photo) ? 'btn btn-success active':'btn btn-secondary' ">Main</button>
+            <button type="button" class="btn btn-sm btn-danger mt-1" (click)="deletePhoto(photo)" [disabled]="isMain(photo)"><i class="fa fa-trash"></i></button>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+
+    <div class="dropzone" dropZone (hovered)="toggleHover($event)" (Dropped)="startUpload($event)" [class.hovering]="isHovring">
+
+
+
+        <h3>AngularFire Drop Zone</h3>
+
+        <div class="file">
+            <label class="file-label">
+      
+      
+              <input class="file-input" type="file" (change)="startUpload($event.target.files)">
+      
+      
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fa fa-upload"></i>
+                  </span>
+                  <span class="file-label">
+                    or choose a file…
+                  </span>
+                </span>
+              </label>
+        </div>
+    </div>
+    <div *ngIf="progressBase | async as pct">
+
+        <div class="progress mb-4">
+            <!-- <div class="progress-bar" role="progressbar" [ngStyle]=" 'width': {{pct | number}} + '%' "></div> -->
+        </div>
+
+
+    </div>
+
+
+    <div *ngIf="snapShot | async as snap">
+        {{ snap.bytesTransferred | filesize }} of {{ snap.totalBytes | filesize }}
+
+        <button (click)="task.pause()" class="button is-warning" [disabled]="!isActive(snap)">Pause</button>
+        <button (click)="task.cancel()" class="button is-danger" [disabled]="!isActive(snap)">Cancel</button>
+        <button (click)="task.resume()" class="button is-info" [disabled]="!(snap?.state === 'paused')">Resume</button>
+
+    </div>
+
+</div>

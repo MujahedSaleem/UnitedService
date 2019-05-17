@@ -20,55 +20,74 @@ import { UserAuthService } from 'src/app/core/services/user-auth.service';
 
 export class PostCardComponent implements OnInit, OnDestroy {
 
-  @Input() post: any;
+  @Input() id: any;
+  post: Post;
   comments: string;
   show;
   allComments: Array<string>;
   tags: Array<string>;
   canComment: boolean;
   canVote: boolean;
-  userLogin: boolean = true;
   constructor(private postService: PostService,
     private router: Router,
 
     private userAuth: UserAuthService,
     private i18n: I18n,
     @Inject(PLATFORM_ID) private platformId: Object) {
-    this.canVote = this.postService.checkIfUserCanVote();
     this.canComment = this.userAuth.isUserSignedIn();
     this.allComments = new Array<string>();
     this.tags = new Array<string>();
-}
+  }
   ngOnDestroy(): void {
   }
   ngOnInit() {
-    this.postService.getPost(this.post.id === undefined ? this.post : this.post.id).then(post => {
-      this.post = new Post({ id: this.post.id === undefined ? this.post : this.post.id, ...post.val() });
-    }).finally( () => {
+   
+    if (this.id instanceof Object) {
+      this.post = new Post({...this.id});
       if (this.post.comment) {
         this.post.comment.forEach(valx => {
           this.allComments.push(valx);
 
         });
       }
-      if(this.post.tags){
+      if (this.post.tags) {
         for (let index = 0; index < this.post.tags.length; index++) {
           this.tags.push(this.post.tags[index]);
 
         }
       }
+    } else {
+      this.postService.getPost(this.id).subscribe((data: Post) => {
+        console.log(data)
+        this.post = new Post({...data});
+        if (this.post.avatarThumbnailUrl === undefined) {
+          this.post.avatarThumbnailUrl = '../../../../assets/images/user.png';
+        }
+      }, err => LoggerService.error(err), () => {
 
-    });
+
+        if (this.post.tags) {
+          for (let index = 0; index < this.post.tags.length; index++) {
+            this.tags.push(this.post.tags[index]);
+
+          }
+        }
+      });
+    }
+
 
   }
   enter(event) {
 
     if (event.keyCode === 13) {
-      if(this.comments.trim()!==''){
-      this.allComments.push(this.comments);
+      if (this.comments.trim() !== '') {
+        this.post.comment.push(this.comments);
+        if (this.id instanceof String) {
+          this.post.id = this.id.toString();
 
-      this.postService.createComment(this.comments, this.post.id);
-      this.comments = '';
+        }
+        this.postService.createComment(this.post, this.post.id);
+        this.comments = '';
       }
     }
   }
@@ -89,7 +108,7 @@ export class PostCardComponent implements OnInit, OnDestroy {
 
   seePostDetails(post: Post): void {
     if (!post.closed) {
-      this.router.navigate([AppConfig.routes.posts + '/' + post.id]);
+      this.router.navigate([`/${this.post.uid}`]);
     }
   }
 

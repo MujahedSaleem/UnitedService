@@ -1,3 +1,18 @@
+.dropdown-toggle,
+.dropdown-item {
+    cursor: pointer;
+}
+
+.rounded-circle {
+    max-height: 50px;
+    border: 2px solid white;
+    display: inline;
+}
+
+.cd-main-header {
+    z-index: 9999;
+}
+
 @import "../../../styles/mixins";
 :host(app-header) {
     padding-top: 0;

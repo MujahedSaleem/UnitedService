@@ -8,21 +8,22 @@ import { Observable, of } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { map, tap, catchError } from 'rxjs/operators';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { AngularFirestoreCollection, AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { User } from 'firebase';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
-  private postsCollection: AngularFireList<Post>;
+  private postsCollection: AngularFirestoreCollection<Post>;
   constructor(private afs: AngularFireDatabase,
     private Logger: LoggerService,
+    private db: AngularFirestore,
     private i18n: I18n,
     @Inject(PLATFORM_ID) private platformId: Object) {
-    this.postsCollection = this.afs.list<Post>(AppConfig.routes.posts, post =>
-      post.orderByKey()
-    );
+    this.postsCollection = this.db.collection(AppConfig.routes.posts, ref => ref.limit(25).orderBy('date','asc'));
   }
-  private static handleError<T>(operation = 'operation', result?: T) {
+  public static handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error); // log to console instead
       LoggerService.log(`${operation} failed: ${error.message}`);
@@ -34,40 +35,49 @@ export class PostService {
       return of(result as T);
     };
   }
-
-  checkIfUserCanVote(): boolean {
-    if (isPlatformBrowser(this.platformId)) {
-      return Number(localStorage.getItem('votes')) < AppConfig.votesLimit;
+  updatePosts(userId: string, photoUrl: string) {
+    const u: User = JSON.parse(localStorage.getItem('user'));
+    if (userId !== u.uid) {
+      return;
     }
-    return false;
-  }
+    return this.db.collection(`${AppConfig.routes.posts}`).ref.where('uid', '==', userId)
+      .onSnapshot(data => {
+        data.forEach(doc => {
+          this.db.collection(`${AppConfig.routes.posts}`).doc(doc.id).update({ avatarThumbnailUrl: photoUrl })
 
+        });
+      });
+  }
   getPosts(): Observable<Post[]> {
+
     return this.postsCollection.snapshotChanges([])
       .pipe(
         map((actions) => {
           return actions.map((action) => {
-            console.log(action)
-            return new Post({ id: action.key, ...action.payload.val() as Post });
+            return new Post({ id: action.payload.doc.id, ...action.payload.doc.data() as Post });
           });
         }),
-        tap(() => LoggerService.log(`fetched posts`)),
-        catchError(PostService.handleError('getPOsts', []))
+        tap(() => LoggerService.log(`fetched postss`)),
+        catchError(PostService.handleError('getposts', []))
       );
   }
+  postDoc: AngularFirestoreDocument<Post>;
+  getPost(id: string) {
+    this.postDoc = this.db.doc(`${AppConfig.routes.posts}/${id}`);
+    return this.postDoc.valueChanges();
 
-  getPost(id: string): Promise<firebase.database.DataSnapshot> {
-
-    return this.afs.database.ref(`${AppConfig.routes.posts}`).child(id).once('value', value => {
-      return new Post({ id, ...value.val() });
-    }
-    );
   }
-  createComment(commnet: string, postid: string) {
-    return this.afs.database.ref(`${AppConfig.routes.posts}`).child(postid).child('comment').push(commnet);
+  createComment(post: Post, postid: string) {
+    console.log(post, postid)
+    return this.db.collection(`${AppConfig.routes.posts}`).doc(postid).set(post);
   }
-  createPost(post: Post) {
-        return this.postsCollection.push(JSON.parse(JSON.stringify(post)));
+  createPost(post: Post): Promise<string> {
+    post.avatarThumbnailUrl = JSON.parse(localStorage.getItem('user')).photoURL;
+    const date = new Date();
+    post.date = date;
+    return this.db.collection(`${AppConfig.routes.posts}`).add(JSON.parse(JSON.stringify(post))).then(data => {
+      return data.id;
+    });
   }
 
   // updatePost(post: Post): Promise<void> {

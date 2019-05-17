@@ -78,14 +78,14 @@ export class PostCreatePageComponent implements OnInit {
       this.model.name = this.userService.getUserName();
       this.postService.createPost(this.model).then(data => {
         if (user.posts instanceof Array) {
-          user.posts.push(data.key);
+          user.posts.push(data);
         } else {
           user.posts = new Array<string>();
-          user.posts.push(data.key);
+          user.posts.push(data);
         }
 
         this.userService.updateUser(user).finally(() => {
-          this.router.navigate([`/posts/${data.key}`]);
+          this.router.navigate([`/posts/${data}`]);
         });
       }, reason => {
         console.log(reason)

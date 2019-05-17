@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Observable, of, from } from 'rxjs';
+import { Observable, of, from, Subscription, ReplaySubject, Subject, BehaviorSubject } from 'rxjs';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
 import { switchMap, merge, catchError } from 'rxjs/operators';
@@ -13,32 +13,47 @@ import { UserUtilsService } from './user-utils.service';
   providedIn: 'root'
 })
 export class UserAuthService {
-  user$: Observable<any>;
+  static public_user: User;
   userData: Partial<User>; // Save logged in user data
-  public currentUser: Observable<User | null>;
-  public currentUserSnapshot: User | null;
+  public currentUser: User;
+  photoUrl = new BehaviorSubject<string>('../../../../../assets/user.png');
+  currentUserUrl = this.photoUrl.asObservable();
 
+  private subscruptions: Subscription[] = [];
   constructor(
+    private userService: UserUtilsService,
     public afd: AngularFireDatabase,
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router,
     public ngZone: NgZone,// NgZone service to remove outside scope warning
-    private userService: UserUtilsService
   ) {
-
-    this.afAuth.authState.subscribe(user => {
-      if (user) {
-        this.userService.getUser(user.uid).then(data => {
-          let l_user = new User({ id: user.uid, ...data.val() });
-          l_user.isActive = true;
-          l_user.lastActive = new Date(Date.now());
-          localStorage.setItem('user', JSON.stringify(l_user));
-          this.userService.updateUser(l_user);
-        })
-      } else {
-        localStorage.setItem('user', null);
-      }
-    });
+    this.subscruptions.push(
+      this.afAuth.authState.subscribe(user => {
+        if (user) {
+          const date = new Date(Date.now());
+          this.userService.getUser(user.uid).subscribe((data: User) => {
+            let c_user = new User({ id: user.uid, ...data });
+            c_user.isActive = true;
+            c_user.lastActive = date;
+            this.currentUser = c_user;
+            c_user.chats = this.mapToObject(c_user.chats);
+            localStorage.setItem('user', JSON.stringify(c_user));
+          }, () => {
+          });
+        } else {
+          localStorage.setItem('user', null);
+        }
+      }, () => { this.subscruptions.forEach(x => x.unsubscribe()) }));
+  }
+  private mapToObject(map) {
+    if (map instanceof Map) {
+      let obj = {};
+      map.forEach((x, y) => {
+        obj[y] = x;
+      });
+      return obj;
+    }
+    return map;
   }
 
   // Sign in with email/password
@@ -46,12 +61,14 @@ export class UserAuthService {
 
     return from(this.afAuth.auth.signInWithEmailAndPassword(email, password)
       .then((result) => {
-        this.setUser();
 
         return true;
+
       }).catch((error) => false));
   }
-
+  changeMemberPhoto(photoUrl: string) {
+    this.photoUrl.next(photoUrl);
+  }
   // Sign up with email/password
   SignUp(user: User, password) {
     return from(this.afAuth.auth.createUserWithEmailAndPassword(user.email, password)
@@ -60,6 +77,9 @@ export class UserAuthService {
         up and returns promise */
         this.SendVerificationMail();
         user.uid = result.user.uid;
+        if (user.photoURL === '' || user.photoURL === null) {
+          user.photoURL = this.photoUrl.value;
+        }
         this.SetUserData(user);
         return true;
       }).catch((error) => false));
@@ -97,6 +117,7 @@ export class UserAuthService {
   GoogleAuth() {
     return from(this.AuthLogin(new firebase.auth.GoogleAuthProvider()).then(result => {
       return true;
+
     }).catch((err) => false));
   }
   FacebookAuth() {
@@ -107,7 +128,7 @@ export class UserAuthService {
   AuthLogin(provider) {
     return this.afAuth.auth.signInWithPopup(provider)
       .then((result) => {
-        this.setUser();
+        this.setUser(result);
       }).catch((error) => {
         window.alert(error);
       });
@@ -119,10 +140,13 @@ export class UserAuthService {
   SetUserData(user: User) {
     this.afd.database.ref(`${AppConfig.routes.users}/${user.uid}`).set(JSON.parse(JSON.stringify(new User({ uid: user.uid, ...user }))));
   }
-  private setUser() {
-    /* Saving user data in localstorage when
-    logged in and setting up null when logged out */
-
+  private setUser(user: firebase.auth.UserCredential) {
+    let X: User = new User(user.user);
+    let values = Object.keys(user.additionalUserInfo.profile).map(key => user.additionalUserInfo.profile[key]);
+    console.log(values)
+    X.disabled = !values[3];
+    X.displayName = values[0];
+    this.userService.createUser(X);
   }
   // Sign out
   SignOut() {
@@ -137,8 +161,5 @@ export class UserAuthService {
 
     }).catch(a => console.log(a));
   }
-  private setCurrentUserSnapshot(): void {
-    this.currentUser.subscribe(user => this.currentUserSnapshot = user);
 
-  }
 }
