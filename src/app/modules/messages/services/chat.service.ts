@@ -66,10 +66,17 @@ export class ChatService {
       return of(null);
     }
   }
-  updateMessages(senderId, value) {
+  updateMessages(reciverID, senderId, value) {
     let x: User = this.userService.userdata.value;
+    this.db.collection('chats').doc(x.chats.get(reciverID)).collection('messages').ref
+      .where('reciverId', '==', senderId).where('isRead', '==', false)
+      .onSnapshot((data => {
+        data.forEach(z => {
+          this.db.doc(`chats/${x.chats.get(reciverID.trim())}/messages/${z.id}`).update(value);
 
-        this.db.doc(`chats/${x.chats.get(senderId.trim())}/messages/${y.id}`).update(value);
+        });
+      }));
+
   }
   getMessages(type: string): Observable<any[]> {
     let users = [];
@@ -146,6 +153,9 @@ export class ChatService {
     return obj;
   }
   private objectToMap(obj) {
+    if (!obj) {
+      return  new Map<string,string>();
+    }
     if (obj instanceof Map) {
       return obj;
     }
@@ -157,11 +167,10 @@ export class ChatService {
   }
   sendMessage(chatMessage: ChatMessage) {
     let user: User = this.userService.userdata.value;
-
+   
     if (user.chats instanceof Map) {
     } else {
       user.chats = this.objectToMap(user.chats);
-
     }
 
     let reciver: User;
@@ -169,18 +178,19 @@ export class ChatService {
       reciver = usera;
 
       if (!user.chats.get(chatMessage.reciverId)) {
-        let y = `${chatMessage.reciverId}`;
-        user.numOfReciver += 1;
-        user.chats.set(chatMessage.reciverId, `room${user.chats.size}`);
-        reciver.chats.set(chatMessage.senderId, user.chats.get(chatMessage.reciverId));
-        this.chatsCollection = this.db.collection(`chats`).doc(`${user.chats.get(chatMessage.reciverId)}`).collection('messages');
-        this.chatsCollection.add(chatMessage).then(data => {
-          user.messages.push(data.id);
+
+        this.db.collection(`chats`).add({ sederId: chatMessage.senderId, reciverId: chatMessage.reciverId }).then(data => {
+          user.chats.set(chatMessage.reciverId, data.id);
+          reciver.chats.set(chatMessage.senderId, data.id);
+        }).finally(() => {
+          this.chatsCollection = this.db.collection(`chats`).doc(`${user.chats.get(chatMessage.reciverId)}`).collection('messages');
+          this.chatsCollection.add(chatMessage);
+          user.chats = this.mapToObject(user.chats);
+          reciver.chats = this.mapToObject(reciver.chats);
+          this.userService.updateUser(user);
+          this.userService.updateUser(reciver);
         });
-        user.chats = this.mapToObject(user.chats);
-        reciver.chats = this.mapToObject(reciver.chats);
-        this.userService.updateUser(user);
-        this.userService.updateUser(reciver);
+
 
       } else {
         this.chatsCollection = this.db.collection(`chats`).doc(`${user.chats.get(chatMessage.reciverId)}`).collection('messages');

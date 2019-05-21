@@ -25,10 +25,11 @@ registerLocaleData(localeAr, 'ar');
 
 @NgModule({
   imports: [
+    FirebaseModule,
+
     BrowserModule.withServerTransition({appId: 'angularexampleapp'}),
     HttpClientModule,
 
-    FirebaseModule,
     NgxGalleryModule,
 
     NgxExampleLibraryModule.forRoot({
@@ -47,6 +48,7 @@ registerLocaleData(localeAr, 'ar');
   providers: [AngularFirestore,
     {provide: APP_CONFIG, useValue: AppConfig},
     {provide: ErrorHandler, useClass: SentryErrorHandler},
+
     {
       provide: TRANSLATIONS,
       useFactory: (locale) => {

@@ -26,7 +26,7 @@ export class PostDetailPageComponent implements OnInit {
 
   ngOnInit() {
     const postId = this.activatedRoute.snapshot.paramMap.get('id');
-    this.postService.getPost(postId).subscribe(data=>this.post=data);
+    this.postService.getPost(postId).subscribe(data => this.post = data);
   }
   goBack(): void {
     this.location.back();

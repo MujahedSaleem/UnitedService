@@ -17,7 +17,7 @@ import { UserUtilsService } from 'src/app/core/services/user-utils.service';
 import { User } from '../../users/shared/user.model';
 import { Subscription } from 'rxjs';
 import { ActiveService } from '../services/active.service';
-import { PresenceService } from 'src/app/core/services/presence.service';
+import { PresenceService } from '../../../core/services/presence.service';
 
 
 @Component({
@@ -30,9 +30,9 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
   name: string;
   chats: ChatMessage[] = [];
-  isContentLoader: boolean = true;
-  public disabled: boolean = false;
-  public type: string = 'component';
+  isContentLoader = true;
+  public disabled = false;
+  public type = 'component';
   public config: PerfectScrollbarConfigInterface = {};
   user: User;
   @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
@@ -50,46 +50,51 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.active.setPresence('online');
-    this.userService.getUser(this.reciverId).subscribe((user: User) => {
-      this.user = user;
+    if (this.reciverId) {
+      this.userService.getUser(this.reciverId).subscribe((user: User) => {
+        this.user = user;
 
-      this.isContentLoader = false;
-      this.chatSvc.setName(this.user.displayName);
+        this.isContentLoader = false;
+        this.chatSvc.setName(this.user.displayName);
 
 
-      this.chatSvc.getAllChatMessages(this.reciverId).subscribe((results) => {
-        setTimeout(() => {
-          this.chats = results.sort((a: any, b: any) => {
-            return a.message_date['seconds'] - b.message_date['seconds'];
+        this.chatSvc.getAllChatMessages(this.reciverId).subscribe((results) => {
+          if(results){
+            
+         
+          setTimeout(() => {
+            this.chats = results.sort((a: any, b: any) => {
+              return a.message_date['seconds'] - b.message_date['seconds'];
 
-          });
-          this.active.getPresence(this.reciverId).subscribe(precence => {
-            this.chats.forEach(x => {
-              if (x.senderId === this.userService.userdata.value.uid) {
-                x.isRead = true;
-              }
             });
-            if (precence === 'online') {
-              this.chatSvc.updateMessages(this.userService.userdata.value, {
-                isRead: true
+            this.active.getPresence(this.reciverId).subscribe(precence => {
+              this.chats.forEach(x => {
+                if (x.senderId === this.userService.userdata.value.uid) {
+                  x.isRead = true;
+                }
               });
-            }
-          
-          });
-          this.cd.detectChanges();
-          this.chatPS.directiveRef.scrollToBottom(0, 300);
-        }, 1100);
-      });
-    });
+              if (precence === 'online') {
+                this.chatSvc.updateMessages(this.reciverId, this.userService.userdata.value.uid, {
+                  isRead: true
+                });
+              }
+
+            });
+            this.cd.detectChanges();
+            this.chatPS.directiveRef.scrollToBottom(0, 300);
+          }, 1100);
+        }});
+      }); 
+    }
   }
 
   ngAfterViewInit() {
     this.subscriptions.push(
       this.chatSvc.getUserName().subscribe((result) => {
-        console.log("ngAfterViewInit" + JSON.stringify(result));
-        let jsonName = JSON.stringify(result)
-        if ((typeof (result) === 'undefined') || (jsonName == '{}')) {
-          console.log("NAME > " + JSON.stringify(result));
+        console.log('ngAfterViewInit' + JSON.stringify(result));
+        const jsonName = JSON.stringify(result);
+        if ((typeof (result) === 'undefined') || (jsonName === '{}')) {
+          console.log('NAME >'  + JSON.stringify(result));
           setTimeout(() => {
             this.name = result;
             this.isContentLoader = false;

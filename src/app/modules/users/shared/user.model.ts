@@ -14,6 +14,7 @@ export class User {
     numOfReciver: number;
     numberOfRoom: number;
     chats: any;
+    gender: string;
     messages: Array<string>
     email: string;
     emailVerified: boolean;
@@ -24,6 +25,7 @@ export class User {
     constructor(User: any = {}) {
         this.bio = User.bio || ' ';
         this.uid = User.uid;
+        this.gender = User.gender || 'male';
         this.photoURL = User.photoURL || '';
         this.posts = User.posts;
         this.city = User.city || ' ';
@@ -41,7 +43,11 @@ export class User {
         this.numOfReciver = User.numOfReciver || 0;
     }
     private objectToMap(obj) {
-        if (obj instanceof Map){
+        if(!obj){
+            return new Map<string,string>();
+
+        }
+        if (obj instanceof Map) {
             return obj;
         }
         let x = new Map<string, string>();

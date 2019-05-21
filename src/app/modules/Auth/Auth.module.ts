@@ -13,7 +13,7 @@ import { LoginComponent } from './pages/login/login.component';
         ReactiveFormsModule,
         MDBBootstrapModule],
     exports: [],
-    declarations: [RegisterPageComponent,LoginComponent],
+    declarations: [RegisterPageComponent, LoginComponent],
     providers: [],
 })
 export class AuthModule { }

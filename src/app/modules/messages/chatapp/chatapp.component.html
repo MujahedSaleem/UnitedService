@@ -1,6 +1,6 @@
 <app-chat-header class="m-5"></app-chat-header>
 
-<main class="content">
+<main class="content" *ngIf="id">
     <app-chat-window [reciverId]="id"></app-chat-window>
 </main>
 <footer class="footer">

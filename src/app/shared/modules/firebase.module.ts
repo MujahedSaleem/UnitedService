@@ -1,13 +1,13 @@
-import {NgModule} from '@angular/core';
-import {AngularFireModule, FirebaseOptionsToken} from '@angular/fire';
-import {environment} from '../../../environments/environment';
+import { NgModule } from '@angular/core';
+import { AngularFireModule, FirebaseOptionsToken } from '@angular/fire';
+import { environment } from '../../../environments/environment';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 @NgModule({
   imports: [
-    AngularFireModule.initializeApp(environment.firebase, 'angularexampleapp'),
+    AngularFireModule,
     AngularFireAuthModule,
     AngularFireDatabaseModule,
     AngularFireStorageModule,
@@ -19,6 +19,9 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
     AngularFireAuthModule,
     AngularFireDatabaseModule,
   ],
+  providers: [
+    { provide: FirebaseOptionsToken, useValue: environment.firebase }
+  ]
 })
 
 export class FirebaseModule {

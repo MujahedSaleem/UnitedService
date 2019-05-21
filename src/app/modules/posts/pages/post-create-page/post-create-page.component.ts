@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Post } from '../../shared/post.model';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
@@ -17,8 +17,16 @@ export class PostCreatePageComponent implements OnInit {
   isworkdone = false;
   model: Post;
   load = true;
+  lat; lon;
+  locations;
+  mainLocation;
+  zoom
+  @ViewChild("search")
+  public searchElementRef: ElementRef;
+  tags: string[];
   constructor(private fb: FormBuilder,
     private router: Router,
+    private ngZone: NgZone,
     private route: ActivatedRoute,
     private userService: UserUtilsService,
     private _hotkeysService: HotkeysService,
@@ -36,6 +44,8 @@ export class PostCreatePageComponent implements OnInit {
   }
 
   ngOnInit() {
+
+
     setTimeout(a => {
       this.load = false
     }, 700)
@@ -56,11 +66,13 @@ export class PostCreatePageComponent implements OnInit {
     this.createModel = this.fb.group(
       {
         title: [null, Validators.required],
+        price: [null, Validators.required],
+        location: [null, Validators.required],
         description: [null],
-        tags: [null],
-        price: [null, Validators.required]
+        tags: [null, Validators.required],
       });
   }
+
   workdone() {
     if (!this.isworkdone) {
       this.isworkdone = true;
@@ -73,7 +85,9 @@ export class PostCreatePageComponent implements OnInit {
     if (this.createModel.valid) {
       let user: User = JSON.parse(localStorage.getItem('user'));
       this.model = Object.assign({}, this.createModel.value);
-      this.model.tags = this.getTags(this.createModel.value.tags);
+      if (this.createModel.value.tags) {
+        this.tags = this.getTags(this.createModel.value.tags);
+      }
       this.model.uid = user.uid;
       this.model.name = this.userService.getUserName();
       this.postService.createPost(this.model).then(data => {
@@ -83,7 +97,10 @@ export class PostCreatePageComponent implements OnInit {
           user.posts = new Array<string>();
           user.posts.push(data);
         }
+        this.tags.forEach(x => {
+          this.postService.createTags(x, data);
 
+        });
         this.userService.updateUser(user).finally(() => {
           this.router.navigate([`/posts/${data}`]);
         });

@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {animate, AnimationTriggerMetadata, style, transition, trigger} from '@angular/animations';
-
 declare const require;
 const bowser = require('bowser');
 
@@ -29,7 +28,7 @@ export class UtilsHelperService {
     }
     return true;
   }
-
+ 
   static isBrowserValid() {
     const browser = bowser.getParser(window.navigator.userAgent);
     return browser.satisfies({

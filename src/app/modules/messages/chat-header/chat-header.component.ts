@@ -40,15 +40,9 @@ export class ChatHeaderComponent implements OnInit {
     });
   }
 
-  onVideoCall() {
-    this.route.navigate(['/video-call']);
-  }
-
-  onSentiment() {
-    this.route.navigate(['/sentiment']);
-  }
-
+ 
   onCamera() {
+
     setTimeout(() => {
       const dialogRef = this.dialog.open(WebcamDialog, {
         height: '480px',

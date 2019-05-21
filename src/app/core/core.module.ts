@@ -4,20 +4,20 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { UserAuthService } from './services/user-auth.service';
 import { AuthGuard } from './guard/auth.guard';
-import { PresenceService } from './services/presence.service';
 import { UserUtilsService } from './services/user-utils.service';
-
+import { AgmCoreModule } from '@agm/core'; 
 @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    RouterModule
+    RouterModule,
+   
   ],
   exports: [
     BrowserModule,
     BrowserAnimationsModule
   ],
-  providers: [UserAuthService, AuthGuard, PresenceService, UserUtilsService]
+  providers: [UserAuthService, AuthGuard, UserUtilsService]
 
 })
 

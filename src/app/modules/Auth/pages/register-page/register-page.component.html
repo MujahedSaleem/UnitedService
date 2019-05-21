@@ -43,7 +43,7 @@
                     type="text"
                     id="form3"
                     class="text-white form-control"
-                    formControlName="userName"
+                    formControlName="displayName"
                     mdbValidate
                     mdbInput
                   />
@@ -84,6 +84,24 @@
                     mdbValidate
                   />
                   <label for="form5" class="text-white">repete password</label>
+                </div>
+                <div class="form-check md-form form-check-inline">
+                    <input 
+                    type="radio" 
+                    formControlName="gender"
+                    id="fomr6"
+                    class="form-check-input" 
+                    mdbInput>
+                   <label class="form-check-label" for="fomr6">Male</label>
+                </div>
+                <div class="form-check md-form form-check-inline">
+                   <input 
+                   type="radio" 
+                   formControlName="gender"
+                   id="fomr7"
+                   class="form-check-input" 
+                   mdbInput>
+                  <label class="form-check-label" for="fomr7">Male</label>
                 </div>
                 <div class="text-center mt-4">
                   <button

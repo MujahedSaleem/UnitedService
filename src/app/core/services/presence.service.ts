@@ -11,7 +11,7 @@ import { UserUtilsService } from './user-utils.service';
 })
 export class PresenceService {
 
-  constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase,private userService:UserUtilsService) {
+  constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private userService: UserUtilsService) {
     console.log('let there be presence');
     this.updateOnUser().subscribe();
     this.updateOnDisconnect().subscribe();
@@ -52,8 +52,9 @@ export class PresenceService {
     );
   }
   async setPresence(status: string) {
+    if ( this.userService.userdata) {
     const user = await this.userService.userdata.value;
-    if (user) {
+   
       return this.db.object(`status/${user.uid}`).update({ status, timestamp: this.timestamp });
     }
   }

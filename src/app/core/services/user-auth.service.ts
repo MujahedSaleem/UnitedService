@@ -9,6 +9,7 @@ import * as firebase from 'firebase';
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
 import { User } from 'src/app/modules/users/shared/user.model';
 import { UserUtilsService } from './user-utils.service';
+import { MessagingService } from './Messaging.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,6 +22,7 @@ export class UserAuthService {
 
   private subscruptions: Subscription[] = [];
   constructor(
+    public msg: MessagingService,
     private userService: UserUtilsService,
     public afd: AngularFireDatabase,
     public afAuth: AngularFireAuth, // Inject Firebase auth service
@@ -38,6 +40,9 @@ export class UserAuthService {
             this.currentUser = c_user;
             c_user.chats = this.mapToObject(c_user.chats);
             localStorage.setItem('user', JSON.stringify(c_user));
+            this.msg.getPermission(c_user)
+            this.msg.monitorRefresh(c_user)
+            this.msg.receiveMessages()
           }, () => {
           });
         } else {
@@ -128,7 +133,7 @@ export class UserAuthService {
   AuthLogin(provider) {
     return this.afAuth.auth.signInWithPopup(provider)
       .then((result) => {
-        this.setUser(result);
+
       }).catch((error) => {
         window.alert(error);
       });
@@ -140,14 +145,7 @@ export class UserAuthService {
   SetUserData(user: User) {
     this.afd.database.ref(`${AppConfig.routes.users}/${user.uid}`).set(JSON.parse(JSON.stringify(new User({ uid: user.uid, ...user }))));
   }
-  private setUser(user: firebase.auth.UserCredential) {
-    let X: User = new User(user.user);
-    let values = Object.keys(user.additionalUserInfo.profile).map(key => user.additionalUserInfo.profile[key]);
-    console.log(values)
-    X.disabled = !values[3];
-    X.displayName = values[0];
-    this.userService.createUser(X);
-  }
+
   // Sign out
   SignOut() {
     return this.afAuth.auth.signOut().then(() => {

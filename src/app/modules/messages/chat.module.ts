@@ -28,12 +28,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   wheelPropagation: true
 };
 
-import { SentimentComponent } from './sentiment/sentiment.component';
 
 
 import { PlatformModule } from '@angular/cdk/platform';
 import { ObserversModule } from '@angular/cdk/observers';
-import { VideocallComponent } from './videocall/videocall.component';
 import { MaterialModule } from 'src/app/shared/modules/material.module';
 import { MessageRoutingModule } from './message-routing.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -71,8 +69,6 @@ import { ActiveService } from './services/active.service';
     ChatFooterComponent,
     ChatHeaderComponent,
     ChatappComponent,
-    VideocallComponent,
-    SentimentComponent,
     ChatMainComponent
   ],
   providers: [

@@ -7,5 +7,8 @@ export const environment = {
     projectId: 'freeworker-5517f',
     storageBucket: 'freeworker-5517f.appspot.com',
     messagingSenderId: '665869299509'
-  }
+  },
+  wsserver: 'http://localhost:3000',
+  iceservers: 'http://localhost:3000/getICETokens',
+
 };

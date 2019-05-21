@@ -21,7 +21,7 @@ export class PostService {
     private db: AngularFirestore,
     private i18n: I18n,
     @Inject(PLATFORM_ID) private platformId: Object) {
-    this.postsCollection = this.db.collection(AppConfig.routes.posts, ref => ref.limit(25).orderBy('date','asc'));
+    this.postsCollection = this.db.collection(AppConfig.routes.posts, ref => ref.limit(25).orderBy('date', 'asc'));
   }
   public static handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
@@ -64,12 +64,36 @@ export class PostService {
   postDoc: AngularFirestoreDocument<Post>;
   getPost(id: string) {
     this.postDoc = this.db.doc(`${AppConfig.routes.posts}/${id}`);
-    return this.postDoc.valueChanges();
+    return this.postDoc.snapshotChanges().pipe(map(data=>new Post({id:data.payload.id,...data.payload.data()})));;
 
   }
-  createComment(post: Post, postid: string) {
-    console.log(post, postid)
-    return this.db.collection(`${AppConfig.routes.posts}`).doc(postid).set(post);
+  createComment(Comment, postid: string) {
+    return this.db.doc(`${AppConfig.routes.posts}/${postid}`).collection('Comments').add({content:Comment})
+  }
+
+  getComment(postid: string) {
+    return this.db.doc(`${AppConfig.routes.posts}/${postid}`).collection('Comments').valueChanges()
+      .pipe(map(data => {
+        let m = new Array();
+        data.forEach((x, y) => {
+          m.push(x['content']);
+        });
+        return m;
+      }));
+  }
+  getTags(postid: string) {
+    return this.db.doc(`${AppConfig.routes.posts}/${postid}`).collection('tags').valueChanges()
+      .pipe(map(data => {
+        let m = new Array();
+        data.forEach((x, y) => {
+          m.push(x['content']);
+        });
+        return m;
+      }));
+  }
+  createTags(Tags, postid: string) {
+    return this.db.doc(`${AppConfig.routes.posts}/${postid}`).collection('tags')
+      .add({ content: Tags })
   }
   createPost(post: Post): Promise<string> {
     post.avatarThumbnailUrl = JSON.parse(localStorage.getItem('user')).photoURL;

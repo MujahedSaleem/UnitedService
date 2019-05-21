@@ -35,7 +35,7 @@ export class RegisterPageComponent implements OnInit {
   createRegisterForm() {
     this.registerModel = this.fb.group(
       {
-        userName: [null, Validators.required],
+        displayName: [null, Validators.required],
         email: [
           null,
           Validators.compose([
@@ -46,7 +46,8 @@ export class RegisterPageComponent implements OnInit {
           ])
         ],
         passwrod: [null, Validators.required],
-        confirmPassword: ["", Validators.required]
+        confirmPassword: ["", Validators.required],
+        gender: ["", Validators.required]
       },
       { validators: CustomValidators.matchPassword }
     );
@@ -54,8 +55,7 @@ export class RegisterPageComponent implements OnInit {
 
   register() {
     if (this.registerModel.valid) {
-      const user: User = Object.assign({}, this.registerModel.value);
-      user.displayName = this.registerModel.value.userName;
+      const user: User = new User({ ...this.registerModel.value });
       // TODO call the auth service
       this.subscriptions.push(
         this.Authservice.SignUp(user, this.registerModel.value.passwrod).subscribe(success => {

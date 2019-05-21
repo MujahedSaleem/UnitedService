@@ -53,8 +53,9 @@ export class ActiveService {
     );
   }
   async setPresence(status: string) {
-    const user = await this.userService.userdata.value;
-    if (user) {
+  if (this.userService.userdata.value) { 
+     const user = await this.userService.userdata.value;
+    
       return this.db.object(`msstatus/${user.uid}`).update({ status, timestamp: this.timestamp });
     }
   }
@@ -62,7 +63,6 @@ export class ActiveService {
     return firebase.database.ServerValue.TIMESTAMP;
   }
   getPresence(uid: string) {
-    return of('online');
     return this.db.object(`msstatus/${uid}`).valueChanges().pipe(map(data => data));
   }
 

@@ -77,19 +77,22 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   }
   gooAuth() {
-    this.auth.GoogleAuth().subscribe(success => {
-      if (success) {
-        this.ngZone.run(() => {
-          this.router.navigateByUrl(this.returnUrl).finally(() => {
-            location.reload();
+    this.subscriptions.push(
+      this.auth.GoogleAuth().subscribe(success => {
+        if (success) {
+          this.ngZone.run(() => {
+            this.router.navigateByUrl(this.returnUrl).finally(() => {
+              location.reload();
+            });
           });
-        });
-      } else {
-        this.displayFailedLogin();
+        } else {
+          this.displayFailedLogin();
+        }
+        this.loadingService.isLoading.next(false);
       }
-      this.loadingService.isLoading.next(false);
-    }
+      )
     );
+
 
   }
   ngOnDestroy() {

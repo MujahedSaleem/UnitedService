@@ -61,7 +61,9 @@ export class UserUtilsService {
     return false;
   }
   private objectToMap(obj) {
-
+    if(!obj){
+      return;
+    }
     if (obj instanceof Map) {
       return obj;
     }

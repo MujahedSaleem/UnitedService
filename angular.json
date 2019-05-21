@@ -18,7 +18,9 @@
                         "main": "src/main.ts",
                         "polyfills": "src/polyfills.ts",
                         "tsConfig": "src/tsconfig.app.json",
-                        "assets": [{
+                        "assets": [
+
+                            {
                                 "glob": "**/*",
                                 "input": "src/assets/images",
                                 "output": "/assets/images"
@@ -55,8 +57,6 @@
                             "node_modules/@fortawesome/fontawesome-free/scss/brands.scss",
                             "node_modules/angular-bootstrap-md/scss/bootstrap/bootstrap.scss",
                             "node_modules/angular-bootstrap-md/scss/mdb-free.scss"
-
-
                         ],
                         "stylePreprocessorOptions": {
                             "includePaths": [

@@ -11,6 +11,7 @@ import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 import { catchError } from 'rxjs/operators';
 import { UserUtilsService } from 'src/app/core/services/user-utils.service';
 import { UserAuthService } from 'src/app/core/services/user-auth.service';
+import { of, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-post-card',
@@ -24,8 +25,8 @@ export class PostCardComponent implements OnInit, OnDestroy {
   post: Post;
   comments: string;
   show;
-  allComments: Array<string>;
-  tags: Array<string>;
+  allComments: Observable<Array<string>>;
+  tags: Observable<Array<string>>;
   canComment: boolean;
   canVote: boolean;
   constructor(private postService: PostService,
@@ -35,43 +36,29 @@ export class PostCardComponent implements OnInit, OnDestroy {
     private i18n: I18n,
     @Inject(PLATFORM_ID) private platformId: Object) {
     this.canComment = this.userAuth.isUserSignedIn();
-    this.allComments = new Array<string>();
-    this.tags = new Array<string>();
+    this.allComments = of(new Array());
+    this.tags = of(new Array<string>());
   }
   ngOnDestroy(): void {
   }
   ngOnInit() {
-   
+
     if (this.id instanceof Object) {
-      this.post = new Post({...this.id});
-      if (this.post.comment) {
-        this.post.comment.forEach(valx => {
-          this.allComments.push(valx);
-
-        });
-      }
-      if (this.post.tags) {
-        for (let index = 0; index < this.post.tags.length; index++) {
-          this.tags.push(this.post.tags[index]);
-
-        }
-      }
+      this.post = new Post({ ...this.id });
+      this.allComments = this.postService.getComment( this.post.id);
+      this.tags = this.postService.getTags( this.post.id);
     } else {
       this.postService.getPost(this.id).subscribe((data: Post) => {
         console.log(data)
-        this.post = new Post({...data});
+        this.post = new Post({ ...data });
         if (this.post.avatarThumbnailUrl === undefined) {
           this.post.avatarThumbnailUrl = '../../../../assets/images/user.png';
         }
       }, err => LoggerService.error(err), () => {
 
+        this.tags = this.postService.getTags(this.id);
 
-        if (this.post.tags) {
-          for (let index = 0; index < this.post.tags.length; index++) {
-            this.tags.push(this.post.tags[index]);
 
-          }
-        }
       });
     }
 
@@ -81,12 +68,7 @@ export class PostCardComponent implements OnInit, OnDestroy {
 
     if (event.keyCode === 13) {
       if (this.comments.trim() !== '') {
-        this.post.comment.push(this.comments);
-        if (this.id instanceof String) {
-          this.post.id = this.id.toString();
-
-        }
-        this.postService.createComment(this.post, this.post.id);
+        this.postService.createComment(this.comments, this.post.id);
         this.comments = '';
       }
     }

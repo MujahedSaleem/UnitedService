@@ -1,21 +1,50 @@
-import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
-import * as algoliasearch from 'algoliasearch';
+import * as admin from 'firebase-admin'
+import * as functions from 'firebase-functions'
 admin.initializeApp(functions.config().firebase);
-const env = functions.config();
-const client = algoliasearch(env.algolia.appid, env.algolia.adminkey);
-const index = client.initIndex('posts');
 
-exports.indexPosts = functions.firestore.document('posts/{postsId}')
-    .onCreate((snap, context) => {
-        const data = snap.data();
-        const objId= snap.id;
-        return index.addObject({
-            objId,...data
-        })
+import {COMMENT_EVENT, LIKE_EVENT} from "./constants";
+import * as notificationFunctions from './notification'
+
+export const firestoreInstance = admin.firestore();
+
+export const newFollowerNotification = functions.firestore
+    .document('PublicUserData/{followerId}/Followers/{followedId}')
+    .onCreate(event => {
+        return notificationFunctions.sendNewFollowerNotification(event);
     });
-exports.unindexPosts = functions.firestore.document('posts/{id}')
-.onDelete((snap, context) => {
-    const objId= snap.id;
-    return index.deleteObject(objId);
-})
+
+export const newMessagesNotification = functions.firestore
+    .document('PublicUserData/{followerId}/Followers/{followedId}')
+    .onCreate(event => {
+        return notificationFunctions.sendNewFollowerNotification(event);
+    });
+
+export const newLikeNotification = functions.firestore
+    .document('Posts/{postId}/Likes/{likeId}')
+    .onCreate(event => {
+        return notificationFunctions.sendPostNotication(event, LIKE_EVENT)
+    });
+
+export const newCommentNotification = functions.firestore
+    .document('Posts/{postId}/Comments/{commentId}')
+    .onCreate(event => {
+        return notificationFunctions.sendPostNotication(event, COMMENT_EVENT)
+    });
+
+// export const updateFeedAfterFollow = functions.firestore
+//     .document('PublicUserData/{followerId}/Following/{followedId}')
+//     .onCreate(event => {
+//         return atomicFunctions.updateFeedAfterUserAction(event, true);
+//     });
+
+// export const updateFeedAfterUserNewWorkout = functions.firestore
+//     .document('Posts/{postId}')
+//     .onCreate(event => {
+//         return atomicFunctions.updateFollowersFeed(event, false)
+//     });
+
+// export const updateFeedAfterUnFollow = functions.firestore
+//     .document('PublicUserData/{followerId}/Following/{followedId}')
+//     .onDelete(event => {
+//         return atomicFunctions.updateFeedAfterUserAction(event, false);
+// });
