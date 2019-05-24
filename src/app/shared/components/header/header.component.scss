@@ -1,12 +1,27 @@
 .dropdown-toggle,
+.avatarr,
 .dropdown-item {
     cursor: pointer;
+}
+
+.mat-card-title {
+    font-size: 16px;
 }
 
 .rounded-circle {
     max-height: 50px;
     border: 2px solid white;
     display: inline;
+}
+
+app-header[_nghost-c0],
+header[_ngcontent-c0],
+nav[_ngcontent-c0] {
+    height: auto !important;
+}
+
+.example-spacer {
+    flex: 1 1 auto;
 }
 
 .cd-main-header {

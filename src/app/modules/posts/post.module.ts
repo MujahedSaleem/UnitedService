@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PostDetailPageComponent } from './pages/post-detail-page/post-detail-page.component';
-import { PostService } from './shared/Post.service';
+import { PostService } from '../../core/services/Post.service';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { PostRoutingModule } from './post-routing.module';
@@ -9,20 +9,23 @@ import { PostCreatePageComponent } from './pages/post-create-page/post-create-pa
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { HotkeyModule } from 'angular2-hotkeys';
 import { CommonModule } from '@angular/common';
-import { KeyboardShortcutsModule }     from 'ng-keyboard-shortcuts';
+import { KeyboardShortcutsModule } from 'ng-keyboard-shortcuts';
+import { PhotoEditorComponent } from '../users/components/Photo-Editor/Photo-Editor.component';
+import { UsereModule } from '../users/user.module';
 @NgModule({
     imports: [
         HotkeyModule.forRoot(),
         MDBBootstrapModule.forRoot(),
         FormsModule,
         ReactiveFormsModule,
+        UsereModule,
         SharedModule,
         KeyboardShortcutsModule,
         PostRoutingModule],
     declarations: [
         PostDetailPageComponent,
         PostCreatePageComponent,
-        ],
+    ],
 
     providers: [PostService],
 })

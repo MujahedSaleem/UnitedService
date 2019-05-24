@@ -59,7 +59,6 @@ import { ActiveService } from './services/active.service';
     FirebaseModule,
     PerfectScrollbarModule,
     WebCamModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     SharedModule,
   ],
   entryComponents: [WebcamDialog],

@@ -7,6 +7,11 @@ mat-card-subtitle,
     cursor: pointer;
 }
 
+.mat-card-image {
+    width: calc(27% + 32px) !important;
+    margin: 0 !important;
+}
+
 .hero-card {
     margin-bottom: 2rem;
     @include push--auto(2rem);

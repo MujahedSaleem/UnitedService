@@ -1,9 +1,13 @@
-<div class="comment__body">
-    <div class="content">
-        <span dir="ltr">
-   
-        {{Comment}}
-   
-        </span>
+<div class="d-inline-flex" *ngIf="user|async as x">
+    <div mat-card-avatar color="primary" style="background-size: 40px 40px" [ngStyle]="{'background-image': 'url(' + x.photoURL + ')'}"></div>
+
+    <div class="ml-2 comment__body">
+        <div class="content">
+            <div class="d-inline-flex">
+                <mat-card-title class="text-primary mr-2">{{x.displayName+' '+x.familyName}}</mat-card-title>
+                <span dir="ltr">
+        {{Comment.content}}
+        </span></div>
+        </div>
     </div>
 </div>

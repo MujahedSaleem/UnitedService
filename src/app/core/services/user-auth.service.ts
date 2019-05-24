@@ -10,20 +10,21 @@ import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firesto
 import { User } from 'src/app/modules/users/shared/user.model';
 import { UserUtilsService } from './user-utils.service';
 import { MessagingService } from './Messaging.service';
+import { MessageService } from './Message.service';
 @Injectable({
   providedIn: 'root'
 })
 export class UserAuthService {
   static public_user: User;
-  userData: Partial<User>; // Save logged in user data
-  public currentUser: User;
-  photoUrl = new BehaviorSubject<string>('../../../../../assets/user.png');
+  public currentUser= new BehaviorSubject(null);
+  photoUrl = new BehaviorSubject<string>('/assets/images/user.png');
   currentUserUrl = this.photoUrl.asObservable();
-
+  userSigned = new BehaviorSubject(false);
   private subscruptions: Subscription[] = [];
   constructor(
     public msg: MessagingService,
     private userService: UserUtilsService,
+    private ms: MessageService,
     public afd: AngularFireDatabase,
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router,
@@ -32,21 +33,25 @@ export class UserAuthService {
     this.subscruptions.push(
       this.afAuth.authState.subscribe(user => {
         if (user) {
+          this.userSigned.next(true);
+            this.ms.requestPermission(user.uid);
+            this.ms.receiveMessage();
+          
           const date = new Date(Date.now());
           this.userService.getUser(user.uid).subscribe((data: User) => {
             let c_user = new User({ id: user.uid, ...data });
             c_user.isActive = true;
             c_user.lastActive = date;
-            this.currentUser = c_user;
+            this.currentUser.next( c_user);
             c_user.chats = this.mapToObject(c_user.chats);
             localStorage.setItem('user', JSON.stringify(c_user));
-            this.msg.getPermission(c_user)
-            this.msg.monitorRefresh(c_user)
-            this.msg.receiveMessages()
+
           }, () => {
           });
         } else {
           localStorage.setItem('user', null);
+          this.userSigned.next(false);
+
         }
       }, () => { this.subscruptions.forEach(x => x.unsubscribe()) }));
   }
@@ -66,6 +71,7 @@ export class UserAuthService {
 
     return from(this.afAuth.auth.signInWithEmailAndPassword(email, password)
       .then((result) => {
+        this.setUserMessageToken(result.user.uid);
 
         return true;
 
@@ -87,7 +93,7 @@ export class UserAuthService {
         }
         this.SetUserData(user);
         return true;
-      }).catch((error) => false));
+      }).catch((error) => error));
   }
 
   // Send email verfificaiton when new user sign up
@@ -110,12 +116,11 @@ export class UserAuthService {
 
   // Returns true when user is looged in and email is verified
   isUserSignedIn() {
-
     let users: User = JSON.parse(localStorage.getItem('user'));
     if (!users) {
       return false;
     }
-    return users.isActive;
+    return true;
   }
 
   // Sign in with Google
@@ -133,7 +138,7 @@ export class UserAuthService {
   AuthLogin(provider) {
     return this.afAuth.auth.signInWithPopup(provider)
       .then((result) => {
-
+        this.setUserMessageToken(result.user.uid);
       }).catch((error) => {
         window.alert(error);
       });
@@ -159,5 +164,15 @@ export class UserAuthService {
 
     }).catch(a => console.log(a));
   }
+  setUserMessageToken(uid) {
+    this.ms.requestPermission(uid)
+    this.msg.monitorRefresh(uid)
+    this.msg.receiveMessages()
+    // const messages = firebase.messaging();
+    // messages.getToken().then(data=>{
+    //   console.log(data)
+    //   this.db.collection('PrivateUserData').doc(uid).set({ messagingTokens:data  });
 
+    // })
+  }
 }

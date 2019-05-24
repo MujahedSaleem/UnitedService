@@ -20,7 +20,6 @@ export class MessagingService {
         return this.messaging.getToken()
       })
       .then(token => {
-        console.log(token)
         this.saveToken(user, token)
       })
       .catch((err) => {

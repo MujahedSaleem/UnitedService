@@ -12,7 +12,7 @@ export const AppConfig: any = {
     auth: 'auth'
   },
   votesLimit: 3,
-  topHeroesLimit: 4,
+  topHeroesLimit: 10,
   snackBarDuration: 3000,
   repositoryURL: 'https://github.com/MujahedSaleem/UnitedService.git',
   sentryDSN: 'https://38434a1b115f41d3a31e356cdc496c06@sentry.io/1315526'

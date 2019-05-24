@@ -28,7 +28,12 @@
                         </div>
                         <div>
                             <strong>Last Active:</strong>
-                            <p>{{ user.isActive}}</p>
+                            <p *ngIf="presence$ | async as presence" [ngClass]="{
+                                'alert-success':  presence.status  === 'online',
+                                'alert-warning': presence.status  === 'away',
+                                'alert-danger':  presence.status  === 'offline'
+                            }">
+                                {{presence.status}}</p>
                         </div>
                         <div>
                             <strong>Member since:</strong>

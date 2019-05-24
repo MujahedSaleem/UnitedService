@@ -7,14 +7,15 @@ export class Post {
   avatarUrl: string;
   avatarThumbnailUrl: string;
   price: number;
-  tags: string[];
   date:Date;
   title:string;
+  photos:string[];
   location: string;
   comment: Array<string> ;
 
   constructor(post: any = {}) {
     this.id = post.id;
+    this.photos=post.photos;
     this.uid = post.uid;
     this.title =post.title;
     this.name = post.name ;
@@ -22,7 +23,6 @@ export class Post {
     this.avatarUrl = post.avatarUrl || '';
     this.avatarThumbnailUrl = post.avatarThumbnailUrl || '../../../../../../../assets/images/user.png';
     this.price = post.price || 0;
-    this.tags = post.tags || {};
     this.description = post.description || '';
     this.date =  post.date ||post.date.toDate();
     this.location = post.location;

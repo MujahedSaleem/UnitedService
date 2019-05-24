@@ -36,7 +36,24 @@
                             <p>{{ user.created |date: 'mediumDate' }}</p>
                         </div>
                     </div>
+                    <div class="card-footer">
 
+
+
+
+                        <div class="btn-group d-flex" *ngIf="Action">
+                            <button [disabled]="!done" style="font-size: 20px" (click)="like()" [ngClass]=" x? 'btn-primary': 'btn-danger'" class="btn   mr-3">
+                                <i class="fa fa-thumbs-up" *ngIf="x"></i>
+                                <i class="demo-icon icon-spin6 animate-spin" *ngIf="!done"><div id="xe839"></div></i>
+                               
+                                <i class="fa fa-thumbs-down" *ngIf="!x"></i>
+                               
+                              </button>
+                            <button style="font-size: 20px" (click)="sendMessage()" class="btn btn-success">
+                                <i class="fa fa-comments"></i>
+                              </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-sm-8 ">

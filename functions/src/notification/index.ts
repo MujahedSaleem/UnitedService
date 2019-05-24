@@ -1,6 +1,6 @@
-import {EVENTS, FOLLOW_EVENT, PRIV_USER_DATA} from "../constants";
+import { EVENTS, FOLLOW_EVENT, PRIV_USER_DATA } from "../constants";
 import * as admin from "firebase-admin";
-import {firestoreInstance} from "../index";
+import { firestoreInstance } from "../index";
 
 const fieldValue = admin.firestore.FieldValue;
 const messagingAdmin = admin.messaging();
@@ -15,18 +15,18 @@ export async function sendNewFollowerNotification(event: any) {
 
     //An user can't send notifications to himself
     if (userId === authorId) {
-         console.log('User doesnt recieve their own notifications');
+        console.log('User doesnt recieve their own notifications');
     }
     try {
 
         //Retrieve the events filtering by the author of the interaction and the kind of event
         const eventAlreadyExist = await userEventExist(userId, FOLLOW_EVENT);
         //If the event exist, means that a notification was already sent for such event and user
-        if (eventAlreadyExist)  console.log('An event for this action have been sent already');
+        if (eventAlreadyExist) console.log('An event for this action have been sent already');
 
         //Retrieve the user data and check if the user exist
         const userData = await getUserPrivateData(userId);
-        if (!userData.exists)  console.log('User doc doesnt exists');
+        if (!userData.exists) console.log('User doc doesnt exists');
 
         //Get the tokens from the retrieved user
         // noinspection TypeScriptUnresolvedVariable
@@ -85,26 +85,27 @@ export async function sendNewFollowerNotification(event: any) {
     }
 }
 
-export async function sendPostNotication(event:any, kind:any) {
-    const commentAuthorId = event.data.data().author.uid;
-    const postId = event.params.postId;
-    const postAuthorId = event.data.data().postAuthorId;
-    const authorUsername = event.data.data().author.fullName;
-    const authorPhotoUrl = event.data.data().author.profilePicture;
+export async function sendPostNotication(event: FirebaseFirestore.DocumentSnapshot, kind: any) {
+    console.log(event);
+    const commentAuthorId = event.data()!.authoruid
+    const postId = event.data()!.postId;
+    const postAuthorId = event.data()!.postAutherUid;
+    const authorUsername = event.data()!.authorUsername;
+    const authorPhotoUrl = event.data()!.authorPhotoUrl;
 
     //An user can't send notifications to himself
     if (commentAuthorId === postAuthorId) {
-         console.log('User doesnt recieve their own notifications');
+        console.log('User doesnt recieve their own notifications');
     }
     try {
         //Retrieve the events filtering by the author of the interaction, the ref and the kind of event
         const eventAlreadyExist = await userEventExist(commentAuthorId, kind, postId);
         //If the event exist, means that a notification was already sent for such event and user
-        if (eventAlreadyExist)  console.log('An event for this action have been sent already');
+        if (eventAlreadyExist) console.log('An event for this action have been sent already');
 
         //Retrieve the user data and check if the user exist
         const userData = await getUserPrivateData(postAuthorId);
-        if (!userData.exists)  console.log('User doc doesnt exists');
+        if (!userData.exists) console.log('User doc doesnt exists');
 
         //Get the tokens from the retrieved user
         // noinspection TypeScriptUnresolvedVariable

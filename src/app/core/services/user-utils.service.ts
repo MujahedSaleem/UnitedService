@@ -10,7 +10,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { map, tap, catchError, filter, finalize } from 'rxjs/operators';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { AngularFirestoreCollection, AngularFirestoreDocument, AngularFirestore } from 'angularfire2/firestore';
-import { PostService } from 'src/app/modules/posts/shared/Post.service';
+import { PostService } from 'src/app/core/services/Post.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,7 @@ export class UserUtilsService {
     @Inject(PLATFORM_ID) private platformId: Object) {
     this.usersCollection = this.db.collection(AppConfig.routes.users);
     let x: User = JSON.parse(localStorage.getItem('user'));
-    if ( x != null) {
+    if (x != null) {
       x.chats = this.objectToMap(x.chats);
       this.userdata = new BehaviorSubject<any>(x);
     }
@@ -61,7 +61,7 @@ export class UserUtilsService {
     return false;
   }
   private objectToMap(obj) {
-    if(!obj){
+    if (!obj) {
       return;
     }
     if (obj instanceof Map) {
@@ -90,12 +90,11 @@ export class UserUtilsService {
   getUser(id: string): Observable<User | string> {
     return this.db.collection(`${AppConfig.routes.users}`).doc(id).snapshotChanges()
       .pipe(map(data => {
-        console.log({ uid: id, ...data.payload.data() })
         if (data.payload.exists) {
           let x = new User({ uid: id, ...data.payload.data() });
           return x;
         } else {
-          return ('null');
+          throw null ;
         }
       }), catchError(err => {
         return of(err);
@@ -166,7 +165,6 @@ export class UserUtilsService {
     if (user.uid === u.uid) {
       localStorage.setItem('user', JSON.stringify(x));
     }
-    console.log(x)
     return this.db.collection(`${AppConfig.routes.users}`).doc(`${user.uid}`).
       update(JSON.parse(JSON.stringify(Object.assign({}, x)))).then(() => {
         LoggerService.log(`updated hero w/ id=${user.uid}`);
@@ -189,6 +187,38 @@ export class UserUtilsService {
   getUserName() {
     const user: User = JSON.parse(localStorage.getItem('user'));
     return user.displayName;
+  }
+  like(userId, recipientId, x) {
+    if (!x) {
+      this.db.doc(`${AppConfig.routes.users}/${userId}`).collection('following').add({ uid: recipientId });
+      this.db.doc(`${AppConfig.routes.users}/${recipientId}`).collection('follower').add({ uid: userId });
+
+    } else {
+      this.db.doc(`${AppConfig.routes.users}/${userId}`).collection('following').ref.where('uid', '==', recipientId).onSnapshot(data => {
+        if (!data.empty) {
+          data.forEach(y => {
+            this.db.doc(`${AppConfig.routes.users}/${userId}/following/${y.id}`).delete();
+
+          });
+
+        }
+      });
+      this.db.doc(`${AppConfig.routes.users}/${recipientId}`)
+        .collection('follower').ref.where('uid', '==', recipientId).onSnapshot(data => {
+          if (!data.empty) {
+            data.forEach(y => {
+              this.db.doc(`${AppConfig.routes.users}/${userId}/follower/${y.id}`).delete();
+
+            });
+
+          }
+        });
+    }
+
+  }
+  DoLike(userId, recipientId) {
+
+    return this.db.doc(`${AppConfig.routes.users}/${userId}`).collection('following').ref.where('uid', '==', recipientId).get()
   }
 
 

@@ -8,6 +8,7 @@ import { User } from '../../users/shared/user.model';
 import { TSMap } from 'typescript-map';
 import { ChatUser } from '../model/chat-user';
 import { map } from 'rxjs/operators';
+import { UserAuthService } from 'src/app/core/services/user-auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,8 @@ export class ChatService {
   private chatsContainerCollection: AngularFirestoreDocument<any>;
   CUrrentUser: User;
   sederId: string;
-  constructor(private db: AngularFirestore, private userService: UserUtilsService) {
+  constructor(private db: AngularFirestore,  private auth: UserAuthService,
+    private userService: UserUtilsService) {
     this.sederId = JSON.parse(localStorage.getItem('user')).uid;
 
   }
@@ -32,7 +34,7 @@ export class ChatService {
     return this.userdata.asObservable();
   }
   deleteMessage(reciverId) {
-    this.userService.userdata.subscribe(x => {
+    this.auth.currentUser.subscribe(x => {
       let user: User = x;
       let a;
       if (user.chats.delete(reciverId)) {
@@ -43,7 +45,7 @@ export class ChatService {
   }
 
   getAllChatMessages(reciverId: string): Observable<ChatMessage[]> {
-    let x: User = this.userService.userdata.value;
+    let x: User = this.auth.currentUser.value;
 
 
     if (x.chats instanceof Map) {
@@ -67,7 +69,7 @@ export class ChatService {
     }
   }
   updateMessages(reciverID, senderId, value) {
-    let x: User = this.userService.userdata.value;
+    let x: User = this.auth.currentUser.value;
     this.db.collection('chats').doc(x.chats.get(reciverID)).collection('messages').ref
       .where('reciverId', '==', senderId).where('isRead', '==', false)
       .onSnapshot((data => {
@@ -80,10 +82,11 @@ export class ChatService {
   }
   getMessages(type: string): Observable<any[]> {
     let users = [];
-    const current_user: User = this.userService.userdata.value;
+    let current_user: User = this.auth.currentUser.value;
     if (current_user.chats === null || current_user.chats === undefined) {
       return of(undefined);
     }
+    current_user.chats = this.objectToMap(current_user.chats);
     current_user.chats.forEach((x, y) => {
       switch (type) {
         case 'Unread':
@@ -154,7 +157,7 @@ export class ChatService {
   }
   private objectToMap(obj) {
     if (!obj) {
-      return  new Map<string,string>();
+      return new Map<string, string>();
     }
     if (obj instanceof Map) {
       return obj;
@@ -166,8 +169,8 @@ export class ChatService {
     return x;
   }
   sendMessage(chatMessage: ChatMessage) {
-    let user: User = this.userService.userdata.value;
-   
+    let user: User = this.auth.currentUser.value;
+
     if (user.chats instanceof Map) {
     } else {
       user.chats = this.objectToMap(user.chats);
@@ -179,17 +182,19 @@ export class ChatService {
 
       if (!user.chats.get(chatMessage.reciverId)) {
 
-        this.db.collection(`chats`).add({ sederId: chatMessage.senderId, reciverId: chatMessage.reciverId }).then(data => {
-          user.chats.set(chatMessage.reciverId, data.id);
-          reciver.chats.set(chatMessage.senderId, data.id);
-        }).finally(() => {
-          this.chatsCollection = this.db.collection(`chats`).doc(`${user.chats.get(chatMessage.reciverId)}`).collection('messages');
-          this.chatsCollection.add(chatMessage);
-          user.chats = this.mapToObject(user.chats);
-          reciver.chats = this.mapToObject(reciver.chats);
-          this.userService.updateUser(user);
-          this.userService.updateUser(reciver);
-        });
+        this.db.collection(`chats`).add(
+          { sederId: chatMessage.senderId, reciverId: chatMessage.reciverId })
+          .then(data => {
+            user.chats.set(chatMessage.reciverId, data.id);
+            reciver.chats.set(chatMessage.senderId, data.id);
+          }).finally(() => {
+            this.chatsCollection = this.db.collection(`chats`).doc(`${user.chats.get(chatMessage.reciverId)}`).collection('messages');
+            this.chatsCollection.add(chatMessage);
+            user.chats = this.mapToObject(user.chats);
+            reciver.chats = this.mapToObject(reciver.chats);
+            this.userService.updateUser(user);
+            this.userService.updateUser(reciver);
+          });
 
 
       } else {

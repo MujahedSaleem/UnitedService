@@ -1,5 +1,5 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { Post } from './post.model';
+import { Post } from '../../modules/posts/shared/post.model';
 import { MatSnackBar } from '@angular/material';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { AppConfig } from 'src/app/configs/app.config';
@@ -21,7 +21,7 @@ export class PostService {
     private db: AngularFirestore,
     private i18n: I18n,
     @Inject(PLATFORM_ID) private platformId: Object) {
-    this.postsCollection = this.db.collection(AppConfig.routes.posts, ref => ref.limit(25).orderBy('date', 'asc'));
+    this.postsCollection = this.db.collection(AppConfig.routes.posts, ref => ref.limit(25).orderBy('date', 'desc'));
   }
   public static handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
@@ -64,11 +64,16 @@ export class PostService {
   postDoc: AngularFirestoreDocument<Post>;
   getPost(id: string) {
     this.postDoc = this.db.doc(`${AppConfig.routes.posts}/${id}`);
-    return this.postDoc.snapshotChanges().pipe(map(data=>new Post({id:data.payload.id,...data.payload.data()})));;
+    return this.postDoc.snapshotChanges().pipe(map(data => new Post({ id: data.payload.id, ...data.payload.data() })));;
 
   }
-  createComment(Comment, postid: string) {
-    return this.db.doc(`${AppConfig.routes.posts}/${postid}`).collection('Comments').add({content:Comment})
+  createComment(Comment, postid: string, user: User) {
+    return this.db.doc(`${AppConfig.routes.posts}/${postid}`).collection('Comments').add(
+      {
+        content: Comment,
+        authoruid: user.uid,
+        postid: postid,
+      });
   }
 
   getComment(postid: string) {
@@ -76,7 +81,7 @@ export class PostService {
       .pipe(map(data => {
         let m = new Array();
         data.forEach((x, y) => {
-          m.push(x['content']);
+          m.push(x);
         });
         return m;
       }));
@@ -96,7 +101,6 @@ export class PostService {
       .add({ content: Tags })
   }
   createPost(post: Post): Promise<string> {
-    post.avatarThumbnailUrl = JSON.parse(localStorage.getItem('user')).photoURL;
     const date = new Date();
     post.date = date;
     return this.db.collection(`${AppConfig.routes.posts}`).add(JSON.parse(JSON.stringify(post))).then(data => {

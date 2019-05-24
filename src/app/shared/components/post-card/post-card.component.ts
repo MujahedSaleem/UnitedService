@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Inject, PLATFORM_ID, ViewChild, OnDestroy } from '@angular/core';
 import { Post } from 'src/app/modules/posts/shared/post.model';
-import { PostService } from 'src/app/modules/posts/shared/Post.service';
+import { PostService } from 'src/app/core/services/Post.service';
 import { Router } from '@angular/router';
 import { LoggerService } from 'src/app/core/services/logger.service';
 import { I18n } from '@ngx-translate/i18n-polyfill';
@@ -25,14 +25,16 @@ export class PostCardComponent implements OnInit, OnDestroy {
   post: Post;
   comments: string;
   show;
-  allComments: Observable<Array<string>>;
+  allComments: Observable<Array<any>>;
   tags: Observable<Array<string>>;
+  photo:Observable<any>;
   canComment: boolean;
   canVote: boolean;
   constructor(private postService: PostService,
     private router: Router,
 
     private userAuth: UserAuthService,
+    private userervice: UserUtilsService,
     private i18n: I18n,
     @Inject(PLATFORM_ID) private platformId: Object) {
     this.canComment = this.userAuth.isUserSignedIn();
@@ -42,33 +44,35 @@ export class PostCardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
   ngOnInit() {
-
     if (this.id instanceof Object) {
       this.post = new Post({ ...this.id });
-      this.allComments = this.postService.getComment( this.post.id);
-      this.tags = this.postService.getTags( this.post.id);
+      this.allComments = this.postService.getComment(this.post.id);
+      this.tags = this.postService.getTags(this.post.id);
+      this.photo = this.userervice.getUser(this.post.uid);
     } else {
       this.postService.getPost(this.id).subscribe((data: Post) => {
-        console.log(data)
         this.post = new Post({ ...data });
         if (this.post.avatarThumbnailUrl === undefined) {
-          this.post.avatarThumbnailUrl = '../../../../assets/images/user.png';
+          this.post.avatarThumbnailUrl = '/assets/images/user.png';
         }
-      }, err => LoggerService.error(err), () => {
-
+        this.allComments = this.postService.getComment(this.id);
         this.tags = this.postService.getTags(this.id);
+        this.photo = this.userervice.getUser(this.post.uid);
 
 
-      });
+      }, err => LoggerService.error(err));
     }
 
 
+  }
+  sendMessage() {
+    this.router.navigate([`/messages/${this.post.uid}`]);
   }
   enter(event) {
 
     if (event.keyCode === 13) {
       if (this.comments.trim() !== '') {
-        this.postService.createComment(this.comments, this.post.id);
+        this.postService.createComment(this.comments, this.post.id, JSON.parse(localStorage.getItem('user')));
         this.comments = '';
       }
     }

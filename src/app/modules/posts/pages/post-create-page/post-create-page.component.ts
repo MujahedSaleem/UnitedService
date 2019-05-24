@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Post } from '../../shared/post.model';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { HotkeysService, Hotkey } from 'angular2-hotkeys';
-import { PostService } from '../../shared/Post.service';
+import { PostService } from '../../../../core/services/Post.service';
 import { User } from 'src/app/modules/users/shared/user.model';
 import { UserUtilsService } from 'src/app/core/services/user-utils.service';
 @Component({
@@ -16,10 +16,13 @@ export class PostCreatePageComponent implements OnInit {
   createModel: FormGroup;
   isworkdone = false;
   model: Post;
+  photos = new Array();
   load = true;
   lat; lon;
   locations;
+  url;
   mainLocation;
+  done: boolean = false;
   zoom
   @ViewChild("search")
   public searchElementRef: ElementRef;
@@ -85,11 +88,11 @@ export class PostCreatePageComponent implements OnInit {
     if (this.createModel.valid) {
       let user: User = JSON.parse(localStorage.getItem('user'));
       this.model = Object.assign({}, this.createModel.value);
+      this.model.photos = this.photos;
       if (this.createModel.value.tags) {
         this.tags = this.getTags(this.createModel.value.tags);
       }
       this.model.uid = user.uid;
-      this.model.name = this.userService.getUserName();
       this.postService.createPost(this.model).then(data => {
         if (user.posts instanceof Array) {
           user.posts.push(data);
@@ -109,5 +112,11 @@ export class PostCreatePageComponent implements OnInit {
       });
 
     }
+  }
+  addPhoto(url) {
+    this.photos.push(url);
+  }
+  doneWork(d){
+    this.done = d;
   }
 }

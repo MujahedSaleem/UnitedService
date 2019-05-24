@@ -2,7 +2,7 @@
     background-color: #f2f3f5;
     border-radius: 18px;
     box-sizing: border-box;
-    color: #90d50c;
+    color: black;
     display: inline-block;
     line-height: 16px;
     margin: 0;
@@ -12,6 +12,15 @@
     position: relative;
     white-space: normal;
     word-break: break-word;
+}
+
+.mat-card-subtitle:not(:first-child),
+.mat-card-title:not(:first-child) {
+    margin-top: 12px;
+}
+
+.mat-card-title {
+    font-size: 16px;
 }
 
 .content {

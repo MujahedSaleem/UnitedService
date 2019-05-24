@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, Input, OnInit, PLATFORM_ID, OnChanges } from '@angular/core';
 import { AppConfig } from '../../../configs/app.config';
 import { HeroService } from '../../../modules/heroes/shared/hero.service';
 import { Hero } from '../../../modules/heroes/shared/hero.model';
@@ -9,6 +9,9 @@ import { I18n } from '@ngx-translate/i18n-polyfill';
 import { Post } from 'src/app/modules/posts/shared/post.model';
 import { UserUtilsService } from 'src/app/core/services/user-utils.service';
 import { UserAuthService } from 'src/app/core/services/user-auth.service';
+import { Observable } from 'rxjs';
+import { PostService } from 'src/app/core/services/Post.service';
+import { User } from 'src/app/modules/users/shared/user.model';
 
 @Component({
   selector: 'app-hero-card',
@@ -17,25 +20,24 @@ import { UserAuthService } from 'src/app/core/services/user-auth.service';
 })
 export class HeroCardComponent implements OnInit {
 
+
   @Input() post: Post;
 
   canComment: boolean = false;
-  tags: Array<string>;
-  constructor(private auth: UserAuthService,
+  tags: Observable<Array<string>>;
+  photo:Observable<any>;
+  constructor(public auth: UserAuthService,
     private router: Router,
-    private snackBar: MatSnackBar,
+    private userservice: UserUtilsService,
+    private postser: PostService,
     private i18n: I18n,
     @Inject(PLATFORM_ID) private platformId: Object) {
-    this.canComment = this.auth.isUserSignedIn();
   }
 
   ngOnInit() {
-    this.tags = new Array<string>();
-    if (this.post.tags) {
-      for (let index = 0; index < this.post.tags.length; index++) {
-        this.tags.push(this.post.tags[index]);
-      }
-    }
+    this.tags = this.postser.getTags(this.post.id);
+    this.photo = this.userservice.getUser(this.post.uid);
+
   }
   sendMessage() {
     this.router.navigate([`/messages/${this.post.uid}`]);

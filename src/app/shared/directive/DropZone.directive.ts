@@ -9,9 +9,11 @@ export class DropZoneDirective {
 
   constructor() { }
   @HostListener('drop', ['$event'])
-  onDrop($event) {
+  public onDrop($event) {
     $event.preventDefault();
-    this.Dropped.emit($event.dataTransfare.files);
+    $event.stopPropagation();
+    let files = $event.dataTransfer.files;
+    this.Dropped.emit(files);
     this.hovered.emit(false);
   }
   @HostListener('dragover', ['$event'])

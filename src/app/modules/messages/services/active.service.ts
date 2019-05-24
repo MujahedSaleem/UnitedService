@@ -6,13 +6,15 @@ import { of } from 'rxjs';
 import * as firebase from 'firebase';
 import { UserUtilsService } from 'src/app/core/services/user-utils.service';
 import { ChatModule } from '../chat.module';
+import { UserAuthService } from 'src/app/core/services/user-auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActiveService {
 
-  constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private userService: UserUtilsService) {
+  constructor(private afAuth: AngularFireAuth, 
+    private db: AngularFireDatabase, private atuhservice: UserAuthService) {
     console.log('let there be presence messenger');
     this.updateOnUser().subscribe();
     this.updateOnDisconnect().subscribe();
@@ -53,8 +55,8 @@ export class ActiveService {
     );
   }
   async setPresence(status: string) {
-  if (this.userService.userdata.value) { 
-     const user = await this.userService.userdata.value;
+  if (this.atuhservice.currentUser.value) { 
+     const user = await this.atuhservice.currentUser.value;
     
       return this.db.object(`msstatus/${user.uid}`).update({ status, timestamp: this.timestamp });
     }

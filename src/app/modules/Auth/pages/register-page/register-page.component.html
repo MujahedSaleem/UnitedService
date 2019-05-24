@@ -2,32 +2,30 @@
 <script>
     new WOW().init();
 </script>
-
-<div class="view" style="background-image: url('http://mdbootstrap.com/img/Photos/Others/images/91.jpg'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+<div class="" style="background-image: url('http://mdbootstrap.com/img/Photos/Others/images/91.jpg'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
     <!-- Mask & flexbox options-->
-    <div class="mask rgba-gradient d-flex justify-content-center align-items-center">
+    <div class="mask view rgba-gradient container d-flex justify-content-center align-items-center">
         <!-- Content -->
-        <div class="container">
-            <!--Grid row-->
-            <div class="row mt-5">
-                <!--Grid column-->
-                <div class=" col-md-6 mb-5 mt-md-0 mt-5 white-text text-center text-md-left">
-                    <h1 class=" animatedh1-responsive font-weight-bold wow fadeInLeft" data-wow-delay="0.3s">
-                        Sign up right now!
-                    </h1>
-                    <hr class=" animated hr-light wow fadeInLeft" data-wow-delay="0.3s" />
-                    <h6 class=" animated mb-3 wow fadeInLeft" data-wow-delay="0.3s">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem repellendus quasi fuga nesciunt dolorum nulla magnam veniam sapiente, fugiat! Commodi sequi non animi ea dolor molestiae, quisquam iste, maiores. Nulla.
-                    </h6>
-                    <a mdbBtn color="white" outline="true" mdbWavesEffect class="animated wow fadeInLeft" data-wow-delay="0.3s">Learn more</a
+        <!--Grid row-->
+        <div class="row">
+            <!--Grid column-->
+            <div class=" col-md-6 mb-5 mt-md-0  white-text text-center text-md-left">
+                <h1 class=" animatedh1-responsive font-weight-bold wow fadeInLeft" data-wow-delay="0.3s">
+                    Sign up right now!
+                </h1>
+                <hr class=" animated hr-light wow fadeInLeft" data-wow-delay="0.3s" />
+                <h6 class=" animated mb-3 wow fadeInLeft" data-wow-delay="0.3s">
+                    Contact skilled persones, regular persones within minutes. View profiles, ratings, portfolios and chat with them. Pay the any persone only when you are 100% satisfied with their work. .
+                </h6>
+                <a mdbBtn color="white" outline="true" mdbWavesEffect class="animated wow fadeInLeft" data-wow-delay="0.3s">Learn more</a
           >
-        </div>
+            </div>
         <!--Grid column-->
         <!--Grid column-->
-        <div class="col-md-6 col-xl-5 mb-4">
+            <div class="col-md-6 col-xl-5 mb-4">
           <!--Form-->
           <form [formGroup]="registerModel" (ngSubmit)="register()">
-            <mdb-card class="animated wow fadeInRight" data-wow-delay="0.3s">
+            <mdb-card id ="data" class="animated wow fadeInRight" data-wow-delay="0.3s">
               <mdb-card-body>
                 <!--Header-->
                 <div class="text-center">
@@ -37,7 +35,9 @@
                   <hr class="hr-light" />
                 </div>
                 <!--Body-->
-                <div class="md-form">
+                <div class="row">
+                  <div class="col-md-6">
+                 <div class="md-form">
                   <i class="fas fa-user prefix white-text active"></i>
                   <input
                     type="text"
@@ -48,6 +48,22 @@
                     mdbInput
                   />
                   <label for="form3" class="text-white">Your name</label>
+                </div></div>
+                <div class="col-md-6">
+
+                <div class="md-form">
+                  <i class="fas fa-user prefix white-text active"></i>
+                  <input
+                    type="text"
+                    id="form9"
+                    class="text-white form-control"
+                    formControlName="familyName"
+                    mdbValidate
+                    mdbInput
+                  />
+                  <label for="form9" class="text-white">Family Name</label>
+                </div>
+                </div>
                 </div>
                 <div class="md-form">
                   <i class="fas fa-envelope prefix white-text active"></i>
@@ -85,24 +101,22 @@
                   />
                   <label for="form5" class="text-white">repete password</label>
                 </div>
-                <div class="form-check md-form form-check-inline">
-                    <input 
-                    type="radio" 
-                    formControlName="gender"
-                    id="fomr6"
-                    class="form-check-input" 
-                    mdbInput>
-                   <label class="form-check-label" for="fomr6">Male</label>
-                </div>
-                <div class="form-check md-form form-check-inline">
-                   <input 
-                   type="radio" 
-                   formControlName="gender"
-                   id="fomr7"
-                   class="form-check-input" 
-                   mdbInput>
-                  <label class="form-check-label" for="fomr7">Male</label>
-                </div>
+                <div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="materialUnchecked" value="male"
+                               formControlName="gender" [name]="reactiveRadio">
+                        <label class="text-white form-check-label" for="materialUnchecked">Male</label>
+                      </div>
+                    
+                      <div class="form-check">
+                        <input type="radio" class="form-check-input" id="materialChecked2" value="female"
+                               formControlName="gender" [name]="reactiveRadio">
+                        <label class="text-white form-check-label" for="materialChecked2">Female</label>
+                      </div>
+
+          </div>
+ 
+              
                 <div class="text-center mt-4">
                   <button
                     mdbBtn
@@ -117,33 +131,20 @@
                   </button>
 
                   <hr class="hr-light mb-3 mt-4" />
-                  <div
-                    class="inline-ul text-center d-flex justify-content-center"
-                  >
-                    <a class="p-2 m-2 tw-ic">
-                      <i class="fab fa-twitter white-text"></i>
-                    </a>
-                    <a class="p-2 m-2 li-ic">
-                        <i class="fab fa-linkedin-in white-text"> </i>
-                    </a>
-                    <a class="p-2 m-2 ins-ic">
-                        <i class="fab fa-instagram white-text"> </i>
-                    </a>
-                </div>
-            </div>
-            </mdb-card-body>
-            </mdb-card>
-            </form>
-            ` <small><a routerLink="/auth/login">Already have an Account?</a></small>
+             
+        </div>
+        </mdb-card-body>
+        </mdb-card>
+        </form>
+        ` <small><a routerLink="/auth/login">Already have an Account?</a></small>
 
-            <!--/.Form-->
+                <!--/.Form-->
+            </div>
         </div>
         <!--Grid column-->
     </div>
-    <!--Grid row-->
-</div>
-<!-- Content -->
-</div>
-<!-- Mask & flexbox options-->
+    <!-- Content -->
+
+    <!-- Mask & flexbox options-->
 </div>
 <!-- Full Page Intro -->

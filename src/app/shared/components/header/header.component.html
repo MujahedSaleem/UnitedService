@@ -1,26 +1,36 @@
 <header>
-    <link rel="manifest" href="../../../../manifest.json">
     <nav>
         <div fxFlex fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center center">
             <div fxFlex="40" class="d-inline-flex">
-                <a mat-raised-button routerLink="/" i18n="@@home">
-          Home
-        </a>
+                <div class="d-inline">
 
-                <a *ngIf="user" mat-raised-button [routerLink]="['/', user.uid,'edit']">
-          {{user.displayName}}
-        </a>
-                <a *ngIf="user" mat-raised-button [routerLink]="['/messages']">
-         Messanger
-        </a>
-
-
-                <div class="d-inline"> <a *ngIf="loggedIn()" mat-raised-button (click)="logout()">
-            Sign Out </a>
+                    <a mat-raised-button routerLink="/">
+                        <i class="fa fa-home"></i> Home
+                    </a>
                 </div>
 
-                <div class="d-inline" *ngIf="!loggedIn()"> <a mat-raised-button (click)="login()">
-                        Sign In
+                <div [routerLink]="['/', user.uid,'edit']" *ngIf="userAuth.currentUser |async as user" class="d-inline-flex avatarr mr-1">
+
+                    <div mat-raised-button mat-card-avatar class="hero-header__image" color="primary" style="background-size: 40px 40px" [ngStyle]="{'background-image': 'url(' + user.photoURL + ')'}"></div>
+                    <mat-card-title class="text-white ">{{user.displayName+' '+user.familyName}}</mat-card-title>
+                </div>
+
+
+                <div class="d-inline">
+                    <a *ngIf="loggedIn()" mat-raised-button [routerLink]="['/messages']">
+                        <i class="fab fa-facebook-messenger"></i>Messanger
+                    </a>
+
+                </div>
+
+                <div class="d-inline">
+                    <a *ngIf="loggedIn()" mat-raised-button (click)="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out </a>
+                </div>
+
+                <div class="d-inline" *ngIf="!loggedIn()">
+                    <a mat-raised-button (click)="login()">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
                     </a>
                 </div>
 

@@ -21,13 +21,13 @@ export const newMessagesNotification = functions.firestore
 
 export const newLikeNotification = functions.firestore
     .document('Posts/{postId}/Likes/{likeId}')
-    .onCreate(event => {
+    .onCreate(async event => {
         return notificationFunctions.sendPostNotication(event, LIKE_EVENT)
     });
 
 export const newCommentNotification = functions.firestore
-    .document('Posts/{postId}/Comments/{commentId}')
-    .onCreate(event => {
+    .document('posts/{postid}/Comments/{commentId}')
+    .onCreate(async event => {
         return notificationFunctions.sendPostNotication(event, COMMENT_EVENT)
     });
 

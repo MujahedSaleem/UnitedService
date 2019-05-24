@@ -24,7 +24,7 @@ export class HeaderComponent implements OnInit {
   constructor(@Inject(APP_CONFIG) public appConfig: any,
     private progressBarService: ProgressBarService,
     private router: Router,
-    private userAuth: UserAuthService,
+    public userAuth: UserAuthService,
     private userService: UserUtilsService,
     private activatedRoute: ActivatedRoute,
     @Inject(PLATFORM_ID) private platformId: Object) {
@@ -32,12 +32,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(this.userService.userdata){
-       this.userService.userdata.subscribe((user: User) => {
-      this.user = user;
-    }, () => { this.userService.userdata.unsubscribe() });
-    }
-   
+  
     if (isPlatformBrowser(this.platformId)) {
       this.selectedLanguage = localStorage.getItem('language') || 'en';
     }

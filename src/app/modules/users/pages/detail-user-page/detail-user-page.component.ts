@@ -13,7 +13,10 @@ import { PresenceService } from 'src/app/core/services/presence.service';
 })
 export class DetailUserPageComponent implements OnInit {
   user: User;
+  done: any = true;
   presence$;
+  x
+  Action = false;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
   constructor(private userService: UserUtilsService,
@@ -25,11 +28,42 @@ export class DetailUserPageComponent implements OnInit {
 
   ngOnInit() {
     const id: string = this.activatedRoute.snapshot.params.id;
-    this.presence$ = this.presence.getPresence(id);
+    const user: User = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      this.userService.DoLike(user.uid, id).then(data => {
+        this.x = data.empty;
+      });
+      if (user && id !== user.uid) {
+        this.Action = true;
+
+      }
+    }
     this.userService.getUser(id).subscribe((user: User) => {
+      if (user === null) {
+        this.router.navigate(['404']);
+      }
       this.user = user;
       this.loadImage();
+      this.presence$ = this.presence.getPresence(id);
+
     }, err => this.router.navigate(['404']));
+  }
+  like() {
+    this.done = false;
+    this.x = !this.x;
+    const id: string = this.activatedRoute.snapshot.params.id;
+    const user: User = JSON.parse(localStorage.getItem('user'));
+    if (id === user.uid) {
+      return;
+    }
+    this.userService.like(user.uid, id, this.x);
+    setTimeout(() => { this.done = true }, 200)
+
+  }
+  sendMessage() {
+    const id: string = this.activatedRoute.snapshot.params.id;
+
+    this.router.navigate([`/messages/${id}`]);
   }
   loadImage() {
     this.galleryOptions = [
@@ -51,12 +85,15 @@ export class DetailUserPageComponent implements OnInit {
   }
   getImages() {
     const imageUrls = [];
+    if (!this.user.photos) {
+      return imageUrls;
+    }
     for (let i = 0; i < this.user.photos.length; i++) {
       imageUrls.push({
         small: this.user.photos[i],
         medium: this.user.photos[i],
         big: this.user.photos[i],
-        description: 'this.user.photos[i].description'
+        description: ' '
       });
     }
 

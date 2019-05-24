@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { PostService } from '../posts/shared/Post.service';
+import { PostService } from '../../core/services/Post.service';
 import { MemberCardComponent } from './components/member-Card/member-Card.component';
 import { EditUserPageComponent } from './pages/edit-user-page/edit-user-page.component';
 import { FormsModule } from '@angular/forms';
@@ -12,12 +12,12 @@ import { TimeagoModule } from 'ngx-timeago';
 import { PhotoEditorComponent } from './components/Photo-Editor/Photo-Editor.component';
 import { PhotoService } from './shared/Photo.service';
 import { DropZoneDirective } from 'src/app/shared/directive/DropZone.directive';
-import {FileSizeModule} from 'ngx-filesize';
+import { FileSizeModule } from 'ngx-filesize';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { DetailUserPageComponent } from './pages/detail-user-page/detail-user-page.component';
 @NgModule({
     imports: [
-         CommonModule,
+        CommonModule,
         FormsModule,
         NgxGalleryModule,
         FileSizeModule,
@@ -26,9 +26,10 @@ import { DetailUserPageComponent } from './pages/detail-user-page/detail-user-pa
         UserRoutingModule,
         SharedModule,
         TimeagoModule.forRoot()],
-        
-    providers: [PostService, PhotoService],
-    declarations: [EditUserPageComponent,DetailUserPageComponent, MemberCardComponent, PhotoEditorComponent,DropZoneDirective],
+
+    providers: [PhotoService],
+    declarations: [EditUserPageComponent, DetailUserPageComponent, MemberCardComponent, PhotoEditorComponent, DropZoneDirective],
     entryComponents: [MemberCardComponent],
+    exports: [PhotoEditorComponent]
 })
 export class UsereModule { }

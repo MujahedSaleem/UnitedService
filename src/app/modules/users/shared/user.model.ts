@@ -22,11 +22,13 @@ export class User {
     lastActive: Date;
     isActive: boolean;
     created: Date;
+    familyName:string;
     constructor(User: any = {}) {
         this.bio = User.bio || ' ';
         this.uid = User.uid;
+        this.familyName = User.familyName;
         this.gender = User.gender || 'male';
-        this.photoURL = User.photoURL || '';
+        this.photoURL = User.photoURL || '/assets/images/user.png';
         this.posts = User.posts;
         this.city = User.city || ' ';
         this.intrest = User.intrest || ' ';

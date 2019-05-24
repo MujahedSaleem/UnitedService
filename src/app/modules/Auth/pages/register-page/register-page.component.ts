@@ -18,6 +18,7 @@ export class RegisterPageComponent implements OnInit {
   private subscriptions: Subscription[] = [];
 
   model: User;
+  reactiveRadio = 'd';
   @Output() cancelRegsiter = new EventEmitter();
   registerModel: FormGroup;
   constructor(private fb: FormBuilder,
@@ -36,6 +37,7 @@ export class RegisterPageComponent implements OnInit {
     this.registerModel = this.fb.group(
       {
         displayName: [null, Validators.required],
+        familyName: [null, Validators.required],
         email: [
           null,
           Validators.compose([
@@ -67,11 +69,11 @@ export class RegisterPageComponent implements OnInit {
 
                 })
               } else {
-                this.alertService.showSnackBar('There was a problem signing up, try again.');
+                this.alertService.showSnackBar(success);
               }
             });
           } else {
-            this.alertService.showSnackBar('There was a problem signing up, try again.');
+            this.alertService.showSnackBar(success);
           }
 
           this.loadingService.isLoading.next(false);

@@ -38,7 +38,7 @@ export class ChatMainComponent implements OnInit {
       this.users.next(data);
 
     });
-    this.userId = this.userService.userdata.value.uid;
+    this.userId = this.atuhservice.currentUser.value.uid;
   }
 
   do() {

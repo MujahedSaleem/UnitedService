@@ -19,7 +19,10 @@
                         "polyfills": "src/polyfills.ts",
                         "tsConfig": "src/tsconfig.app.json",
                         "assets": [
-
+                            "src/favicon.ico",
+                            "src/assets",
+                            "src/manifest.json",
+                            "src/firebase-messaging-sw.js",
                             {
                                 "glob": "**/*",
                                 "input": "src/assets/images",
@@ -177,7 +180,11 @@
                             },
                             "src/assets/css/reset.css",
                             "src/assets/css/loading.css",
-                            "src/app/styles/global.scss"
+                            "src/app/styles/global.scss",
+                            "src/favicon.ico",
+                            "src/assets",
+                            "src/manifest.json",
+                            "src/firebase-messaging-sw.js"
                         ],
                         "assets": [{
                                 "glob": "**/*",

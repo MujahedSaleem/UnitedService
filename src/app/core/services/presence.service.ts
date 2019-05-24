@@ -5,13 +5,15 @@ import { map, switchMap, tap, first } from 'rxjs/operators';
 import { of } from 'rxjs';
 import * as firebase from 'firebase';
 import { UserUtilsService } from './user-utils.service';
+import { UserAuthService } from './user-auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PresenceService {
 
-  constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private userService: UserUtilsService) {
+  constructor(private afAuth: AngularFireAuth, private auth: UserAuthService,
+    private db: AngularFireDatabase, private userService: UserUtilsService) {
     console.log('let there be presence');
     this.updateOnUser().subscribe();
     this.updateOnDisconnect().subscribe();
@@ -52,9 +54,9 @@ export class PresenceService {
     );
   }
   async setPresence(status: string) {
-    if ( this.userService.userdata) {
-    const user = await this.userService.userdata.value;
-   
+    if (this.auth.currentUser && this.auth.currentUser.value) {
+      const user = await this.auth.currentUser.value;
+
       return this.db.object(`status/${user.uid}`).update({ status, timestamp: this.timestamp });
     }
   }

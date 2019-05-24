@@ -15,8 +15,8 @@
 
             <div class="row " style=" background: #fff;margin: 2rem; padding:1.25rem;flex:1 1 auto;box-sizing: border-box; box-shadow: 0 0 4px 0 rgba(0,0,0,.08),0 2px 4px 0 rgba(0,0,0,.12);">
                 <div class="col-md-12">
-                    <h4 style="font-weight:bold">Choose a name for your service or project</h4>
-                    <input type="text" id="form3" placeholder="eg: build me website" class="text-white form-control" formControlName="title" mdbValidate mdbInput />
+                    <h4 style="font-weight:bold">Choose a <b>Subject</b> for your service or project</h4>
+                    <input type="text" id="form3" placeholder="eg: build me website" class="form-control" formControlName="title" mdbValidate mdbInput />
                 </div>
                 <div class="col-md-12 mt-5">
 
@@ -68,6 +68,7 @@
 
                     <div></div>
                 </div>
+                <app-Photo-Editor (url)="addPhoto($event)" (done)="doneWork($event)" [pp]="'post'"></app-Photo-Editor>
 
                 <div class="col-md-12 mt-5" *ngIf="isworkdone">
                     <div class="alert alert-success" role="alert">
@@ -77,7 +78,8 @@
                     </div>
                 </div>
 
-                <button mdbBtn color="primary" [disabled]="!createModel.valid" (click)="workdone()" mdbWavesEffect>
+
+                <button mdbBtn color="primary" [disabled]="!createModel.valid || !done " (click)="workdone()" mdbWavesEffect>
                     <div *ngIf="!isworkdone">Next</div>
                     <div *ngIf="isworkdone">finish</div>
                 </button>

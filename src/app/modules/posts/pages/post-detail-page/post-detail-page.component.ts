@@ -5,7 +5,7 @@ import { Hero } from 'src/app/modules/heroes/shared/hero.model';
 import { Location } from '@angular/common';
 import { AppConfig } from 'src/app/configs/app.config';
 import { UtilsHelperService } from 'src/app/core/services/utils-helper.service';
-import { PostService } from '../../shared/Post.service';
+import { PostService } from '../../../../core/services/Post.service';
 import { Post } from '../../shared/post.model';
 
 @Component({

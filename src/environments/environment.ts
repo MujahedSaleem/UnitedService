@@ -10,5 +10,10 @@ export const environment = {
   },
   wsserver: 'http://localhost:3000',
   iceservers: 'http://localhost:3000/getICETokens',
-
+  algolia: {
+    appId: 'AJEREH8JH9',
+    apiKey: '215c1327800d686ab106fea63528c815',
+    indexName: 'posts',
+    urlSync: false
+  }
 };

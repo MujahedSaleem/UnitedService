@@ -40,7 +40,7 @@ export class ChatHeaderComponent implements OnInit {
     });
   }
 
- 
+
   onCamera() {
 
     setTimeout(() => {
@@ -71,7 +71,6 @@ export class ChatHeaderComponent implements OnInit {
     Input
     const filePath = `${id}_${event.target.files[0].name}`;
     const task = this.storage.upload(filePath, file);
-    console.log(this.storage.ref(filePath));
     task.snapshotChanges().pipe(
       finalize(() => {
         const reciverId = this.Activatedrouter.snapshot.params.id;
@@ -98,7 +97,7 @@ export class ChatHeaderComponent implements OnInit {
       ;
     task.catch(err => LoggerService.log(err.message));
 
-  
+
   }
 }
 

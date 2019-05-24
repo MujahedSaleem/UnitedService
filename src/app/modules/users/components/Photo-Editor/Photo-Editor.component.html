@@ -1,20 +1,19 @@
 <div class="row">
     <div class="col-sm-2" *ngFor="let photo of photos">
         <img src="{{photo}}" class="img-thumbnail p1" alt="">
-        <div class="text-center">
+        <div class="text-center" *ngIf="post!=='post'">
             <button type="button" class="btn btn-sm mr-2" (click)="setMainPhoto(photo)" [disabled]="photo.isMain" [ngClass]="isMain(photo) ? 'btn btn-success active':'btn btn-secondary' ">Main</button>
             <button type="button" class="btn btn-sm btn-danger mt-1" (click)="deletePhoto(photo)" [disabled]="isMain(photo)"><i class="fa fa-trash"></i></button>
         </div>
     </div>
 </div>
 
-<div class="row mt-3">
-
-    <div class="dropzone" dropZone (hovered)="toggleHover($event)" (Dropped)="startUpload($event)" [class.hovering]="isHovring">
-
+<div class=" mt-3">
+    <div class="dropzone" appDropZone (hovered)="toggleHover($event)" (Dropped)="startUpload($event)" [class.hovering]="isHovring">
 
 
-        <h3>AngularFire Drop Zone</h3>
+
+        <h3>File Drop Zone</h3>
 
         <div class="file">
             <label class="file-label">
@@ -47,9 +46,9 @@
     <div *ngIf="snapShot | async as snap">
         {{ snap.bytesTransferred | filesize }} of {{ snap.totalBytes | filesize }}
 
-        <button (click)="task.pause()" class="button is-warning" [disabled]="!isActive(snap)">Pause</button>
-        <button (click)="task.cancel()" class="button is-danger" [disabled]="!isActive(snap)">Cancel</button>
-        <button (click)="task.resume()" class="button is-info" [disabled]="!(snap?.state === 'paused')">Resume</button>
+        <button (click)="task.pause()" class="btn btn-warning" [disabled]="!isActive(snap)">Pause</button>
+        <button (click)="task.cancel()" class="btn btn-danger" [disabled]="!isActive(snap)">Cancel</button>
+        <button (click)="task.resume()" class="btn btn-info" [disabled]="!(snap?.state === 'paused')">Resume</button>
 
     </div>
 
