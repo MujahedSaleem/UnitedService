@@ -1,14 +1,14 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ChatHeaderComponent } from './chat-header.component';
+import { ChatHeaderComponent } from "./chat-header.component";
 
-describe('ChatHeaderComponent', () => {
+describe("ChatHeaderComponent", () => {
   let component: ChatHeaderComponent;
   let fixture: ComponentFixture<ChatHeaderComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ChatHeaderComponent ]
+      declarations: [ ChatHeaderComponent ],
     })
     .compileComponents();
   }));
@@ -19,7 +19,7 @@ describe('ChatHeaderComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

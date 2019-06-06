@@ -1,19 +1,19 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { ChatappComponent } from './chatapp/chatapp.component';
-import { ChatMainComponent } from './chat-main/chat-main.component';
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+import { ChatMainComponent } from "./chat-main/chat-main.component";
+import { ChatappComponent } from "./chatapp/chatapp.component";
 
 const routes = [
 
   {
-    path: ':id',
+    path: ":id",
     component: ChatappComponent,
   },
   {
-    path: '**',
+    path: "**",
     component: ChatMainComponent,
-  }
-]
+  },
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

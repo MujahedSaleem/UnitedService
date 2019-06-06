@@ -1,16 +1,16 @@
-import {APP_INITIALIZER, InjectionToken, ModuleWithProviders, NgModule} from '@angular/core';
-import {NgxExampleLibraryComponent} from './ngx-example-library.component';
-import {NgxExampleLibraryService} from './ngx-example-library.service';
+import {APP_INITIALIZER, InjectionToken, ModuleWithProviders, NgModule} from "@angular/core";
+import {NgxExampleLibraryComponent} from "./ngx-example-library.component";
+import {NgxExampleLibraryService} from "./ngx-example-library.service";
 
-export const OPTIONS = new InjectionToken<string>('OPTIONS');
+export const OPTIONS = new InjectionToken<string>("OPTIONS");
 
 export interface SampleModuleOptions {
   config: {};
 }
 
 export function initialize(options: any) {
-  console.log('Angular library has started with this options: ', options);
-  return function () {
+  console.log("Angular library has started with this options: ", options);
+  return function() {
   };
 }
 
@@ -18,14 +18,14 @@ export function initialize(options: any) {
   imports: [
   ],
   declarations: [
-    NgxExampleLibraryComponent
+    NgxExampleLibraryComponent,
   ],
   exports: [
-    NgxExampleLibraryComponent
-  ]
+    NgxExampleLibraryComponent,
+  ],
 })
 export class NgxExampleLibraryModule {
-  static forRoot(options?: SampleModuleOptions): ModuleWithProviders {
+  public static forRoot(options?: SampleModuleOptions): ModuleWithProviders {
     return {
       ngModule: NgxExampleLibraryModule,
       providers: [
@@ -34,10 +34,10 @@ export class NgxExampleLibraryModule {
           provide: APP_INITIALIZER,
           useFactory: initialize,
           deps: [OPTIONS],
-          multi: true
+          multi: true,
         },
-        NgxExampleLibraryService
-      ]
+        NgxExampleLibraryService,
+      ],
     };
   }
 }

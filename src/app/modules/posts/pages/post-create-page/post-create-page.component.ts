@@ -1,44 +1,44 @@
-import { Component, OnInit, NgZone, ViewChild, ElementRef } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Post } from '../../shared/post.model';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { HotkeysService, Hotkey } from 'angular2-hotkeys';
-import { PostService } from '../../../../core/services/Post.service';
-import { User } from 'src/app/modules/users/shared/user.model';
-import { UserUtilsService } from 'src/app/core/services/user-utils.service';
-import { ProgressBarService } from 'src/app/core/services/progress-bar.service';
-import { UserAuthService } from 'src/app/core/services/user-auth.service';
-import { Guid } from 'src/app/modules/messages/shared/util';
+import { Component, ElementRef, NgZone, OnInit, ViewChild } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
+import { Hotkey, HotkeysService } from "angular2-hotkeys";
+import { ProgressBarService } from "src/app/core/services/progress-bar.service";
+import { UserAuthService } from "src/app/core/services/user-auth.service";
+import { UserUtilsService } from "src/app/core/services/user-utils.service";
+import { Guid } from "src/app/modules/messages/shared/util";
+import { User } from "src/app/modules/users/shared/user.model";
+import { PostService } from "../../../../core/services/Post.service";
+import { Post } from "../../shared/post.model";
 @Component({
-  selector: 'app-post-create-page',
-  templateUrl: './post-create-page.component.html',
-  styleUrls: ['./post-create-page.component.css']
+  selector: "app-post-create-page",
+  templateUrl: "./post-create-page.component.html",
+  styleUrls: ["./post-create-page.component.css"],
 })
 export class PostCreatePageComponent implements OnInit {
 
-  createModel: FormGroup;
-  isworkdone = false;
-  model: Post;
-  photos = new Array();
-  load = true;
-  lat; lon;
-  locations;
-  url;
-  mainLocation;
-  done: boolean = false;
-  zoom
+  public createModel: FormGroup;
+  public isworkdone = false;
+  public model: Post;
+  public photos = new Array();
+  public load = true;
+  public lat; public lon;
+  public locations;
+  public url;
+  public mainLocation;
+  public done: boolean = false;
+  public zoom;
   @ViewChild("search", { static: false })
   public searchElementRef: ElementRef;
-  tags: string[];
+  public tags: string[];
   constructor(private fb: FormBuilder,
-    private router: Router,
-    private ngZone: NgZone,
-    private auth: UserAuthService,
-    private userService: UserUtilsService,
-    private _hotkeysService: HotkeysService,
-    private progressBarService: ProgressBarService,
-    private postService: PostService) {
-    this._hotkeysService.add(new Hotkey('ctrl+enter', (event: KeyboardEvent): boolean => {
+              private router: Router,
+              private ngZone: NgZone,
+              private auth: UserAuthService,
+              private userService: UserUtilsService,
+              private _hotkeysService: HotkeysService,
+              private progressBarService: ProgressBarService,
+              private postService: PostService) {
+    this._hotkeysService.add(new Hotkey("ctrl+enter", (event: KeyboardEvent): boolean => {
       if (this.createModel.valid) {
         if (!this.isworkdone) {
           this.isworkdone = true;
@@ -50,29 +50,29 @@ export class PostCreatePageComponent implements OnInit {
     }));
   }
 
-  ngOnInit() {
+  public ngOnInit() {
 
     this.progressBarService.increase();
 
-    setTimeout(a => {
-      this.load = false
+    setTimeout((a) => {
+      this.load = false;
       this.progressBarService.decrease();
 
-    }, 700)
+    }, 700);
     this.createForm();
 
   }
-  getTags(wrods: string): string[] {
-    let values: string[] = new Array();
-    wrods.split('#').forEach(val => {
-      if (val !== '') {
-        values.push(val)
+  public getTags(wrods: string): string[] {
+    const values: string[] = new Array();
+    wrods.split("#").forEach((val) => {
+      if (val !== "") {
+        values.push(val);
 
       }
     });
     return values;
   }
-  createForm() {
+  public createForm() {
     this.createModel = this.fb.group(
       {
         title: [null, Validators.required],
@@ -83,7 +83,7 @@ export class PostCreatePageComponent implements OnInit {
       });
   }
 
-  workdone() {
+  public workdone() {
     if (!this.isworkdone) {
       this.isworkdone = true;
     } else {
@@ -91,9 +91,9 @@ export class PostCreatePageComponent implements OnInit {
     }
 
   }
-  register() {
+  public register() {
     if (this.createModel.valid) {
-      let user: User = JSON.parse(localStorage.getItem('user'));
+      const user: User = JSON.parse(localStorage.getItem("user"));
       this.model = Object.assign({}, this.createModel.value);
       this.model.photos = this.photos;
       if (this.createModel.value.tags) {
@@ -102,30 +102,30 @@ export class PostCreatePageComponent implements OnInit {
       const code = Guid.codeGuid();
       this.model.code = code;
       this.model.uid = user.uid;
-      this.postService.createPost(this.model).then(data => {
+      this.postService.createPost(this.model).then((data) => {
         if (user.posts instanceof Array) {
           user.posts.push(data);
         } else {
           user.posts = new Array<string>();
           user.posts.push(data);
         }
-        this.tags.forEach(x => {
+        this.tags.forEach((x) => {
           this.postService.createTags(x, data);
 
         });
         this.userService.updateUser(user).finally(() => {
           this.router.navigate([`/posts/${data}`]);
         });
-      }, reason => {
-        console.log(reason)
+      }, (reason) => {
+        console.log(reason);
       });
 
     }
   }
-  addPhoto(url) {
+  public addPhoto(url) {
     this.photos.push(url);
   }
-  doneWork(d) {
+  public doneWork(d) {
     this.done = d;
   }
 }

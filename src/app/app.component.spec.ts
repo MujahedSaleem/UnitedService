@@ -1,18 +1,18 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {AppComponent} from './app.component';
-import {TestsModule} from './shared/modules/tests.module';
-import {HeroService} from './modules/heroes/shared/hero.service';
-import {Title} from '@angular/platform-browser';
-import {configureTestSuite} from 'ng-bullet';
-import {NavigationEnd, Router} from '@angular/router';
-import {HeaderComponent} from './shared/components/header/header.component';
-import {SearchBarComponent} from './shared/components/search-bar/search-bar.component';
-import {FooterComponent} from './shared/components/footer/footer.component';
-import {NgxExampleLibraryComponent} from '@ismaestro/ngx-example-library';
-import {APP_CONFIG, AppConfig} from './configs/app.config';
-import {of} from 'rxjs';
+import {ComponentFixture, TestBed} from "@angular/core/testing";
+import {Title} from "@angular/platform-browser";
+import {NavigationEnd, Router} from "@angular/router";
+import {NgxExampleLibraryComponent} from "@ismaestro/ngx-example-library";
+import {configureTestSuite} from "ng-bullet";
+import {of} from "rxjs";
+import {AppComponent} from "./app.component";
+import {APP_CONFIG, AppConfig} from "./configs/app.config";
+import {HeroService} from "./modules/heroes/shared/hero.service";
+import {FooterComponent} from "./shared/components/footer/footer.component";
+import {HeaderComponent} from "./shared/components/header/header.component";
+import {SearchBarComponent} from "./shared/components/search-bar/search-bar.component";
+import {TestsModule} from "./shared/modules/tests.module";
 
-describe('AppComponent', () => {
+describe("AppComponent", () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
   let router: Router;
@@ -21,20 +21,20 @@ describe('AppComponent', () => {
   configureTestSuite(() => {
     TestBed.configureTestingModule({
       imports: [
-        TestsModule
+        TestsModule,
       ],
       declarations: [
         HeaderComponent,
         SearchBarComponent,
         FooterComponent,
         NgxExampleLibraryComponent,
-        AppComponent
+        AppComponent,
       ],
       providers: [
         {provide: APP_CONFIG, useValue: AppConfig},
         Title,
-        HeroService
-      ]
+        HeroService,
+      ],
     });
   });
 
@@ -43,20 +43,20 @@ describe('AppComponent', () => {
     component = fixture.debugElement.componentInstance;
     titleService = TestBed.get(Title);
     router = TestBed.get(Router);
-    spyOn(router, 'events').and.returnValue(of(new NavigationEnd(1, '', '/')));
+    spyOn(router, "events").and.returnValue(of(new NavigationEnd(1, "", "/")));
   });
 
-  it('should create the app', (() => {
+  it("should create the app", (() => {
     fixture.detectChanges();
     expect(component).toBeTruthy();
   }));
 
-  it('should change title meta tag in root path', (() => {
+  it("should change title meta tag in root path", (() => {
     fixture.detectChanges();
-    expect(titleService.getTitle()).toBe('App title');
+    expect(titleService.getTitle()).toBe("App title");
   }));
 
-  it('should check browser features', (() => {
+  it("should check browser features", (() => {
     expect(component.checkBrowserFeatures()).toBeTruthy();
   }));
 });

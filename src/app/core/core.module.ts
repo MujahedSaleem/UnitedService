@@ -1,13 +1,13 @@
-import { NgModule, Optional, SkipSelf } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule } from '@angular/router';
-import { UserAuthService } from './services/user-auth.service';
-import { AuthGuard } from './guard/auth.guard';
-import { UserUtilsService } from './services/user-utils.service';
-import { MessageService } from './services/Message.service';
-import { PostService } from './services/Post.service';
-import { NotifierModule } from 'angular-notifier';
+import { NgModule, Optional, SkipSelf } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { RouterModule } from "@angular/router";
+import { NotifierModule } from "angular-notifier";
+import { AuthGuard } from "./guard/auth.guard";
+import { MessageService } from "./services/Message.service";
+import { PostService } from "./services/Post.service";
+import { UserAuthService } from "./services/user-auth.service";
+import { UserUtilsService } from "./services/user-utils.service";
 @NgModule({
   imports: [
     BrowserModule,
@@ -20,7 +20,7 @@ import { NotifierModule } from 'angular-notifier';
     BrowserAnimationsModule,
 
   ],
-  providers: [PostService,MessageService,UserAuthService, AuthGuard, UserUtilsService]
+  providers: [PostService, MessageService, UserAuthService, AuthGuard, UserUtilsService],
 
 })
 

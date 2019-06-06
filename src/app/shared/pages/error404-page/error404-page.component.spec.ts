@@ -1,10 +1,10 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {TestsModule} from '../../modules/tests.module';
-import {ProgressBarService} from '../../../core/services/progress-bar.service';
-import {Error404PageComponent} from './error404-page.component';
-import {configureTestSuite} from 'ng-bullet';
+import {ComponentFixture, TestBed} from "@angular/core/testing";
+import {configureTestSuite} from "ng-bullet";
+import {ProgressBarService} from "../../../core/services/progress-bar.service";
+import {TestsModule} from "../../modules/tests.module";
+import {Error404PageComponent} from "./error404-page.component";
 
-describe('Error404Page', () => {
+describe("Error404Page", () => {
   let component: Error404PageComponent;
   let fixture: ComponentFixture<Error404PageComponent>;
   let progressBarService: ProgressBarService;
@@ -12,11 +12,11 @@ describe('Error404Page', () => {
   configureTestSuite(() => {
     TestBed.configureTestingModule({
       imports: [
-        TestsModule
+        TestsModule,
       ],
       declarations: [
-        Error404PageComponent
-      ]
+        Error404PageComponent,
+      ],
     });
   });
 
@@ -26,7 +26,7 @@ describe('Error404Page', () => {
     progressBarService = TestBed.get(ProgressBarService);
   });
 
-  it('should create nav component', (() => {
+  it("should create nav component", (() => {
     fixture.detectChanges();
     expect(component).toBeTruthy();
   }));

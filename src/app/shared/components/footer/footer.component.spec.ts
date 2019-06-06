@@ -1,9 +1,9 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {FooterComponent} from './footer.component';
-import {configureTestSuite} from 'ng-bullet';
-import {NgxExampleLibraryComponent} from '@ismaestro/ngx-example-library';
+import {ComponentFixture, TestBed} from "@angular/core/testing";
+import {NgxExampleLibraryComponent} from "@ismaestro/ngx-example-library";
+import {configureTestSuite} from "ng-bullet";
+import {FooterComponent} from "./footer.component";
 
-describe('FooterComponent', () => {
+describe("FooterComponent", () => {
   let component: FooterComponent;
   let fixture: ComponentFixture<FooterComponent>;
 
@@ -11,8 +11,8 @@ describe('FooterComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         NgxExampleLibraryComponent,
-        FooterComponent
-      ]
+        FooterComponent,
+      ],
     });
   });
 
@@ -21,7 +21,7 @@ describe('FooterComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  it('should create footer component', (() => {
+  it("should create footer component", (() => {
     expect(component).toBeTruthy();
   }));
 });

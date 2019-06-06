@@ -1,15 +1,15 @@
-import {HomePage} from './home-page';
-import {AppConfig} from '../../../../src/app/configs/app.config';
-import {browser} from 'protractor';
+import {browser} from "protractor";
+import {AppConfig} from "../../../../src/app/configs/app.config";
+import {HomePage} from "./home-page";
 
-describe('Home page', function () {
+describe("Home page", function() {
   let page;
 
   beforeEach(() => {
     page = new HomePage();
   });
 
-  it('should contains heroes limit', () => {
+  it("should contains heroes limit", () => {
     HomePage.navigateTo();
     browser.driver.sleep(2000);
     expect<any>(HomePage.getNumberHeroes()).toBe(AppConfig.topHeroesLimit);

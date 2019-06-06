@@ -1,17 +1,17 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { DebugElement } from "@angular/core";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 
-import { PostCreatePageComponent } from './post-create-page.component';
+import { PostCreatePageComponent } from "./post-create-page.component";
 
-describe('PostCreatePageComponent', () => {
+describe("PostCreatePageComponent", () => {
   let component: PostCreatePageComponent;
   let fixture: ComponentFixture<PostCreatePageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PostCreatePageComponent ]
+      declarations: [ PostCreatePageComponent ],
     })
     .compileComponents();
   }));
@@ -22,7 +22,7 @@ describe('PostCreatePageComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

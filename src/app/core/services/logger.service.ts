@@ -1,29 +1,28 @@
-import { Injectable } from '@angular/core';
-import { MatSnackBarConfig, MatSnackBar } from '@angular/material';
-import { AppConfig } from 'src/app/configs/app.config';
-
+import { Injectable } from "@angular/core";
+import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
+import { AppConfig } from "src/app/configs/app.config";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 
 export class LoggerService {
-
-  constructor(private snackBar: MatSnackBar) { }
-  configError: MatSnackBarConfig = {
-    panelClass: ['style-error'],
-  };
-  static log(msg: string): void {
+  public static log(msg: string): void {
     console.log(msg);
   }
 
-  static error(msg: string, obj = {}): void {
+  public static error(msg: string, obj = {}): void {
     console.error(msg, obj);
   }
-  showSnackBar(name, duration = AppConfig.snackBarDuration): void {
+  public configError: MatSnackBarConfig = {
+    panelClass: ["style-error"],
+  };
+
+  constructor(private snackBar: MatSnackBar) { }
+  public showSnackBar(name, duration = AppConfig.snackBarDuration): void {
     const config: MatSnackBarConfig = new MatSnackBarConfig();
     config.duration = duration;
-    config.panelClass = 'style-error';
-    this.snackBar.open(name, 'OK', config);
+    config.panelClass = "style-error";
+    this.snackBar.open(name, "OK", config);
   }
 }

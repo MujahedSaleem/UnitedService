@@ -1,17 +1,17 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { DebugElement } from "@angular/core";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 
-import { PhotoEditorComponent } from './Photo-Editor.component';
+import { PhotoEditorComponent } from "./Photo-Editor.component";
 
-describe('PhotoEditorComponent', () => {
+describe("PhotoEditorComponent", () => {
   let component: PhotoEditorComponent;
   let fixture: ComponentFixture<PhotoEditorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PhotoEditorComponent ]
+      declarations: [ PhotoEditorComponent ],
     })
     .compileComponents();
   }));
@@ -22,7 +22,7 @@ describe('PhotoEditorComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

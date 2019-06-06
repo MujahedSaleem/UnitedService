@@ -1,11 +1,11 @@
 export class ChatUser {
-    displayName: string;
-    photoURL: string;
-    uid: string;
+    public displayName: string;
+    public photoURL: string;
+    public uid: string;
     constructor(Chatuser: any = { }) {
-        this.displayName= Chatuser.displayName;
-        this.photoURL= Chatuser.photoURL;
-        this.uid= Chatuser.uid;
+        this.displayName = Chatuser.displayName;
+        this.photoURL = Chatuser.photoURL;
+        this.uid = Chatuser.uid;
 
     }
 }

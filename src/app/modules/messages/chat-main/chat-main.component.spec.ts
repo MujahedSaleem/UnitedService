@@ -1,17 +1,17 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { DebugElement } from "@angular/core";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 
-import { ChatMainComponent } from './chat-main.component';
+import { ChatMainComponent } from "./chat-main.component";
 
-describe('ChatMainComponent', () => {
+describe("ChatMainComponent", () => {
   let component: ChatMainComponent;
   let fixture: ComponentFixture<ChatMainComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ChatMainComponent ]
+      declarations: [ ChatMainComponent ],
     })
     .compileComponents();
   }));
@@ -22,7 +22,7 @@ describe('ChatMainComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

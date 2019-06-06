@@ -1,3 +1,5 @@
+import { NgModule } from "@angular/core";
+import { FlexLayoutModule } from "@angular/flex-layout";
 import {
   MatAutocompleteModule,
   MatButtonModule,
@@ -25,15 +27,13 @@ import {
   MatSlideToggleModule,
   MatSnackBarModule,
   MatSortModule,
+  MatStepperModule,
   MatTableModule,
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
-  MatStepperModule
-} from '@angular/material';
-import { NgModule } from '@angular/core';
-import { MDBBootstrapModule } from 'angular-bootstrap-md';
-import { FlexLayoutModule } from '@angular/flex-layout';
+} from "@angular/material";
+import { MDBBootstrapModule } from "angular-bootstrap-md";
 @NgModule({
   imports: [
     FlexLayoutModule,
@@ -69,8 +69,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatStepperModule
-
+    MatStepperModule,
 
   ],
   exports: [
@@ -104,7 +103,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatStepperModule
+    MatStepperModule,
   ],
 })
 

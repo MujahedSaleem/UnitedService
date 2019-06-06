@@ -1,18 +1,18 @@
-import {NgModule} from '@angular/core';
-import {ServerModule} from '@angular/platform-server';
-import {AppModule} from './app.module';
-import {AppComponent} from './app.component';
-import {ModuleMapLoaderModule} from '@nguniversal/module-map-ngfactory-loader';
-import {FlexLayoutServerModule} from '@angular/flex-layout/server';
+import {NgModule} from "@angular/core";
+import {FlexLayoutServerModule} from "@angular/flex-layout/server";
+import {ServerModule} from "@angular/platform-server";
+import {ModuleMapLoaderModule} from "@nguniversal/module-map-ngfactory-loader";
+import {AppComponent} from "./app.component";
+import {AppModule} from "./app.module";
 
 @NgModule({
   imports: [
     AppModule,
     ServerModule,
     ModuleMapLoaderModule,
-    FlexLayoutServerModule
+    FlexLayoutServerModule,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppServerModule {
 }

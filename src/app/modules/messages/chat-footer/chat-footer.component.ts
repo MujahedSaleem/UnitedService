@@ -1,47 +1,47 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 
-import { MatSnackBar } from '@angular/material';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { ChatService } from '../services/chat.service';
-import { SentimentService } from '../services/sentiment.service';
-import { Guid } from '../shared/util';
-import { environment } from 'src/environments/environment.prod';
-import { User } from '../../users/shared/user.model';
-import { ActivatedRoute } from '@angular/router';
-import { ChatMessage } from '../model/chat-message';
+import { AngularFireStorage } from "@angular/fire/storage";
+import { MatSnackBar } from "@angular/material";
+import { ActivatedRoute } from "@angular/router";
+import { environment } from "src/environments/environment.prod";
+import { User } from "../../users/shared/user.model";
+import { ChatMessage } from "../model/chat-message";
+import { ChatService } from "../services/chat.service";
+import { SentimentService } from "../services/sentiment.service";
+import { Guid } from "../shared/util";
 
 declare var MediaRecorder: any;
 declare var window: any;
 
 @Component({
-  selector: 'app-chat-footer',
-  templateUrl: './chat-footer.component.html',
-  styleUrls: ['./chat-footer.component.css'],
-  encapsulation: ViewEncapsulation.None
+  selector: "app-chat-footer",
+  templateUrl: "./chat-footer.component.html",
+  styleUrls: ["./chat-footer.component.css"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ChatFooterComponent implements OnInit {
 
-  messageValue: string = '';
-  name: string = null;
-  isRecording: boolean = false;
-  mediaRecorder: any;
-  user: User;
+  public messageValue: string = "";
+  public name: string = null;
+  public isRecording: boolean = false;
+  public mediaRecorder: any;
+  public user: User;
   constructor(private chatSvc: ChatService,
-    public snackBar: MatSnackBar,
-    public storage: AngularFireStorage,
-    private Activatedrouter: ActivatedRoute,
-    public sentimentSvc: SentimentService) {
+              public snackBar: MatSnackBar,
+              public storage: AngularFireStorage,
+              private Activatedrouter: ActivatedRoute,
+              public sentimentSvc: SentimentService) {
   }
 
-  ngOnInit() {
-    this.user = JSON.parse(localStorage.getItem('user'));
+  public ngOnInit() {
+    this.user = JSON.parse(localStorage.getItem("user"));
 
     this.chatSvc.getUserName().subscribe((result) => {
       this.name = result;
     });
   }
 
-  onStartRecord() {
+  public onStartRecord() {
     navigator.mediaDevices.getUserMedia({ audio: true }).
       then((stream) => {
         this.mediaRecorder = new MediaRecorder(stream);
@@ -52,18 +52,18 @@ export class ChatFooterComponent implements OnInit {
       });
   }
 
-  onStopRecord() {
+  public onStopRecord() {
     this.mediaRecorder.stop();
     window.localStream.getAudioTracks()[0].stop();
     this.isRecording = false;
   }
 
-  onMessage() {
-    if (typeof (this.name) !== 'undefined') {
-      console.log('messaged send')
-      if (this.messageValue !== '') {
+  public onMessage() {
+    if (typeof (this.name) !== "undefined") {
+      console.log("messaged send");
+      if (this.messageValue !== "") {
         const reciverId = this.Activatedrouter.snapshot.params.id;
-        let chatMessage: ChatMessage = {
+        const chatMessage: ChatMessage = {
           message_type: 1,
           message: this.messageValue,
           message_date: new Date(),
@@ -73,11 +73,11 @@ export class ChatFooterComponent implements OnInit {
           webcamUrl: null,
           audioUrl: null,
           senderId: this.user.uid,
-          reciverId: reciverId,
-          isRead: false
+          reciverId,
+          isRead: false,
         };
-        this.chatSvc.sendMessage(chatMessage)
-        this.messageValue = '';
+        this.chatSvc.sendMessage(chatMessage);
+        this.messageValue = "";
 
       }
 
@@ -85,7 +85,7 @@ export class ChatFooterComponent implements OnInit {
   }
 
   // function as expression this works!
-  audioIsAvailable = e => {
+  public audioIsAvailable = (e) => {
   //   let id = Guid.newGuid();
   //   const filePath = `${id}.webm`;
   //   console.log(filePath);

@@ -1,17 +1,17 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { DebugElement } from "@angular/core";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 
-import { EditUserPageComponent } from './edit-user-page.component';
+import { EditUserPageComponent } from "./edit-user-page.component";
 
-describe('EditUserPageComponent', () => {
+describe("EditUserPageComponent", () => {
   let component: EditUserPageComponent;
   let fixture: ComponentFixture<EditUserPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditUserPageComponent ]
+      declarations: [ EditUserPageComponent ],
     })
     .compileComponents();
   }));
@@ -22,7 +22,7 @@ describe('EditUserPageComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

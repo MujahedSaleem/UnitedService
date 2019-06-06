@@ -1,7 +1,7 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from "@angular/core";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ProgressBarService {
   public updateProgressBar$: EventEmitter<any>;
@@ -19,7 +19,7 @@ export class ProgressBarService {
   public increase(): void {
     this.requestsRunning++;
     if (this.requestsRunning === 1) {
-      this.updateProgressBar$.emit('indeterminate');
+      this.updateProgressBar$.emit("indeterminate");
     }
   }
 
@@ -27,7 +27,7 @@ export class ProgressBarService {
     if (this.requestsRunning > 0) {
       this.requestsRunning--;
       if (this.requestsRunning === 0) {
-        this.updateProgressBar$.emit('determinate ');
+        this.updateProgressBar$.emit("determinate ");
       }
     }
   }

@@ -1,17 +1,17 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { DebugElement } from "@angular/core";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 
-import { PostCardComponent } from './post-card.component';
+import { PostCardComponent } from "./post-card.component";
 
-describe('PostCardComponent', () => {
+describe("PostCardComponent", () => {
   let component: PostCardComponent;
   let fixture: ComponentFixture<PostCardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PostCardComponent ]
+      declarations: [ PostCardComponent ],
     })
     .compileComponents();
   }));
@@ -22,7 +22,7 @@ describe('PostCardComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

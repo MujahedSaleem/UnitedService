@@ -8,7 +8,7 @@ import * as notificationFunctions from './notification'
 export const firestoreInstance = admin.firestore();
 export const sorting = functions.https.onRequest(async (req, resp) => {
     //  const uid = req.header('uid');
-    let posts: string[] = [];
+    const posts: string[] = [];
     try {
         const post = await firestoreInstance.collection('posts').listDocuments()
          // tslint:disable-next-line: no-floating-promises
@@ -28,7 +28,7 @@ export const sorting = functions.https.onRequest(async (req, resp) => {
                 const tag_content = await firestoreInstance.
                     doc(`posts/${doc.id}/tags/${tag.id}`).get();
     
-                const tag_contetn: string = tag_content.data()!.content;
+                const tag_contetn: string = tag_content.data().content;
                 resp.status(200).send(JSON.stringify(tag_contetn));
                 posts.push(doc.id);
     

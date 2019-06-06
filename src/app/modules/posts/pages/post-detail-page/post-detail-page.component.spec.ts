@@ -1,17 +1,17 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { DebugElement } from "@angular/core";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 
-import { PostDetailPageComponent } from './post-detail-page.component';
+import { PostDetailPageComponent } from "./post-detail-page.component";
 
-describe('PostDetailPageComponent', () => {
+describe("PostDetailPageComponent", () => {
   let component: PostDetailPageComponent;
   let fixture: ComponentFixture<PostDetailPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PostDetailPageComponent ]
+      declarations: [ PostDetailPageComponent ],
     })
     .compileComponents();
   }));
@@ -22,7 +22,7 @@ describe('PostDetailPageComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

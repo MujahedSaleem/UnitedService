@@ -1,16 +1,16 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {SpinnerComponent} from './spinner.component';
-import {configureTestSuite} from 'ng-bullet';
+import {ComponentFixture, TestBed} from "@angular/core/testing";
+import {configureTestSuite} from "ng-bullet";
+import {SpinnerComponent} from "./spinner.component";
 
-describe('SpinnerComponent', () => {
+describe("SpinnerComponent", () => {
   let component: SpinnerComponent;
   let fixture: ComponentFixture<SpinnerComponent>;
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [
-        SpinnerComponent
-      ]
+        SpinnerComponent,
+      ],
     });
   });
 
@@ -19,7 +19,7 @@ describe('SpinnerComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
+  it("should create", () => {
     fixture.detectChanges();
     expect(component).toBeTruthy();
   });

@@ -15,6 +15,10 @@
                     <img src="{{user.photoURL }}" alt="{{ user.knownAs }}" class="card-img-top img-thumbnail" />
                     <div class="card-body">
                         <div>
+                            <star-rating [starType]="'svg'" [rating]="user.rate" [disabled]="true"></star-rating>
+
+                        </div>
+                        <div>
                             <strong>Location:</strong>
                             <p>{{user.city }}</p>
                         </div>

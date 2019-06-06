@@ -1,61 +1,61 @@
-import { Injectable } from '@angular/core';
-import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireDatabase } from 'angularfire2/database';
-import { map, switchMap, tap, first } from 'rxjs/operators';
-import { of } from 'rxjs';
-import * as firebase from 'firebase';
-import { UserUtilsService } from './user-utils.service';
-import { UserAuthService } from './user-auth.service';
+import { Injectable } from "@angular/core";
+import { AngularFireAuth } from "angularfire2/auth";
+import { AngularFireDatabase } from "angularfire2/database";
+import * as firebase from "firebase";
+import { of } from "rxjs";
+import { first, map, switchMap, tap } from "rxjs/operators";
+import { UserAuthService } from "./user-auth.service";
+import { UserUtilsService } from "./user-utils.service";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class PresenceService {
 
   constructor(private afAuth: AngularFireAuth, private auth: UserAuthService,
-    private db: AngularFireDatabase, private userService: UserUtilsService) {
-      if(auth.isUserSignedIn()){
-         console.log('let there be presence');
-      this.updateOnUser().subscribe();
-      this.updateOnDisconnect().subscribe();
-      this.updateOnAway();}
-   
+              private db: AngularFireDatabase, private userService: UserUtilsService) {
+      if (auth.isUserSignedIn()) {
+         console.log("let there be presence");
+         this.updateOnUser().subscribe();
+         this.updateOnDisconnect().subscribe();
+         this.updateOnAway(); }
+
   }
 
-  updateOnDisconnect() {
+  public updateOnDisconnect() {
     return this.afAuth.authState.pipe(
-      tap(user => {
+      tap((user) => {
         if (user) {
           this.db.object(`status/${user.uid}`).query.ref.onDisconnect()
             .update({
-              status: 'offline',
-              timestamp: this.timestamp
+              status: "offline",
+              timestamp: this.timestamp,
             });
         }
-      })
+      }),
     );
   }
-  updateOnAway() {
+  public updateOnAway() {
     document.onvisibilitychange = (e) => {
 
-      if (document.visibilityState === 'hidden') {
-        this.setPresence('away');
+      if (document.visibilityState === "hidden") {
+        this.setPresence("away");
       } else {
-        this.setPresence('online');
+        this.setPresence("online");
       }
     };
   }
-  updateOnUser() {
-    const connection = this.db.object('.info/connected').valueChanges().pipe(
-      map(connected => connected ? 'online' : 'offline')
+  public updateOnUser() {
+    const connection = this.db.object(".info/connected").valueChanges().pipe(
+      map((connected) => connected ? "online" : "offline"),
     );
 
     return this.afAuth.authState.pipe(
-      switchMap(user => user ? connection : of('offline')),
-      tap(status => this.setPresence(status))
+      switchMap((user) => user ? connection : of("offline")),
+      tap((status) => this.setPresence(status)),
     );
   }
-  async setPresence(status: string) {
+  public async setPresence(status: string) {
     if (this.auth.currentUser && this.auth.currentUser.value) {
       const user = await this.auth.currentUser.value;
 
@@ -65,11 +65,11 @@ export class PresenceService {
   get timestamp() {
     return firebase.database.ServerValue.TIMESTAMP;
   }
-  getPresence(uid: string) {
+  public getPresence(uid: string) {
     return this.db.object(`status/${uid}`).valueChanges();
   }
 
-  getUser() {
+  public getUser() {
     return this.afAuth.authState.pipe(first()).toPromise();
   }
 

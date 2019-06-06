@@ -1,46 +1,46 @@
-import { Component, OnInit } from '@angular/core';
-import { Message } from '../../users/shared/message.model';
-import { UserUtilsService } from 'src/app/core/services/user-utils.service';
-import { UserAuthService } from 'src/app/core/services/user-auth.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { LoggerService } from 'src/app/core/services/logger.service';
-import { ChatService } from '../services/chat.service';
-import { Subscription, Observable, BehaviorSubject } from 'rxjs';
-import { ChatMessage } from '../model/chat-message';
-import { User } from '../../users/shared/user.model';
-import { ChatUser } from '../model/chat-user';
-import { ProgressBarService } from 'src/app/core/services/progress-bar.service';
-import { timeout } from 'q';
+import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+import { timeout } from "q";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
+import { LoggerService } from "src/app/core/services/logger.service";
+import { ProgressBarService } from "src/app/core/services/progress-bar.service";
+import { UserAuthService } from "src/app/core/services/user-auth.service";
+import { UserUtilsService } from "src/app/core/services/user-utils.service";
+import { Message } from "../../users/shared/message.model";
+import { User } from "../../users/shared/user.model";
+import { ChatMessage } from "../model/chat-message";
+import { ChatUser } from "../model/chat-user";
+import { ChatService } from "../services/chat.service";
 
 @Component({
-  selector: 'app-chat-main',
-  templateUrl: './chat-main.component.html',
-  styleUrls: ['./chat-main.component.css']
+  selector: "app-chat-main",
+  templateUrl: "./chat-main.component.html",
+  styleUrls: ["./chat-main.component.css"],
 })
 export class ChatMainComponent implements OnInit {
-  userId: string;
-  messagesContainer: string = 'Unread';
-  currentRoom: string;
+  public userId: string;
+  public messagesContainer: string = "Unread";
+  public currentRoom: string;
+  public messages: ChatMessage[];
+  public users: BehaviorSubject<any[]>;
   private subscriptions: Subscription[] = [];
-  messages: ChatMessage[];
-  users: BehaviorSubject<any[]>
   constructor(
     private progressBar: ProgressBarService,
     private atuhservice: UserAuthService,
     private rotue: ActivatedRoute,
     private router: Router,
     private messageService: ChatService,
-    private alertify: LoggerService
+    private alertify: LoggerService,
   ) {
     this.users = new BehaviorSubject<any[]>([]);
   }
 
-  ngOnInit() {
+  public ngOnInit() {
     this.progressBar.increase();
     if (!this.atuhservice.isUserSignedIn()) {
-      this.router.navigate(['404']);
+      this.router.navigate(["404"]);
     }
-    this.messageService.getMessages(`${this.messagesContainer}`).subscribe(data => {
+    this.messageService.getMessages(`${this.messagesContainer}`).subscribe((data) => {
 
       this.users.next(data);
       setTimeout(() => {
@@ -50,17 +50,17 @@ export class ChatMainComponent implements OnInit {
     this.userId = this.atuhservice.currentUser.value.uid;
 
   }
-  
-  do() {
-    this.messageService.getMessages(`${this.messagesContainer}`).subscribe(data => {
+
+  public do() {
+    this.messageService.getMessages(`${this.messagesContainer}`).subscribe((data) => {
 
       this.users.next(data);
 
     });
   }
-  delteMessage(id: string) {
+  public delteMessage(id: string) {
 console.log(id);
-    if (confirm('Are you sure you want to remove this message permetaily !!!')) {
+if (confirm("Are you sure you want to remove this message permetaily !!!")) {
       this.messageService.deleteMessage(id);
     }
 

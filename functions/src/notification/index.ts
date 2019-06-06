@@ -30,7 +30,7 @@ export async function sendNewFollowerNotification(event: any) {
 
         //Get the tokens from the retrieved user
         // noinspection TypeScriptUnresolvedVariable
-        const tokens = userData.data()!.messagingTokens;
+        const tokens = userData.data().messagingTokens;
 
         //Generate the payload
         const payload = {
@@ -87,11 +87,11 @@ export async function sendNewFollowerNotification(event: any) {
 
 export async function sendPostNotication(event: FirebaseFirestore.DocumentSnapshot, kind: any) {
     console.log(event);
-    const commentAuthorId = event.data()!.authoruid
-    const postId = event.data()!.postId;
-    const postAuthorId = event.data()!.postAutherUid;
-    const authorUsername = event.data()!.authorUsername;
-    const authorPhotoUrl = event.data()!.authorPhotoUrl;
+    const commentAuthorId = event.data().authoruid
+    const postId = event.data().postId;
+    const postAuthorId = event.data().postAutherUid;
+    const authorUsername = event.data().authorUsername;
+    const authorPhotoUrl = event.data().authorPhotoUrl;
 
     //An user can't send notifications to himself
     if (commentAuthorId === postAuthorId) {
@@ -109,7 +109,7 @@ export async function sendPostNotication(event: FirebaseFirestore.DocumentSnapsh
 
         //Get the tokens from the retrieved user
         // noinspection TypeScriptUnresolvedVariable
-        const tokens = userData.data()!.messagingTokens;
+        const tokens = userData.data().messagingTokens;
 
         //Generate the payload
         const payload = {

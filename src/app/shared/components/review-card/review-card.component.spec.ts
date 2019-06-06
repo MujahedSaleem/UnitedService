@@ -1,17 +1,17 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { DebugElement } from "@angular/core";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 
-import { ReviewCardComponent } from './review-card.component';
+import { ReviewCardComponent } from "./review-card.component";
 
-describe('ReviewCardComponent', () => {
+describe("ReviewCardComponent", () => {
   let component: ReviewCardComponent;
   let fixture: ComponentFixture<ReviewCardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ReviewCardComponent ]
+      declarations: [ ReviewCardComponent ],
     })
     .compileComponents();
   }));
@@ -22,7 +22,7 @@ describe('ReviewCardComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });
