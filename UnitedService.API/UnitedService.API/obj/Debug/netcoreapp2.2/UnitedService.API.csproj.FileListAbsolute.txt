@@ -1,0 +1,14 @@
+C:\Users\wwwmu\OneDrive\Desktop\United Service\UnitedService.API\UnitedService.API\obj\Debug\netcoreapp2.2\UnitedService.API.csprojAssemblyReference.cache
+C:\Users\wwwmu\OneDrive\Desktop\United Service\UnitedService.API\UnitedService.API\obj\Debug\netcoreapp2.2\UnitedService.API.csproj.CoreCompileInputs.cache
+C:\Users\wwwmu\OneDrive\Desktop\United Service\UnitedService.API\UnitedService.API\obj\Debug\netcoreapp2.2\UnitedService.API.RazorAssemblyInfo.cache
+C:\Users\wwwmu\OneDrive\Desktop\United Service\UnitedService.API\UnitedService.API\obj\Debug\netcoreapp2.2\UnitedService.API.RazorAssemblyInfo.cs
+C:\Users\wwwmu\OneDrive\Desktop\United Service\UnitedService.API\UnitedService.API\obj\Debug\netcoreapp2.2\UnitedService.API.AssemblyInfoInputs.cache
+C:\Users\wwwmu\OneDrive\Desktop\United Service\UnitedService.API\UnitedService.API\obj\Debug\netcoreapp2.2\UnitedService.API.AssemblyInfo.cs
+C:\Users\wwwmu\OneDrive\Desktop\United Service\UnitedService.API\UnitedService.API\bin\Debug\netcoreapp2.2\UnitedService.API.deps.json
+C:\Users\wwwmu\OneDrive\Desktop\United Service\UnitedService.API\UnitedService.API\bin\Debug\netcoreapp2.2\UnitedService.API.runtimeconfig.json
+C:\Users\wwwmu\OneDrive\Desktop\United Service\UnitedService.API\UnitedService.API\bin\Debug\netcoreapp2.2\UnitedService.API.runtimeconfig.dev.json
+C:\Users\wwwmu\OneDrive\Desktop\United Service\UnitedService.API\UnitedService.API\bin\Debug\netcoreapp2.2\UnitedService.API.dll
+C:\Users\wwwmu\OneDrive\Desktop\United Service\UnitedService.API\UnitedService.API\obj\Debug\netcoreapp2.2\UnitedService.API.RazorTargetAssemblyInfo.cache
+C:\Users\wwwmu\OneDrive\Desktop\United Service\UnitedService.API\UnitedService.API\bin\Debug\netcoreapp2.2\UnitedService.API.pdb
+C:\Users\wwwmu\OneDrive\Desktop\United Service\UnitedService.API\UnitedService.API\obj\Debug\netcoreapp2.2\UnitedService.API.dll
+C:\Users\wwwmu\OneDrive\Desktop\United Service\UnitedService.API\UnitedService.API\obj\Debug\netcoreapp2.2\UnitedService.API.pdb

@@ -7,10 +7,12 @@ import { Router } from '@angular/router';
 import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
 import { LoggerService } from './logger.service';
 import { isPlatformBrowser } from '@angular/common';
-import { map, tap, catchError, filter, finalize } from 'rxjs/operators';
+import { map, tap, catchError, filter, finalize, switchMap } from 'rxjs/operators';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { AngularFirestoreCollection, AngularFirestoreDocument, AngularFirestore } from 'angularfire2/firestore';
 import { PostService } from 'src/app/core/services/Post.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Review } from 'src/app/shared/components/review-card/review-card';
 
 @Injectable({
   providedIn: 'root'
@@ -26,13 +28,13 @@ export class UserUtilsService {
     public router: Router,
     public ngZone: NgZone,
     private postService: PostService,
+    private http: HttpClient,
     private Logger: LoggerService,
     private i18n: I18n,
     @Inject(PLATFORM_ID) private platformId: Object) {
     this.usersCollection = this.db.collection(AppConfig.routes.users);
     let x: User = JSON.parse(localStorage.getItem('user'));
     if (x != null) {
-      x.chats = this.objectToMap(x.chats);
       this.userdata = new BehaviorSubject<any>(x);
     }
 
@@ -60,31 +62,35 @@ export class UserUtilsService {
     }
     return false;
   }
-  private objectToMap(obj) {
-    if (!obj) {
-      return;
-    }
-    if (obj instanceof Map) {
-      return obj;
-    }
-    let x = new Map<string, string>();
-    Object.keys(obj).forEach(key => {
-      x.set(key, obj[key]);
-    });
-    return x;
+  getReviews(uid) {
+    return this.db.collection<Review>(`${AppConfig.routes.users}/${uid}/rate`, ref => ref.orderBy('date', 'asc')).valueChanges();
   }
-  getUsers(): Observable<User[]> {
-
-    return this.usersCollection.snapshotChanges([])
-      .pipe(
-        map((actions) => {
-          return actions.map((action) => {
-            return new User({ id: action.payload.doc.id, ...action.payload.doc.data() as User });
+  getFollowerName(uid) {
+    let m = [];
+    return this.db.doc(`${AppConfig.routes.users}/${uid}`).collection('follower').stateChanges().pipe(
+      map(data => {
+        data.forEach(xo => {
+          this.getUserPromise(xo.payload.doc.data().uid).then(user => {
+            m.push({ name: user.displayName, state: xo.payload.type });
           });
-        }),
-        tap(() => LoggerService.log(`fetched Users`)),
-        catchError(UserUtilsService.handleError('getUser', []))
-      );
+
+        });
+        return m;
+      })
+    )
+  }
+  getUsers(searchString): Observable<User[]> {
+    let httpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+      'value': searchString
+    });
+    let options = {
+      headers: httpHeaders
+    };
+    return this.http.post<User[]>('http://mujshrf-001-site1.etempurl.com/api/values',
+      {}, { headers: httpHeaders, observe: 'body' });
+
   }
 
   getUser(id: string): Observable<User | string> {
@@ -94,7 +100,7 @@ export class UserUtilsService {
           let x = new User({ uid: id, ...data.payload.data() });
           return x;
         } else {
-          throw null ;
+          throw null;
         }
       }), catchError(err => {
         return of(err);
@@ -102,9 +108,11 @@ export class UserUtilsService {
 
   }
   getUserPromise(id: string): Promise<User> {
-    return this.db.collection(`${AppConfig.routes.users}`).doc(id).ref.get().then(data => {
-      return new User({ uid: id, ...data.data() });
-
+    return this.db.doc(`${AppConfig.routes.users}/${id}`).ref.get().then(data => {
+      if (data.exists) {
+        return new User({ uid: id, ...data.data() });
+      }
+      return null;
     });
 
   }
@@ -153,16 +161,16 @@ export class UserUtilsService {
 
   }
 
-  createUser(user: User) {
-    user.created = new Date(Date.now());
-    return this.db.collection(`${AppConfig.routes.users}`).doc(`${user.uid}`).set(JSON.parse(JSON.stringify(user)));
+  createUser(user: {}) {
+    let us = new User({created:new Date(Date.now()), ...user });
+    return this.db.doc(`${AppConfig.routes.users}/${us.uid}`).set(JSON.parse(JSON.stringify(us)));
   }
 
   updateUser(user: User): Promise<void> {
     const u: User = JSON.parse(localStorage.getItem('user'));
     let x: any = user;
 
-    if (user.uid === u.uid) {
+    if (u && user.uid === u.uid) {
       localStorage.setItem('user', JSON.stringify(x));
     }
     return this.db.collection(`${AppConfig.routes.users}`).doc(`${user.uid}`).
@@ -188,37 +196,33 @@ export class UserUtilsService {
     const user: User = JSON.parse(localStorage.getItem('user'));
     return user.displayName;
   }
-  like(userId, recipientId, x) {
-    if (!x) {
-      this.db.doc(`${AppConfig.routes.users}/${userId}`).collection('following').add({ uid: recipientId });
-      this.db.doc(`${AppConfig.routes.users}/${recipientId}`).collection('follower').add({ uid: userId });
-
-    } else {
-      this.db.doc(`${AppConfig.routes.users}/${userId}`).collection('following').ref.where('uid', '==', recipientId).onSnapshot(data => {
-        if (!data.empty) {
-          data.forEach(y => {
-            this.db.doc(`${AppConfig.routes.users}/${userId}/following/${y.id}`).delete();
-
-          });
-
-        }
-      });
-      this.db.doc(`${AppConfig.routes.users}/${recipientId}`)
-        .collection('follower').ref.where('uid', '==', recipientId).onSnapshot(data => {
-          if (!data.empty) {
-            data.forEach(y => {
-              this.db.doc(`${AppConfig.routes.users}/${userId}/follower/${y.id}`).delete();
-
-            });
-
-          }
+  like(userId, recipientId) {
+    return this.getLike(userId, recipientId).pipe(switchMap(data => {
+      if (data.empty) {
+        this.db.doc(`${AppConfig.routes.users}/${userId}`).collection('following').add({ uid: recipientId }).then(data => {
+          this.db.doc(`${AppConfig.routes.users}/${recipientId}`).collection('follower').add({ uid: userId });
         });
-    }
+        return of('You Like Him');
+
+      } else {
+        data.forEach(y => {
+          this.db.doc(`${AppConfig.routes.users}/${userId}/following/${y.id}`).delete().then(data => {
+            this.db.doc(`${AppConfig.routes.users}/${recipientId}`)
+              .collection('follower', ref => ref.where('uid', '==', userId)).get().subscribe(dataa => {
+                dataa.forEach(y => {
+                  this.db.doc(`${AppConfig.routes.users}/${recipientId}/follower/${y.id}`).delete()
+                });
+              })
+          });
+        });
+        return of('You DisLike Him');
+
+      }
+    }), tap(data => this.Logger.showSnackBar(data)));
 
   }
-  DoLike(userId, recipientId) {
-
-    return this.db.doc(`${AppConfig.routes.users}/${userId}`).collection('following').ref.where('uid', '==', recipientId).get()
+  getLike(userId, recipientId) {
+    return this.db.doc(`${AppConfig.routes.users}/${userId}`).collection('following', ref => ref.where('uid', '==', recipientId)).get()
   }
 
 

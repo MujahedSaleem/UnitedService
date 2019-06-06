@@ -10,6 +10,9 @@ import { catchError } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
 import { PresenceService } from 'src/app/core/services/presence.service';
+import { ProgressBarService } from 'src/app/core/services/progress-bar.service';
+import { Review } from 'src/app/shared/components/review-card/review-card';
+import { MatTabChangeEvent } from '@angular/material';
 
 @Component({
   selector: 'app-edit-user-page',
@@ -24,6 +27,7 @@ export class EditUserPageComponent implements OnInit, AfterViewInit, OnDestroy {
   CurrentUser: User;
   canEdit = false;
   photoUrl: string;
+  reviews: Review[];
   subscriptions: Subscription[] = [];
   private x = new Subscription()
   galleryOptions: NgxGalleryOptions[];
@@ -38,14 +42,36 @@ export class EditUserPageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   constructor(private activatedRoute: ActivatedRoute,
     private userAuthService: UserAuthService,
-    private datachange: NgZone,
+    private progressBarService: ProgressBarService,
     public presence: PresenceService,
-
     private router: Router,
     private datachang: ChangeDetectorRef,
 
     private userService: UserUtilsService) { this.canDoAction = true; }
   ngOnInit() {
+    if (!this.userAuthService.isUserSignedIn()) {
+      this.router.navigate(['404']);
+    }
+    this.userService.getUser( this.userAuthService.currentUser.value.uid).subscribe((data: User) => {
+      let c_user = new User({ id: data.uid, ...data });
+      c_user.isActive = true;
+      c_user.lastActive = new Date(Date.now());
+      let fName = c_user.displayName.split(' ');
+      let fiName, lasName;
+      if (fName.length > 1) {
+        fiName = fName[0];
+        lasName = c_user.displayName.substring(fiName.length + 1, c_user.displayName.length)
+        c_user.displayName = fiName;
+        c_user.familyName = lasName;
+
+      }
+      this.userAuthService.currentUser.next(c_user);
+      localStorage.setItem('user', JSON.stringify(c_user));
+
+    });
+
+    this.progressBarService.increase();
+
     const id: string = this.activatedRoute.snapshot.params.id;
     this.presence$ = this.presence.getPresence(id);
 
@@ -70,9 +96,25 @@ export class EditUserPageComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
   }
+  getReview(event: MatTabChangeEvent) {
+
+    if (event.index === 4) {
+      this.reviews = new Array<Review>();
+      this.userService.getReviews(this.user.uid).subscribe(data => {
+        console.log(data)
+        data.forEach((review) => {
+          this.reviews.push(review);
+        });
+      });
+    }
+  }
   ngAfterViewInit() {
     this.canDoAction = false;
     this.datachang.detectChanges();
+    setTimeout(a => {
+      this.progressBarService.decrease();
+
+    }, 700)
 
 
   }

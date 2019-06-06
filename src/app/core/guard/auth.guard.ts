@@ -5,28 +5,18 @@ import { map, take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { UserAuthService } from '../services/user-auth.service';
 import { of } from 'rxjs';
+import { LoggerService } from '../services/logger.service';
 @Injectable()
 export class AuthGuard implements CanActivate {
 
-  constructor(
-    private auth: UserAuthService,
-    private router: Router,
-  ) {}
+  constructor(private atuhService: UserAuthService, private router: Router, private alertfy: LoggerService) { }
+  canActivate(): boolean {
+    if (this.atuhService.isUserSignedIn() && !this.atuhService.isUserAnny()) {
+      return true;
+    }
 
-  canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean> | boolean {
-
-    return of(this.auth.isUserSignedIn())
-  .pipe(
-        take(1),
-        map((currentUser) => !!currentUser),
-        tap((loggedIn) => {
-          if (!loggedIn) {
-            // this.alertService.alerts.next(new Alert('You must be logged in to access that page.', AlertType.Danger));
-            this.router.navigate(['/auth/login'], {queryParams: { returnUrl: state.url }});
-          }
-        })
-      )
+    this.alertfy.showSnackBar('You shall not Pass !!!!');
+    this.router.navigate(['/home']);
+    return false;
   }
 }

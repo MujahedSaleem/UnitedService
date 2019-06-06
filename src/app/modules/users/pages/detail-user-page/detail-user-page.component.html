@@ -58,7 +58,7 @@
             </div>
             <div class="col-sm-8 ">
                 <div class="tab-panel">
-                    <mat-tab-group class="member-tabset">
+                    <mat-tab-group (selectedTabChange)="getReview($event)" class="member-tabset">
                         <mat-tab label="Posts" style="background-color:gray !important ">
 
 
@@ -88,6 +88,10 @@
 
                         <mat-tab label=" Galary">
                             <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
+                        </mat-tab>
+                        <mat-tab (click)="getReview()" label="reviews">
+                            <app-review-card *ngFor="let review of reviews" [review]="review"></app-review-card>
+                            <hr>
                         </mat-tab>
                     </mat-tab-group>
                 </div>

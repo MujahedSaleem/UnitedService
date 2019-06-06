@@ -41,16 +41,16 @@ export class MessageService {
    * 
    * @param userId userId
    */
-  requestPermission(userId) {
-    this.angularFireMessaging.requestToken.subscribe(
-      (token) => {
-        this.updateToken(userId, token);
-      },
-      (err) => {
-        console.error('Unable to get permission to notify.', err);
-      }
-    );
-  }
+  // requestPermission(userId) {
+  //   this.angularFireMessaging.requestToken.subscribe(
+  //     (token) => {
+  //       this.updateToken(userId, token);
+  //     },
+  //     (err) => {
+  //       console.error('Unable to get permission to notify.', err);
+  //     }
+  //   );
+  // }
 
   /**
    * hook method when new notification received in foreground

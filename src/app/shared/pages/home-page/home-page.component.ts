@@ -1,6 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Hero } from '../../../modules/heroes/shared/hero.model';
-import { HeroService } from '../../../modules/heroes/shared/hero.service';
 import { AppConfig } from '../../../configs/app.config';
 import { UtilsHelperService } from '../../../core/services/utils-helper.service';
 import { PostService } from 'src/app/core/services/Post.service';
@@ -10,6 +8,8 @@ import { ProgressBarService } from 'src/app/core/services/progress-bar.service';
 import { MessageService } from 'src/app/core/services/Message.service';
 import { UserAuthService } from 'src/app/core/services/user-auth.service';
 import { UserUtilsService } from 'src/app/core/services/user-utils.service';
+import { MatDialog } from '@angular/material';
+import { User } from 'src/app/modules/users/shared/user.model';
 
 @Component({
   selector: 'app-home-page',
@@ -26,14 +26,21 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   constructor(private postService: PostService,
     private userUti: UserUtilsService,
-    private auth: UserAuthService, private ms: MessageService, private progressBarService: ProgressBarService) {
+    public auth: UserAuthService, private ms: MessageService, private progressBarService: ProgressBarService) {
   }
+  
   ngOnInit() {
     this.progressBarService.increase();
-   
+    let uid;
+    if (this.auth.isUserSignedIn() && !this.auth.isUserAnny()) {
+      uid = this.auth.currentUser.value.uid;
+    } else {
+      uid = undefined;
+    }
     this.subscriptions.push(
-      this.postService.getPosts().subscribe((posts: Array<Post>) => {
-        this.posts = posts.slice(0, AppConfig.topHeroesLimit);
+
+      this.postService.getPosts(uid).subscribe((posts: Array<Post>) => {
+        this.posts = posts.slice(0, AppConfig.topHeroesLimit).filter(a => a.closed === false);
         this.workdone = true;
         this.progressBarService.decrease();
 

@@ -108,6 +108,7 @@ class Guid {
       return v.toString(16);
     });
   }
+  
 }
 
 @Component({

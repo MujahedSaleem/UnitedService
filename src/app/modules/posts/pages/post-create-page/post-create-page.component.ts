@@ -6,6 +6,9 @@ import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 import { PostService } from '../../../../core/services/Post.service';
 import { User } from 'src/app/modules/users/shared/user.model';
 import { UserUtilsService } from 'src/app/core/services/user-utils.service';
+import { ProgressBarService } from 'src/app/core/services/progress-bar.service';
+import { UserAuthService } from 'src/app/core/services/user-auth.service';
+import { Guid } from 'src/app/modules/messages/shared/util';
 @Component({
   selector: 'app-post-create-page',
   templateUrl: './post-create-page.component.html',
@@ -30,9 +33,10 @@ export class PostCreatePageComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private router: Router,
     private ngZone: NgZone,
-    private route: ActivatedRoute,
+    private auth: UserAuthService,
     private userService: UserUtilsService,
     private _hotkeysService: HotkeysService,
+    private progressBarService: ProgressBarService,
     private postService: PostService) {
     this._hotkeysService.add(new Hotkey('ctrl+enter', (event: KeyboardEvent): boolean => {
       if (this.createModel.valid) {
@@ -48,12 +52,15 @@ export class PostCreatePageComponent implements OnInit {
 
   ngOnInit() {
 
+    this.progressBarService.increase();
 
     setTimeout(a => {
       this.load = false
+      this.progressBarService.decrease();
+
     }, 700)
-    console.log('s')
     this.createForm();
+
   }
   getTags(wrods: string): string[] {
     let values: string[] = new Array();
@@ -62,7 +69,7 @@ export class PostCreatePageComponent implements OnInit {
         values.push(val)
 
       }
-    })
+    });
     return values;
   }
   createForm() {
@@ -92,6 +99,8 @@ export class PostCreatePageComponent implements OnInit {
       if (this.createModel.value.tags) {
         this.tags = this.getTags(this.createModel.value.tags);
       }
+      const code = Guid.codeGuid();
+      this.model.code = code;
       this.model.uid = user.uid;
       this.postService.createPost(this.model).then(data => {
         if (user.posts instanceof Array) {
@@ -116,7 +125,7 @@ export class PostCreatePageComponent implements OnInit {
   addPhoto(url) {
     this.photos.push(url);
   }
-  doneWork(d){
+  doneWork(d) {
     this.done = d;
   }
 }

@@ -14,10 +14,12 @@ export class PresenceService {
 
   constructor(private afAuth: AngularFireAuth, private auth: UserAuthService,
     private db: AngularFireDatabase, private userService: UserUtilsService) {
-    console.log('let there be presence');
-    this.updateOnUser().subscribe();
-    this.updateOnDisconnect().subscribe();
-    this.updateOnAway();
+      if(auth.isUserSignedIn()){
+         console.log('let there be presence');
+      this.updateOnUser().subscribe();
+      this.updateOnDisconnect().subscribe();
+      this.updateOnAway();}
+   
   }
 
   updateOnDisconnect() {

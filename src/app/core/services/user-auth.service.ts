@@ -2,69 +2,86 @@ import { Injectable, NgZone } from '@angular/core';
 import { Observable, of, from, Subscription, ReplaySubject, Subject, BehaviorSubject } from 'rxjs';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
-import { switchMap, merge, catchError } from 'rxjs/operators';
+import { switchMap, merge, catchError, finalize } from 'rxjs/operators';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AppConfig } from 'src/app/configs/app.config';
 import * as firebase from 'firebase';
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
 import { User } from 'src/app/modules/users/shared/user.model';
 import { UserUtilsService } from './user-utils.service';
-import { MessagingService } from './Messaging.service';
-import { MessageService } from './Message.service';
 @Injectable({
   providedIn: 'root'
 })
 export class UserAuthService {
   static public_user: User;
-  public currentUser= new BehaviorSubject(null);
+  public currentUser: BehaviorSubject<User>;
   photoUrl = new BehaviorSubject<string>('/assets/images/user.png');
   currentUserUrl = this.photoUrl.asObservable();
   userSigned = new BehaviorSubject(false);
   private subscruptions: Subscription[] = [];
   constructor(
-    public msg: MessagingService,
     private userService: UserUtilsService,
-    private ms: MessageService,
     public afd: AngularFireDatabase,
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router,
     public ngZone: NgZone,// NgZone service to remove outside scope warning
   ) {
-    this.subscruptions.push(
+    let user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      this.currentUser = new BehaviorSubject(user);
+    } else {
       this.afAuth.authState.subscribe(user => {
-        if (user) {
+
+        if (user && !this.currentUser && !user.isAnonymous ||
+          this.currentUser === null &&
+          this.currentUser.value !== undefined) {
           this.userSigned.next(true);
-            this.ms.requestPermission(user.uid);
-            this.ms.receiveMessage();
-          
           const date = new Date(Date.now());
           this.userService.getUser(user.uid).subscribe((data: User) => {
             let c_user = new User({ id: user.uid, ...data });
+            let fName = c_user.displayName.split(' ');
+            let fiName, lasName;
+            if (fName.length > 1) {
+              fiName = fName[0];
+              lasName = c_user.displayName.substring(fiName.length + 1, c_user.displayName.length)
+              c_user.displayName = fiName;
+              c_user.familyName = lasName;
+
+            }
             c_user.isActive = true;
             c_user.lastActive = date;
-            this.currentUser.next( c_user);
-            c_user.chats = this.mapToObject(c_user.chats);
+            this.currentUser = new BehaviorSubject(c_user);
             localStorage.setItem('user', JSON.stringify(c_user));
 
-          }, () => {
+          });
+          this.userService.getUserPromise(user.uid).then(muser => {
+            if (muser.displayName === undefined && user.emailVerified) {
+              const hisname: string[] = user.displayName.split(' ');
+              this.userService.
+                createUser(new User(
+                  {
+                    uid: user.uid,
+                    familyName: user.displayName.substring(hisname[0].length + 1),
+                    displayName: hisname[0], ...user
+                  }))
+
+              let c_user = new User({ uid: user.uid, lastName: name[1], displayName: name[0], ...user })
+
+              c_user.isActive = true;
+              c_user.lastActive = date;
+              this.currentUser = new BehaviorSubject(c_user);
+              localStorage.setItem('user', JSON.stringify(c_user));
+            }
           });
         } else {
           localStorage.setItem('user', null);
           this.userSigned.next(false);
 
         }
-      }, () => { this.subscruptions.forEach(x => x.unsubscribe()) }));
-  }
-  private mapToObject(map) {
-    if (map instanceof Map) {
-      let obj = {};
-      map.forEach((x, y) => {
-        obj[y] = x;
       });
-      return obj;
     }
-    return map;
   }
+
 
   // Sign in with email/password
   SignIn(email, password) {
@@ -116,11 +133,21 @@ export class UserAuthService {
 
   // Returns true when user is looged in and email is verified
   isUserSignedIn() {
-    let users: User = JSON.parse(localStorage.getItem('user'));
-    if (!users) {
-      return false;
-    }
+    if (this.afAuth.auth.currentUser != null && this.afAuth.auth.currentUser.isAnonymous) {
+      return true;
+
+    } else
+      if (!this.currentUser) {
+        return false;
+      }
     return true;
+  }
+  isUserAnny() {
+    if (this.afAuth.auth.currentUser != null && this.afAuth.auth.currentUser.isAnonymous) {
+      return true;
+
+    }
+    return false;
   }
 
   // Sign in with Google
@@ -154,20 +181,24 @@ export class UserAuthService {
   // Sign out
   SignOut() {
     return this.afAuth.auth.signOut().then(() => {
+      this.currentUser.next(null);
+
       let users: User = JSON.parse(localStorage.getItem('user'));
+      localStorage.removeItem('user');
       users.isActive = false;
       users.lastActive = new Date(Date.now());
       this.userService.updateUser(users).finally(() => {
-        localStorage.removeItem('user');
-        this.router.navigate(['/']);
+        this.router.navigate(['/']).finally(() => {
+      
+        });
       });
+     
+    }).catch(a => console.log(a)).finally(()=>{
+      location.reload();
 
-    }).catch(a => console.log(a));
+    });
   }
   setUserMessageToken(uid) {
-    this.ms.requestPermission(uid)
-    this.msg.monitorRefresh(uid)
-    this.msg.receiveMessages()
     // const messages = firebase.messaging();
     // messages.getToken().then(data=>{
     //   console.log(data)

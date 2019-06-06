@@ -14,17 +14,17 @@ export class MessagingService {
 
   constructor(private afs: AngularFirestore) { }
   getPermission(user) {
-    this.messaging.requestPermission()
-      .then(() => {
-        console.log('Notification permission granted.');
-        return this.messaging.getToken()
-      })
-      .then(token => {
-        this.saveToken(user, token)
-      })
-      .catch((err) => {
-        console.log('Unable to get permission to notify.', err);
-      });
+    // this.messaging.requestPermission()
+    //   .then(() => {
+    //     console.log('Notification permission granted.');
+    //     return this.messaging.getToken()
+    //   })
+    //   .then(token => {
+    //     this.saveToken(user, token)
+    //   })
+    //   .catch((err) => {
+    //     console.log('Unable to get permission to notify.', err);
+    //   });
   }
   monitorRefresh(user) {
     this.messaging.onTokenRefresh(() => {

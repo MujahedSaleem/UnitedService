@@ -1,14 +1,15 @@
 import { map, startWith } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Hero } from '../../../modules/heroes/shared/hero.model';
-import { HeroService } from '../../../modules/heroes/shared/hero.service';
+import { Router, ActivatedRoute } from '@angular/router';
+
 import { LoggerService } from '../../../core/services/logger.service';
 import { AppConfig } from '../../../configs/app.config';
 import { PostService } from 'src/app/core/services/Post.service';
 import { Post } from 'src/app/modules/posts/shared/post.model';
 import * as _ from 'lodash';
+import { UserUtilsService } from 'src/app/core/services/user-utils.service';
+import { User } from 'src/app/modules/users/shared/user.model';
 @Component({
   selector: 'app-search-bar',
   templateUrl: './search-bar.component.html',
@@ -19,28 +20,29 @@ import * as _ from 'lodash';
 
 export class SearchBarComponent implements OnInit {
 
-  defaultPosts: Array<Post>;
+  defaultPosts: Array<User>;
   postFormControl: FormControl;
   postsFiltered: any;
   tags: any = false;
-  constructor(private postService: PostService,
+
+  constructor(private userService: UserUtilsService,
+    private activatedRoute: ActivatedRoute,
     private router: Router) {
     this.defaultPosts = [];
     this.postFormControl = new FormControl();
   }
 
   ngOnInit() {
-    this.postService.getPosts().subscribe((posts: Array<Post>) => {
-      this.defaultPosts = posts;
-      this.postFormControl.valueChanges.pipe(
-        startWith(null),
-        map(value => this.filterHeroes(value)))
-        .subscribe(postsFiltered => {
-          this.postsFiltered = postsFiltered;
+    this.postFormControl.valueChanges
+      .subscribe(value => {
+
+        this.userService.getUsers(value).subscribe((users: Array<User>) => {
+          this.postsFiltered = users;
         });
-    });
+      });
+
   }
-  
+
   setValue(i, e) {
     if (e.checked) {
       this.tags = 'true'
@@ -48,19 +50,21 @@ export class SearchBarComponent implements OnInit {
       this.tags = 'false'
     }
   }
-  filterHeroes(val: string): Post[] {
+  filterHeroes(val: string = ''): User[] {
     // if (this.tags) {
     //   return val ? this.defaultPosts.filter(post => post.description.toLowerCase().includes(val.toLowerCase())
     //                     && post.tags.filter(a => a.toLowerCase().includes(val.toString()))) : this.defaultPosts;
 
     // }
-    return val ? this.defaultPosts.
-      filter(post => post.description.toLowerCase().indexOf(val.toLowerCase()) === 0) : this.defaultPosts;
+    let User = new Array<User>();
 
+    return User;
   }
-  
-  searchHero(hero: Post): Promise<boolean> {
-    LoggerService.log('Moved to hero with id: ' + hero.id);
-    return this.router.navigate([AppConfig.routes.posts + '/' + hero.id]);
+
+  searchHero(hero: User) {
+    LoggerService.log('Moved to hero with id: ' + hero.uid);
+
+    return this.router.navigate(['/', hero.uid], { replaceUrl: true });
+
   }
 }

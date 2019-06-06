@@ -36,7 +36,7 @@
                     </div>
                 </td>
                 <td *ngIf="messagesContainer != 'Inbox' ||messagesContainer != 'Unread'">
-                    <button *ngIf="messagesContainer == 'Outbox'" (click)="delteMessage(user?.uid)" (click)="$event.stopPropagation()" class="btn btn-danger">Delete</button>
+                    <button *ngIf="messagesContainer == 'Outbox'" (click)="delteMessage(user.uid)" (click)="$event.stopPropagation()" class="btn btn-danger">Delete</button>
                 </td>
             </tr>
         </table>

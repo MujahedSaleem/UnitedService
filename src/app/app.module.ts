@@ -14,11 +14,10 @@ import {registerLocaleData} from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import localeAr from '@angular/common/locales/ar';
 import { RouterModule } from '@angular/router';
-import { AngularFirestore } from 'angularfire2/firestore';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from 'src/environments/environment';
-import { MDBBootstrapModule } from 'angular-bootstrap-md/lib/mdb-free.module';
+import { NgxAuthFirebaseUIModule } from 'ngx-auth-firebaseui';
 declare const require;
 registerLocaleData(localeEs, 'es');
 registerLocaleData(localeAr, 'ar');
@@ -27,26 +26,28 @@ registerLocaleData(localeAr, 'ar');
 @NgModule({
   imports: [
     FirebaseModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-    BrowserModule.withServerTransition({appId: 'angularexampleapp'}),
+    BrowserModule.withServerTransition({appId: 'UnitedScoial'}),
     HttpClientModule,
 
     NgxGalleryModule,
+    NgxAuthFirebaseUIModule.forRoot(environment.firebase),
 
     NgxExampleLibraryModule.forRoot({
       config: {
         say: 'hello'
       }
     }),
+
     CoreModule,
     SharedModule,
-    RouterModule,
-    AppRoutingModule,
+    RouterModule  ,
+      AppRoutingModule,
+      ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   declarations: [
     AppComponent
   ],
-  providers: [AngularFirestore,
+  providers: [
     {provide: APP_CONFIG, useValue: AppConfig},
     {provide: ErrorHandler, useClass: SentryErrorHandler},
 

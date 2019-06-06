@@ -45,46 +45,42 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
     private chatSvc: ChatService,
     public userActive: PresenceService,
     private atuhservice: UserAuthService,
-    public active: ActiveService,
+    public active: PresenceService,
     private userService: UserUtilsService,
     private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
+
     this.active.setPresence('online');
     if (this.reciverId) {
-        this.userService.getUser(this.reciverId).subscribe((user: User) => {
+      this.userService.getUser(this.reciverId).subscribe(async (user: User) => {
         this.user = user;
         this.isContentLoader = false;
         this.chatSvc.setName(this.user.displayName);
+        this.chatSvc.doUserHaveMessage(this.atuhservice.currentUser.value.uid, this.reciverId).subscribe(async data => {
+          if (data.length > 0) {
+            let m = await this.chatSvc.getAllChatMessages(this.atuhservice.currentUser.value.uid, this.reciverId);
+            this.subscriptions.push(m.subscribe((results) => {
+              if (results) {
+                this.chatSvc.updateMessages(this.atuhservice.currentUser.value.uid, { 'isRead': true }, results.room)
 
+                setTimeout(() => {
 
-        this.chatSvc.getAllChatMessages(this.reciverId).subscribe((results) => {
-          if (results) {
-
-
-            setTimeout(() => {
-              this.chats = results.sort((a: any, b: any) => {
-                return a.message_date['seconds'] - b.message_date['seconds'];
-
-              });
-              this.active.getPresence(this.reciverId).subscribe(precence => {
-                this.chats.forEach(x => {
-                  if (x.senderId === this.atuhservice.currentUser.value.uid) {
-                    x.isRead = true;
-                  }
-                });
-                if (precence === 'online') {
-                  this.chatSvc.updateMessages(this.reciverId, this.atuhservice.currentUser.value.uid, {
-                    isRead: true
+                  this.chats = results.messages.sort((a: any, b: any) => {
+                    return a.message_date['seconds'] - b.message_date['seconds'];
                   });
-                }
+                  this.cd.detectChanges();
+                  this.chatPS.directiveRef.scrollToBottom(0, 300);
+                }, 1100)
 
-              });
-              this.cd.detectChanges();
-              this.chatPS.directiveRef.scrollToBottom(0, 300);
-            }, 1100);
+              }
+            }));
+
           }
-        });
+        })
+
+
+
       });
     }
   }
@@ -107,8 +103,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.subscriptions.forEach(x => x.unsubscribe());
-    this.active.setPresence('away');
-    this.userActive.updateOnAway();
+    this.cd.detach();
   }
 
   onScrollEvent(event) { }

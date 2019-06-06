@@ -14,14 +14,15 @@ import { PhotoEditorComponent } from '../users/components/Photo-Editor/Photo-Edi
 import { UsereModule } from '../users/user.module';
 @NgModule({
     imports: [
+        PostRoutingModule,
         HotkeyModule.forRoot(),
         MDBBootstrapModule.forRoot(),
         FormsModule,
         ReactiveFormsModule,
         UsereModule,
         SharedModule,
-        KeyboardShortcutsModule,
-        PostRoutingModule],
+        KeyboardShortcutsModule
+        ],
     declarations: [
         PostDetailPageComponent,
         PostCreatePageComponent,

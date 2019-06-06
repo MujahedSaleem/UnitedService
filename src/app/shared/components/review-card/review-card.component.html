@@ -1,0 +1,17 @@
+<app-hero-loading *ngIf="!user"></app-hero-loading>
+<mat-card class="hero-card mt-5" *ngIf="user">
+    <mat-card-header>
+        <div mat-card-avatar class="hero-header__image" style="background-size: 40px 40px" [ngStyle]="{'background-image': 'url(' + user.photoURL+ ')'}"></div>
+        <mat-card-title class="text-primary">{{user.displayName +' '+ user.familyName}}</mat-card-title>
+        <mat-card-subtitle>{{review.date|date}}</mat-card-subtitle>
+        <div class="flex-spacer"></div>
+
+        <div class="post-actions">
+            <star-rating [starType]="'svg'" [rating]="review.rate" [disabled]="true"></star-rating>
+        </div>
+    </mat-card-header>
+
+    <mat-card-content>
+        {{review.rateContent}}
+    </mat-card-content>
+</mat-card>

@@ -33,8 +33,10 @@ import {
 } from '@angular/material';
 import { NgModule } from '@angular/core';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import { FlexLayoutModule } from '@angular/flex-layout';
 @NgModule({
   imports: [
+    FlexLayoutModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,

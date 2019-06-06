@@ -5,20 +5,20 @@ import { RouterModule } from '@angular/router';
 import { UserAuthService } from './services/user-auth.service';
 import { AuthGuard } from './guard/auth.guard';
 import { UserUtilsService } from './services/user-utils.service';
-import { AgmCoreModule } from '@agm/core'; 
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from 'src/environments/environment';
 import { MessageService } from './services/Message.service';
 import { PostService } from './services/Post.service';
+import { NotifierModule } from 'angular-notifier';
 @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     RouterModule,
+    NotifierModule,
   ],
   exports: [
     BrowserModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+
   ],
   providers: [PostService,MessageService,UserAuthService, AuthGuard, UserUtilsService]
 

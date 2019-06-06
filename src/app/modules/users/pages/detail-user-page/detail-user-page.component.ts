@@ -5,6 +5,10 @@ import { UserUtilsService } from 'src/app/core/services/user-utils.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LoggerService } from 'src/app/core/services/logger.service';
 import { PresenceService } from 'src/app/core/services/presence.service';
+import { ProgressBarService } from 'src/app/core/services/progress-bar.service';
+import { NotifierService } from 'angular-notifier';
+import { Review } from 'src/app/shared/components/review-card/review-card';
+import { MatTabChangeEvent } from '@angular/material';
 
 @Component({
   selector: 'app-detail-user-page',
@@ -13,53 +17,85 @@ import { PresenceService } from 'src/app/core/services/presence.service';
 })
 export class DetailUserPageComponent implements OnInit {
   user: User;
+    reviews: Review[];
+
   done: any = true;
   presence$;
-  x
+  x= true;
   Action = false;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
   constructor(private userService: UserUtilsService,
     public presence: PresenceService,
     private log: LoggerService,
+    private progressBarService:
+      ProgressBarService,
+
     private activatedRoute: ActivatedRoute,
     private router: Router,
-  ) { }
+  ) {
+    // override the route reuse strategy
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
+  }
 
   ngOnInit() {
+    this.progressBarService.increase();
+
     const id: string = this.activatedRoute.snapshot.params.id;
     const user: User = JSON.parse(localStorage.getItem('user'));
     if (user) {
-      this.userService.DoLike(user.uid, id).then(data => {
-        this.x = data.empty;
-      });
+
       if (user && id !== user.uid) {
         this.Action = true;
 
       }
     }
     this.userService.getUser(id).subscribe((user: User) => {
-      if (user === null) {
-        this.router.navigate(['404']);
-      }
-      this.user = user;
-      this.loadImage();
-      this.presence$ = this.presence.getPresence(id);
 
+      this.user = user;
+      if (this.user === null) {
+        this.router.navigate(['404']);
+      } else {
+        this.loadImage();
+        this.presence$ = this.presence.getPresence(id);
+      }
     }, err => this.router.navigate(['404']));
+    setTimeout(a => {
+      this.progressBarService.decrease();
+
+    }, 700)
+  }
+  getReview(event: MatTabChangeEvent) {
+
+    if(event.index===3){
+    this.reviews = new Array<Review>();
+    this.userService.getReviews(this.user.uid).subscribe(data => {
+      console.log(data)
+       data.forEach((review)=>{
+         this.reviews.push(review);
+       });
+    });
+  }
   }
   like() {
     this.done = false;
-    this.x = !this.x;
-    const id: string = this.activatedRoute.snapshot.params.id;
+    const recipientId = '' + this.activatedRoute.snapshot.params.id;
     const user: User = JSON.parse(localStorage.getItem('user'));
-    if (id === user.uid) {
-      return;
-    }
-    this.userService.like(user.uid, id, this.x);
-    setTimeout(() => { this.done = true }, 200)
+    this.userService.like(user.uid, recipientId)
+      .subscribe(data => {
+        if (data.length === 12) {
+          this.x = false;
+        } else {
+          this.x = true;
+        }
 
+        this.done = true;
+
+      });
   }
+
   sendMessage() {
     const id: string = this.activatedRoute.snapshot.params.id;
 

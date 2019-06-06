@@ -1,18 +1,19 @@
 <app-hero-loading *ngIf="!post"></app-hero-loading>
-<mat-card class="hero-card" *ngIf="post">
+<mat-card class="hero-card mt-5" *ngIf="post">
     <mat-card-header *ngIf=" photo|async as p">
         <div (click)="seePostDetails(post)" mat-card-avatar class="hero-header__image" style="background-size: 40px 40px" [ngStyle]="{'background-image': 'url(' + p.photoURL+ ')'}"></div>
         <mat-card-title class="text-primary" (click)="seePostDetails(post)">{{p.displayName +' '+ p.familyName}}</mat-card-title>
         <mat-card-subtitle>{{post.date|date}}</mat-card-subtitle>
         <div class="flex-spacer"></div>
-        <!-- <div class="post-actions">
-            {{post.likes}}
-            <mat-icon class="icon__like--red" (click)="like(post)">favorite
-            </mat-icon>
-        </div> -->
+
+        <div class="post-actions">
+            <star-rating *ngIf="post.closed" [starType]="'svg'" [rating]="post.rate" [disabled]="true"></star-rating>
+        </div>
     </mat-card-header>
 
     <mat-card-content>
+        {{post.rate}}
+
         <div class="text-success m-1">{{post.price}} ₪.‎</div>
         <div> <i class="fas fa-map-marker-alt m-1"></i> {{post.location}}</div>
         {{post.description}}
@@ -23,18 +24,21 @@
     <br/>
 
     <div *ngIf="post.photos" class="mt-5 d-inline">
-        <img mat-card-image *ngFor="let item of post.photos" (click)="seeHeroDetails(post)" src="{{item}}">
+        <img mat-card-image *ngFor="let item of post.photos" (click)="openDialog(item)" src="{{item}}">
     </div>
-    <mat-card-actions *ngIf="canComment">
+    <mat-card-actions *ngIf="canComment && !post.closed">
         <hr>
         <button mat-button color="primary" (click)="sendMessage()">Send message <i class="fas fa-envelope"></i></button>
+
+        <button mat-button style="color:#5cb85c" (click)="finish()">Finish <i class="fas fa-check-double"></i></button>
         <hr>
     </mat-card-actions>
+    <hr>
     <mat-card-content>
         <div *ngFor="let item of allComments | async" class="m-3">
             <app-comment [Comment]="item"></app-comment>
         </div>
-        <div *ngIf="canComment" (keydown)="enter($event)">
+        <div *ngIf="canComment && !post.closed" (keydown)="enter($event)">
             <mat-form-field class="example-full-width">
                 <textarea style=" background-color: #f2f3f5" name="coment" [(ngModel)]="comments" required matInput placeholder="Leave a comment"></textarea>
             </mat-form-field>

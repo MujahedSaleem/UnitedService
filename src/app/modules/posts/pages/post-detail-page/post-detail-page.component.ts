@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { HeroService } from 'src/app/modules/heroes/shared/hero.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Hero } from 'src/app/modules/heroes/shared/hero.model';
 import { Location } from '@angular/common';
 import { AppConfig } from 'src/app/configs/app.config';
 import { UtilsHelperService } from 'src/app/core/services/utils-helper.service';
 import { PostService } from '../../../../core/services/Post.service';
 import { Post } from '../../shared/post.model';
+import { ProgressBarService } from 'src/app/core/services/progress-bar.service';
 
 @Component({
   selector: 'app-post-detail-page',
@@ -21,12 +20,32 @@ export class PostDetailPageComponent implements OnInit {
 
   constructor(private postService: PostService,
     private location: Location,
+    private progressBarService: ProgressBarService,
+
     private router: Router,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute) {
+
+    // override the route reuse strategy
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
+  }
 
   ngOnInit() {
+    this.progressBarService.increase();
     const postId = this.activatedRoute.snapshot.paramMap.get('id');
-    this.postService.getPost(postId).subscribe(data => this.post = data);
+
+    this.postService.getPost(postId).subscribe(data => {
+      if (data === undefined) {
+        this.router.navigate(['/404']);
+      }
+      this.post = data;
+    
+    });
+
+    setTimeout(() => {
+      this.progressBarService.decrease();
+    }, 400);
   }
   goBack(): void {
     this.location.back();

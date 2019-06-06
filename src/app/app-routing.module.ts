@@ -4,17 +4,26 @@ import { Error404PageComponent } from './shared/pages/error404-page/error404-pag
 import { HomePageComponent } from './shared/pages/home-page/home-page.component';
 import { AppConfig } from './configs/app.config';
 import { AuthGuard } from './core/guard/auth.guard';
+import { LoggedInGuard } from 'ngx-auth-firebaseui';
 const routes: Routes = [
-  { path: '', component: HomePageComponent, pathMatch: 'full' },
-  { path: AppConfig.routes.createService, loadChildren: './modules/heroes/heroes.module#ServicesModule' },
-  { path: AppConfig.routes.message, loadChildren: './modules/messages/chat.module#ChatModule' },
-  { path: AppConfig.routes.posts, loadChildren: './modules/posts/post.module#PostModule' },
-  { path: AppConfig.routes.auth, loadChildren: './modules/Auth/Auth.module#AuthModule' },
-  { path: AppConfig.routes.error404, component: Error404PageComponent },
-  { path: ':id', loadChildren: './modules/users/user.module#UsereModule' },
-  { path: '**', redirectTo: '/' + AppConfig.routes.error404 },
+  { path: 'home', component: HomePageComponent },
+  { path: '', component: HomePageComponent },
+  { path: '*', redirectTo: '', pathMatch: 'full' },
+  {
+    path: '',
+    runGuardsAndResolvers: 'always',
+    canActivate: [LoggedInGuard ,AuthGuard],
+    children: [
+     
+      { path: AppConfig.routes.message, loadChildren: './modules/messages/chat.module#ChatModule' },
+      { path: AppConfig.routes.posts, loadChildren: './modules/posts/post.module#PostModule' },
+      { path: AppConfig.routes.error404, component: Error404PageComponent },
+      { path: ':id', loadChildren: './modules/users/user.module#UsereModule' },
+      { path: '**', redirectTo: '/' + AppConfig.routes.error404 },
+      { path: 'en', redirectTo: '' }, // because english language is the default one
+    ]
+  },  { path: '**', redirectTo: '/' + AppConfig.routes.error404 },
 
-  { path: 'en', redirectTo: '' }, // because english language is the default one
 
   // otherwise redirect to 404
 ];

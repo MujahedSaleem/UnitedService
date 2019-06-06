@@ -6,16 +6,10 @@ import { ChatWindowComponent } from './chat-window/chat-window.component';
 import { ChatHeaderComponent } from './chat-header/chat-header.component';
 import { ChatFooterComponent } from './chat-footer/chat-footer.component';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireStorageModule } from '@angular/fire/storage';
-import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
-import { HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { WebcamDialog } from './chat-header/chat-header.component';
-import { ServiceWorkerModule } from '@angular/service-worker';
 
 import { WebCamModule } from 'ack-angular-webcam';
 

@@ -19,7 +19,7 @@
     <br/>
 
     <div *ngIf="post.photos" class="mt-5 d-inline">
-        <img mat-card-image *ngFor="let item of post.photos" (click)="seeHeroDetails(post)" src="{{item}}">
+        <img mat-card-image *ngFor="let item of post.photos" (click)="openDialog(item)" src="{{item}}">
     </div>
     <mat-card-actions>
         <hr>

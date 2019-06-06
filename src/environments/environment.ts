@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
+  production: true,
   firebase: {
     apiKey: 'AIzaSyAlaq-morkILkm2NsnGgDs2mHiFDREW9Fc',
     authDomain: 'freeworker-5517f.firebaseapp.com',
@@ -8,8 +8,6 @@ export const environment = {
     storageBucket: 'freeworker-5517f.appspot.com',
     messagingSenderId: '665869299509'
   },
-  wsserver: 'http://localhost:3000',
-  iceservers: 'http://localhost:3000/getICETokens',
   algolia: {
     appId: 'AJEREH8JH9',
     apiKey: '215c1327800d686ab106fea63528c815',

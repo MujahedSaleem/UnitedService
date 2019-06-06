@@ -8,6 +8,54 @@
     font-size: 16px;
 }
 
+.space {
+    flex: 1 1 0;
+}
+
+.btn-round {
+    border-radius: 10em;
+}
+
+$color2: #ffffff;
+.color-2 {
+    background-color: $color2;
+}
+
+.material-design {
+    position: relative;
+    canvas {
+        opacity: 0.25;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
+
+$color1: rgb(255, 255, 255);
+.btn {
+    border: none;
+    color: #426FC5;
+    overflow: hidden;
+    margin: 1rem;
+    padding: 0;
+    text-transform: uppercase;
+    width: 150px;
+    height: 40px;
+    background-color: $color1;
+}
+
+.btn-round {
+    border-radius: 10em;
+}
+
+.example-icon {
+    padding: 0 14px;
+}
+
+.progress-bar {
+    flex: 1 1 auto;
+}
+
 .rounded-circle {
     max-height: 50px;
     border: 2px solid white;
@@ -44,7 +92,6 @@ nav[_ngcontent-c0] {
             padding: 0 calculateRem(16px);
             color: $secondary--color;
             height: 4rem;
-            background: $primary--color;
             .mat-raised-button {
                 color: $primary--color;
                 margin-right: 1rem;

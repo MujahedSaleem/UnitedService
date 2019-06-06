@@ -13,7 +13,6 @@ export class User {
     age: number;
     numOfReciver: number;
     numberOfRoom: number;
-    chats: any;
     gender: string;
     messages: Array<string>
     email: string;
@@ -32,7 +31,6 @@ export class User {
         this.posts = User.posts;
         this.city = User.city || ' ';
         this.intrest = User.intrest || ' ';
-        this.chats = this.objectToMap(User.chats);
         this.displayName = User.displayName;
         this.email = User.email;
         this.age = User.age;
@@ -44,18 +42,5 @@ export class User {
         this.messages = User.messages || new Array<string>();
         this.numOfReciver = User.numOfReciver || 0;
     }
-    private objectToMap(obj) {
-        if(!obj){
-            return new Map<string,string>();
-
-        }
-        if (obj instanceof Map) {
-            return obj;
-        }
-        let x = new Map<string, string>();
-        Object.keys(obj).forEach(key => {
-            x.set(key, obj[key]);
-        });
-        return x;
-    }
+    
 }

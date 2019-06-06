@@ -57,7 +57,6 @@ export class ActiveService {
   async setPresence(status: string) {
   if (this.atuhservice.currentUser.value) { 
      const user = await this.atuhservice.currentUser.value;
-    
       return this.db.object(`msstatus/${user.uid}`).update({ status, timestamp: this.timestamp });
     }
   }

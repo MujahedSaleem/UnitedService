@@ -20,10 +20,11 @@ declare const Modernizr;
 export class AppComponent implements OnInit {
 
   isOnline: boolean;
-
+  opened: boolean;
   constructor(private title: Title,
     private meta: Meta,
     private snackBar: MatSnackBar,
+    
     private router: Router,
     swPush: SwPush,
     public presence: PresenceService,
@@ -44,7 +45,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.title.setTitle(this.i18n({ value: 'App title', id: '@@appTitle' }));
+    this.title.setTitle('united Scoial');
 
     this.onEvents();
     this.checkBrowser();

@@ -1,64 +1,62 @@
 <header>
-    <nav>
-        <div fxFlex fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center center">
-            <div fxFlex="40" class="d-inline-flex">
-                <div class="d-inline">
 
-                    <a mat-raised-button routerLink="/">
-                        <i class="fa fa-home"></i> Home
-                    </a>
-                </div>
-
-                <div [routerLink]="['/', user.uid,'edit']" *ngIf="userAuth.currentUser |async as user" class="d-inline-flex avatarr mr-1">
-
-                    <div mat-raised-button mat-card-avatar class="hero-header__image" color="primary" style="background-size: 40px 40px" [ngStyle]="{'background-image': 'url(' + user.photoURL + ')'}"></div>
-                    <mat-card-title class="text-white ">{{user.displayName+' '+user.familyName}}</mat-card-title>
-                </div>
+    <mat-sidenav-container class="sidenav-container">
 
 
-                <div class="d-inline">
-                    <a *ngIf="loggedIn()" mat-raised-button [routerLink]="['/messages']">
-                        <i class="fab fa-facebook-messenger"></i>Messanger
-                    </a>
+        <mat-sidenav-content>
+            <mat-toolbar style="background-color: #1976D2 !important">
+                <mat-toolbar-row style="height:auto">
+                    <!-- <button mat-icon-button (click)="drawer.toggle()" fxShow="true" fxHide.gt-sm>
+                                    <mat-icon>menu</mat-icon>
+                                  </button> -->
+                    <div fxShow="true">
+                        <!-- The following menu items will be hidden on both SM and XS screen sizes -->
+                        <a [routerLink]="['/']" mat-button>
+                            <mat-icon>home</mat-icon>
+                            <span fxHide.lt-md="true">Home</span>
+                        </a>
+                        <a href="#" mat-button *ngIf="userAuth.isUserSignedIn() && !userAuth.isUserAnny()">
+                            <mat-icon>notifications</mat-icon>
+                            <span fxHide.lt-md="true">Notifications</span>
+                        </a>
+                        <a [routerLink]="['/messages']" *ngIf="userAuth.isUserSignedIn() && !userAuth.isUserAnny()" mat-button>
+                            <mat-icon>message</mat-icon>
+                            <span fxHide.lt-md="true">Messages</span>
 
-                </div>
 
-                <div class="d-inline">
-                    <a *ngIf="loggedIn()" mat-raised-button (click)="logout()">
-                        <i class="fas fa-sign-out-alt"></i> Sign Out </a>
-                </div>
-
-                <div class="d-inline" *ngIf="!loggedIn()">
-                    <a mat-raised-button (click)="login()">
-                        <i class="fas fa-sign-in-alt"></i> Sign In
-                    </a>
-                </div>
-
-
-
-            </div>
-            <div fxFlex class="d-flex justify-content-end">
-                <app-search-bar></app-search-bar>
-                <button mat-icon-button [matMenuTriggerFor]="matmenu">
-          <mat-icon>language</mat-icon>
-        </button>
-                <mat-menu #matmenu="matMenu">
-                    <div mat-menu-item *ngFor="let lang of languages">
-                        <a class="language-link" href="{{(lang.name === 'en') ? currentUrl : '/' + lang.name + currentUrl}}" (click)="changeLanguage(lang.name)">
-                            <mat-icon>flag</mat-icon>
-                            <span>{{lang.label}}</span>
                         </a>
                     </div>
-                </mat-menu>
-                <a class="icon__image" href="{{appConfig.repositoryURL}}" target="_blank">
-                    <img src="assets/images/github-circle-white-transparent.svg">
-                </a>
-            </div>
-        </div>
-    </nav>
-    <section class="progress-bar ">
+                    <span class="example-spacer d-flex justify-content-center">
+                            <section >
+                                    <mat-progress-spinner [diameter] ="'40'" *ngIf="progressBarMode === 'indeterminate'"  mat-card-avatar [color]="'primary'" [mode]="progressBarMode">
+                                    </mat-progress-spinner>
+                                    <div  *ngIf="progressBarMode != 'indeterminate'"  mat-card-avatar style="background-image:url('/assets/images/logo.png'); background-size: 40px 40px" class="hero-header__image" ></div>
+                                </section>
 
-        <mat-progress-bar [color]="'primary'" [mode]="progressBarMode">
-        </mat-progress-bar>
-    </section>
+                    </span>
+                    <div fxShow="true" class="d-inline-flex">
+                        <app-search-bar></app-search-bar>
+                    </div>
+
+                    <div class="d-inline-flex" *ngIf="userAuth.currentUser| async as data">
+                        <div [matMenuTriggerFor]="menu" mat-card-avatar style="background-size: 40px 40px" class="hero-header__image" [ngStyle]="{'background-image': 'url(' + data.photoURL+ ')'}"></div>
+                        <a [matMenuTriggerFor]="menu" fxHide.lt-md="true" mat-button>
+                            <span>{{data.displayName+' '+data!.familyName}}</span>
+                        </a>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item [routerLink]="['/',data.uid,'edit']"><mat-icon>person</mat-icon>Profile</button>
+                            <button mat-menu-item (click)="logout()">LogOut</button>
+                        </mat-menu>
+
+                    </div>
+                    <a [routerLink]="['/','posts']" *ngIf="userAuth.isUserSignedIn() && !userAuth.isUserAnny()" mat-button class="btn btn-round material-design">
+                        <mat-icon>add_circle</mat-icon> <span>Service</span>
+                    </a>
+                    <a mat-button (click)="logout()" *ngIf="userAuth.isUserAnny()">LogOut</a>
+
+                </mat-toolbar-row>
+            </mat-toolbar>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+
 </header>

@@ -3,11 +3,10 @@
 </mat-form-field>
 
 <mat-autocomplete #heroesAutocomplete="matAutocomplete">
-    <mat-option *ngFor="let post of postsFiltered" (onSelectionChange)="searchHero(post)" [value]="post.name">
-        {{post.name}}
+    <mat-option class="text" *ngFor="let post of postsFiltered" (onSelectionChange)="searchHero(post)" [value]="post.displayName">
+        {{post.displayName}}
     </mat-option>
 </mat-autocomplete>
-<br>
 <!-- <mat-slide-toggle [checked]="tags === 'true' ? true : false" (change)="setValue( i , $event )">
     enable tags?
 </mat-slide-toggle> -->

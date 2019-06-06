@@ -49,23 +49,18 @@
             </div>
             <div class="col-sm-8 ">
                 <div class="tab-panel">
-                    <mat-tab-group class="member-tabset">
+                    <mat-tab-group (selectedTabChange)="getReview($event)" class="member-tabset">
+                        <mat-tab label="Main Info">
+                            <ngx-auth-firebaseui-user [canDeleteAccount]="false"></ngx-auth-firebaseui-user>
+                        </mat-tab>
                         <mat-tab label="Posts" style="background-color:gray !important ">
-                            <div *ngIf="canEdit" class="text-center mb-3">
-                                <a mat-button [routerLink]="['/posts/create']">
-                                    <mat-icon style="font-size: 60px !important"> add_to_queue </mat-icon>
-                                </a>
-                            </div>
+
 
                             <div *ngIf="user.posts" style="background-color:gray !important ">
                                 <app-post-card style="width:90%" *ngFor="let post of user.posts" [id]="post"></app-post-card>
                             </div>
 
-                            <div *ngIf="  !user.posts" class="text-center">
-                                <a mat-button [routerLink]="['/posts/create']" style="margin: 11rem !important">
-                                    <mat-icon style="font-size: 60px !important"> add_to_queue </mat-icon>
-                                </a>
-                            </div>
+
 
                         </mat-tab>
                         <mat-tab label="Edit Profile">
@@ -93,6 +88,10 @@
                         </mat-tab>
                         <mat-tab label=" Galary">
                             <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
+                        </mat-tab>
+                        <mat-tab (click)="getReview()" label="reviews">
+                            <app-review-card *ngFor="let review of reviews" [review]="review"></app-review-card>
+                            <hr>
                         </mat-tab>
                     </mat-tab-group>
                 </div>

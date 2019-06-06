@@ -9,8 +9,9 @@ import { isPlatformBrowser } from '@angular/common';
 import { map, tap, catchError } from 'rxjs/operators';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { AngularFirestoreCollection, AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
-import { User } from 'firebase';
-
+import * as firebase from 'firebase';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { UserAuthService } from './user-auth.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -18,10 +19,13 @@ export class PostService {
   private postsCollection: AngularFirestoreCollection<Post>;
   constructor(private afs: AngularFireDatabase,
     private Logger: LoggerService,
+    private http: HttpClient,
     private db: AngularFirestore,
     private i18n: I18n,
     @Inject(PLATFORM_ID) private platformId: Object) {
-    this.postsCollection = this.db.collection(AppConfig.routes.posts, ref => ref.limit(25).orderBy('date', 'desc'));
+    this.postsCollection = this.db.collection(AppConfig.routes.posts, ref => ref.limit(25).orderBy('date', 'desc')
+    );
+
   }
   public static handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
@@ -36,7 +40,7 @@ export class PostService {
     };
   }
   updatePosts(userId: string, photoUrl: string) {
-    const u: User = JSON.parse(localStorage.getItem('user'));
+    const u: firebase.User = JSON.parse(localStorage.getItem('user'));
     if (userId !== u.uid) {
       return;
     }
@@ -48,8 +52,11 @@ export class PostService {
         });
       });
   }
-  getPosts(): Observable<Post[]> {
-
+  getPosts(uid): Observable<Post[]> {
+    if (uid) {
+      return this.http.
+        get<Post[]>(`http://mujshrf-001-site1.etempurl.com/api/values/${uid}`, { headers: { 'Access-Control-Allow-Origin': '*' } });
+    }
     return this.postsCollection.snapshotChanges([])
       .pipe(
         map((actions) => {
@@ -61,23 +68,27 @@ export class PostService {
         catchError(PostService.handleError('getposts', []))
       );
   }
-  postDoc: AngularFirestoreDocument<Post>;
   getPost(id: string) {
-    this.postDoc = this.db.doc(`${AppConfig.routes.posts}/${id}`);
-    return this.postDoc.snapshotChanges().pipe(map(data => new Post({ id: data.payload.id, ...data.payload.data() })));;
+
+    return this.db.doc<Post>(`${AppConfig.routes.posts}/${id}`).snapshotChanges().pipe(
+      map(data => data.payload.exists === true ? new Post({
+        id: data.payload.id
+        , ...data.payload.data()
+      }) : undefined),
+    );
 
   }
-  createComment(Comment, postid: string, user: User) {
+  createComment(Comment, postid: string, user: firebase.User) {
     return this.db.doc(`${AppConfig.routes.posts}/${postid}`).collection('Comments').add(
       {
         content: Comment,
         authoruid: user.uid,
-        postid: postid,
+        date: new Date()
       });
   }
 
   getComment(postid: string) {
-    return this.db.doc(`${AppConfig.routes.posts}/${postid}`).collection('Comments').valueChanges()
+    return this.db.doc(`${AppConfig.routes.posts}/${postid}`).collection('Comments',ref=>ref.orderBy('date','asc')).valueChanges()
       .pipe(map(data => {
         let m = new Array();
         data.forEach((x, y) => {
@@ -85,6 +96,33 @@ export class PostService {
         });
         return m;
       }));
+  }
+  setRate(rate, rateContent, post: Post, uid) {
+    if (post.uid === uid) {
+      this.db.doc(`${AppConfig.routes.posts}/${post.id}`).update({ rate: rate, rateContent: rateContent });
+    } else {
+
+      this.db.doc(`${AppConfig.routes.users}/${post.uid}`).collection('rate').add({
+        rate: rate,
+        rateContent:rateContent,
+        uid: uid,
+        date : new Date(Date.now()).toDateString()
+      }).then(() => {
+        this.db.doc(`${AppConfig.routes.users}/${uid}`).collection('rate').add({
+          rate: post.rate,
+          rateContent: post.rateContent,
+          uid:post.uid,
+          date : new Date(Date.now()).toDateString()
+
+        }).then(() => {
+          this.db.doc(`${AppConfig.routes.posts}/${post.id}`).update({ closed: true });
+
+        });
+      });
+
+    }
+
+
   }
   getTags(postid: string) {
     return this.db.doc(`${AppConfig.routes.posts}/${postid}`).collection('tags').valueChanges()

@@ -1,0 +1,35 @@
+<h1 mat-dialog-title>Welcome {{data.displayName}} this is the Final step</h1>
+<div mat-dialog-content *ngIf="data.showCode">
+
+
+    <div style="background-color: white;border-radius: 25px" *ngIf="done && return_data.rateContent.length>10">
+        <p style="color: black; font-size: 17px;">Give This Code to person serve you</p>
+        <br>
+        <p style="color: black; font-size: 17px;"> {{data.code}}</p>
+
+    </div>
+    <br>
+    <p>Rate him</p>
+    <br>
+    <star-rating [starType]="'svg'" [rating]="1" [(rating)]="return_data.rate"></star-rating>
+    <br>
+    <textarea type="text" placeholder="Please Write review About user" rows="4" [(ngModel)]="return_data.rateContent" class="md-textarea form-control" mdbInput></textarea>
+</div>
+<div mat-dialog-content *ngIf="!data.showCode">
+
+    <p *ngIf="!done">Enter the Code which get from person servred </p>
+    <mat-form-field *ngIf="!done">
+        <input matInput [(ngModel)]="data.enteredCode">
+    </mat-form-field>
+    <br>
+    <p *ngIf="done ">Rate him</p>
+    <br>
+    <star-rating *ngIf="done " [starType]="'svg'" [rating]="1" [(rating)]="return_data.rate"></star-rating>
+    <br>
+    <textarea type="text" *ngIf="done " placeholder="Please Write review About user" rows="4" [(ngModel)]="return_data.rateContent" class="md-textarea form-control" mdbInput></textarea>
+
+</div>
+<div mat-dialog-actions>
+    <button mat-button *ngIf="done && return_data.rateContent.length>10" [mat-dialog-close]="return_data" cdkFocusInitial>Done</button>
+    <button mat-button *ngIf="!done && !data.showCode" (click)="Check()">Check</button>
+</div>

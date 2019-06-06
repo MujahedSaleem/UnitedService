@@ -4,7 +4,6 @@ import { ChatappComponent } from './chatapp/chatapp.component';
 import { ChatMainComponent } from './chat-main/chat-main.component';
 
 const routes = [
-  
 
   {
     path: ':id',
