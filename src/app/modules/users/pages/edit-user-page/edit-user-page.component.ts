@@ -33,7 +33,7 @@ export class EditUserPageComponent implements OnInit, AfterViewInit, OnDestroy {
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
   canDoAction = true;
-  @ViewChild('editForm') editForm: NgForm;
+  @ViewChild('editForm', { static: false }) editForm: NgForm;
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
     if (this.editForm.dirty) {

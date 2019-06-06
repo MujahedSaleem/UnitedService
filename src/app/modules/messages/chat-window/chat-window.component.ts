@@ -36,8 +36,8 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
   public type = 'component';
   public config: PerfectScrollbarConfigInterface = {};
   user: User;
-  @ViewChild(PerfectScrollbarComponent) componentRef?: PerfectScrollbarComponent;
-  @ViewChild('chatPS') chatPS?: PerfectScrollbarComponent;
+  @ViewChild(PerfectScrollbarComponent, { static: true }) componentRef?: PerfectScrollbarComponent;
+  @ViewChild('chatPS', { static: true }) chatPS?: PerfectScrollbarComponent;
   @Input() reciverId: string;
   private subscriptions: Subscription[] = [];
 

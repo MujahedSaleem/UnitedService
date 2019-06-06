@@ -27,7 +27,7 @@ export class PostCreatePageComponent implements OnInit {
   mainLocation;
   done: boolean = false;
   zoom
-  @ViewChild("search")
+  @ViewChild("search", { static: false })
   public searchElementRef: ElementRef;
   tags: string[];
   constructor(private fb: FormBuilder,
