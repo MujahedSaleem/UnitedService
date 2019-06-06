@@ -12,17 +12,17 @@ const routes: Routes = [
   {
     path: '',
     runGuardsAndResolvers: 'always',
-    canActivate: [LoggedInGuard ,AuthGuard],
+    canActivate: [LoggedInGuard, AuthGuard],
     children: [
-     
-      { path: AppConfig.routes.message, loadChildren: './modules/messages/chat.module#ChatModule' },
-      { path: AppConfig.routes.posts, loadChildren: './modules/posts/post.module#PostModule' },
+
+      { path: AppConfig.routes.message, loadChildren: () => import('./modules/messages/chat.module').then(m => m.ChatModule) },
+      { path: AppConfig.routes.posts, loadChildren: () => import('./modules/posts/post.module').then(m => m.PostModule) },
       { path: AppConfig.routes.error404, component: Error404PageComponent },
-      { path: ':id', loadChildren: './modules/users/user.module#UsereModule' },
+      { path: ':id', loadChildren: () => import('./modules/users/user.module').then(m => m.UsereModule) },
       { path: '**', redirectTo: '/' + AppConfig.routes.error404 },
       { path: 'en', redirectTo: '' }, // because english language is the default one
     ]
-  },  { path: '**', redirectTo: '/' + AppConfig.routes.error404 },
+  }, { path: '**', redirectTo: '/' + AppConfig.routes.error404 },
 
 
   // otherwise redirect to 404
