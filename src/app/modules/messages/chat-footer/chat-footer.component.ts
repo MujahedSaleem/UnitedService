@@ -27,10 +27,10 @@ export class ChatFooterComponent implements OnInit {
   public mediaRecorder: any;
   public user: User;
   constructor(private chatSvc: ChatService,
-              public snackBar: MatSnackBar,
-              public storage: AngularFireStorage,
-              private Activatedrouter: ActivatedRoute,
-              public sentimentSvc: SentimentService) {
+    public snackBar: MatSnackBar,
+    public storage: AngularFireStorage,
+    private Activatedrouter: ActivatedRoute,
+    public sentimentSvc: SentimentService) {
   }
 
   public ngOnInit() {
@@ -60,15 +60,14 @@ export class ChatFooterComponent implements OnInit {
 
   public onMessage() {
     if (typeof (this.name) !== "undefined") {
+      
       console.log("messaged send");
       if (this.messageValue !== "") {
         const reciverId = this.Activatedrouter.snapshot.params.id;
         const chatMessage: ChatMessage = {
           message_type: 1,
           message: this.messageValue,
-          message_date: new Date(),
-          from: this.user.displayName,
-          to: this.name,
+          message_date: new Date(Date.now()),
           imageUrl: null,
           webcamUrl: null,
           audioUrl: null,
@@ -86,19 +85,19 @@ export class ChatFooterComponent implements OnInit {
 
   // function as expression this works!
   public audioIsAvailable = (e) => {
-  //   let id = Guid.newGuid();
-  //   const filePath = `${id}.webm`;
-  //   console.log(filePath);
-  //   let chatMessage = {
-  //     message_type: 4,
-  //     message: null,
-  //     message_date: new Date(),
-  //     from: this.name,
-  //     audioUrl: environment.firebase_cms_url + filePath + environment.firebase_cms_url_postfix,
-  //   };
-  //   this.chatSvc.sendMessage(chatMessage).subscribe((result) => {
-  //     console.log(result);
-  //     const task = this.storage.upload(filePath, e.data);
-  //   });
+    //   let id = Guid.newGuid();
+    //   const filePath = `${id}.webm`;
+    //   console.log(filePath);
+    //   let chatMessage = {
+    //     message_type: 4,
+    //     message: null,
+    //     message_date: new Date(),
+    //     from: this.name,
+    //     audioUrl: environment.firebase_cms_url + filePath + environment.firebase_cms_url_postfix,
+    //   };
+    //   this.chatSvc.sendMessage(chatMessage).subscribe((result) => {
+    //     console.log(result);
+    //     const task = this.storage.upload(filePath, e.data);
+    //   });
   }
 }

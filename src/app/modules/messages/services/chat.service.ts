@@ -22,7 +22,7 @@ export class ChatService {
   private chatsCollection: AngularFirestoreCollection<ChatMessage>;
   private chatsContainerCollection: AngularFirestoreDocument<any>;
   constructor(private db: AngularFirestore, private auth: UserAuthService,
-              private userService: UserUtilsService) {
+    private userService: UserUtilsService) {
     this.sederId = JSON.parse(localStorage.getItem("user")).uid;
   }
 
@@ -34,11 +34,11 @@ export class ChatService {
     return this.userdata.asObservable();
   }
   public async deleteMessage(reciverId) {
-    const x = await  this.db.doc(`users/${this.auth.currentUser.value.uid}`).collection("chats").
-     ref.where("uid", "==", reciverId).get();
+    const x = await this.db.doc(`users/${this.auth.currentUser.value.uid}`).collection("chats").
+      ref.where("uid", "==", reciverId).get();
     if (!x.empty) {
-        this.db.doc(`users/${this.auth.currentUser.value.uid}/chats/${x.docs[0].id}`).delete();
-      }
+      this.db.doc(`users/${this.auth.currentUser.value.uid}/chats/${x.docs[0].id}`).delete();
+    }
 
   }
   public getRoomId(uid, rid) {
@@ -47,7 +47,7 @@ export class ChatService {
 
   }
   public doUserHaveMessage(uid, rid) {
-   return  this.db.doc(`users/${uid}`).collection("chats", (ref) => ref.where("uid", "==", rid)).snapshotChanges();
+    return this.db.doc(`users/${uid}`).collection("chats", (ref) => ref.where("uid", "==", rid)).snapshotChanges();
 
   }
   public async getAllChatMessages(uid: string, rid):
@@ -57,19 +57,20 @@ export class ChatService {
     }>> {
     const data = await this.db.doc(`users/${uid}`).collection("chats", (ref) => ref.where("uid", "==", rid)).ref.get();
     if (!data.empty) {
-    const roomId = data.docs[0].data().room;
-    return this.db.doc(`chats/${roomId}`).collection<ChatMessage>("messages").snapshotChanges().pipe(
-      map((data) => {
-        const m: ChatMessage[] = new Array<ChatMessage>();
-        if (data.length !== 0) {
-          data.forEach((item) => {
-            m.push(item.payload.doc.data());
-          });
-          return { messages: m, room: roomId };
-        }
-        return null;
-      }),
-    ); }
+      const roomId = data.docs[0].data().room;
+      return this.db.doc(`chats/${roomId}`).collection<ChatMessage>("messages", ref => ref.orderBy('message_date')).snapshotChanges().pipe(
+        map((data) => {
+          const m: ChatMessage[] = new Array<ChatMessage>();
+          if (data.length !== 0) {
+            data.forEach((item) => {
+              m.push(item.payload.doc.data());
+            });
+            return { messages: m, room: roomId };
+          }
+          return null;
+        }),
+      );
+    }
   }
   public updateMessages(senderId, value, roomId) {
     this.db.doc(`chats/${roomId}`).collection("messages").ref

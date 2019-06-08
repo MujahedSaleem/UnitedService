@@ -23,6 +23,7 @@ export class ChatMainComponent implements OnInit {
   public currentRoom: string;
   public messages: ChatMessage[];
   public users: BehaviorSubject<any[]>;
+  public name: string;
   private subscriptions: Subscription[] = [];
   constructor(
     private progressBar: ProgressBarService,
@@ -40,6 +41,7 @@ export class ChatMainComponent implements OnInit {
     if (!this.atuhservice.isUserSignedIn()) {
       this.router.navigate(["404"]);
     }
+   
     this.messageService.getMessages(`${this.messagesContainer}`).subscribe((data) => {
 
       this.users.next(data);

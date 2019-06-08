@@ -6,7 +6,8 @@
                 <div class="talk-bubble tri-right round btm-left ">
                     <div class="talktext">
                         <mat-chip-list [ngClass]="{'justify-content-end' : chat.senderId !== user.uid}" class="d-flex">
-                            <mat-chip>{{chat.from}}</mat-chip>
+                            <mat-chip *ngIf=" chat.senderId === user.uid">{{name}}</mat-chip>
+                            <mat-chip *ngIf=" chat.senderId !== user.uid">{{displayName}}</mat-chip>
                         </mat-chip-list><br>
                         <div *ngIf="chat.message_type==1">{{chat.message}}</div>
                         <div *ngIf="chat.message_type==2"><img width="400" height="400" src="{{chat.imageUrl}}"></div>

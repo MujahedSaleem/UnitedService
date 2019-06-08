@@ -6,11 +6,11 @@ import { Subject } from "rxjs";
 @Injectable({
   providedIn: "root",
 })
-export class MessagingService {
+export class MessagingService {  private messageSource = new Subject();
+
   public currentMessage = this.messageSource.asObservable(); // message observable to show in Angular component
   private messaging = firebase.messaging();
 
-  private messageSource = new Subject();
 
   constructor(private afs: AngularFirestore) { }
   public getPermission(user) {

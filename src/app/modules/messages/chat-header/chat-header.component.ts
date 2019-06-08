@@ -7,6 +7,7 @@ import { finalize } from "rxjs/operators";
 import { LoggerService } from "src/app/core/services/logger.service";
 import { environment } from "src/environments/environment.prod";
 import { ChatService } from "../services/chat.service";
+import { UserAuthService } from "src/app/core/services/user-auth.service";
 
 export interface WebcamDialogData {
   name: string;
@@ -25,10 +26,11 @@ export class ChatHeaderComponent implements OnInit {
   @Output() public catch = new EventEmitter();
 
   constructor(public chatSvc: ChatService,
-              public storage: AngularFireStorage,
-              private Activatedrouter: ActivatedRoute,
-              public dialog: MatDialog,
-              private route: Router) {
+    public storage: AngularFireStorage,
+    public auth: UserAuthService,
+    private Activatedrouter: ActivatedRoute,
+    public dialog: MatDialog,
+    private route: Router) {
     this.user = JSON.parse(localStorage.getItem("user"));
 
   }
@@ -79,10 +81,8 @@ export class ChatHeaderComponent implements OnInit {
           const chatMessage = {
             message_type: 2,
             message: null,
-            message_date: new Date(),
-            from: this.name,
+            message_date: new Date(Date.now()),
             imageUrl: url,
-            to: this.name,
             webcamUrl: null,
             audioUrl: null,
             senderId: this.user.uid,
@@ -101,7 +101,7 @@ export class ChatHeaderComponent implements OnInit {
 
 class Guid {
   public static newGuid() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
       const r = Math.random() * 16 | 0, v = c == "x" ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
@@ -125,7 +125,7 @@ export class WebcamDialog {
   };
   constructor(
     public dialogRef: MatDialogRef<WebcamDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: WebcamDialogData, public chatSvc: ChatService ) { }
+    @Inject(MAT_DIALOG_DATA) public data: WebcamDialogData, public chatSvc: ChatService) { }
 
   public onNoClick(): void {
     this.dialogRef.close();

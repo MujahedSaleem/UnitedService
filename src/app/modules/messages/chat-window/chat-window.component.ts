@@ -29,6 +29,7 @@ import { ChatService } from "../services/chat.service";
 export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public name: string;
+  public displayName: string;
   public chats: ChatMessage[] = [];
   public isContentLoader = true;
   public disabled = false;
@@ -52,6 +53,11 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.active.setPresence("online");
     if (this.reciverId) {
+      this.displayName = this.atuhservice.currentUser.value.displayName;
+      this.chatSvc.getUserName().subscribe((result) => {
+        console.log("ChatHeaderComponent" + result);
+        this.name = result;
+      });
       this.userService.getUser(this.reciverId).subscribe(async (user: User) => {
         this.user = user;
         this.isContentLoader = false;
@@ -65,9 +71,7 @@ export class ChatWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 setTimeout(() => {
 
-                  this.chats = results.messages.sort((a: any, b: any) => {
-                    return a.message_date.seconds - b.message_date.seconds;
-                  });
+                  this.chats = results.messages;
                   this.cd.detectChanges();
                   this.chatPS.directiveRef.scrollToBottom(0, 300);
                 }, 1100);
