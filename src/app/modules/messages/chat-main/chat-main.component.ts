@@ -41,7 +41,7 @@ export class ChatMainComponent implements OnInit {
     if (!this.atuhservice.isUserSignedIn()) {
       this.router.navigate(["404"]);
     }
-   
+
     this.messageService.getMessages(`${this.messagesContainer}`).subscribe((data) => {
 
       this.users.next(data);

@@ -22,7 +22,7 @@ export class ChatService {
   private chatsCollection: AngularFirestoreCollection<ChatMessage>;
   private chatsContainerCollection: AngularFirestoreDocument<any>;
   constructor(private db: AngularFirestore, private auth: UserAuthService,
-    private userService: UserUtilsService) {
+              private userService: UserUtilsService) {
     this.sederId = JSON.parse(localStorage.getItem("user")).uid;
   }
 
@@ -58,7 +58,7 @@ export class ChatService {
     const data = await this.db.doc(`users/${uid}`).collection("chats", (ref) => ref.where("uid", "==", rid)).ref.get();
     if (!data.empty) {
       const roomId = data.docs[0].data().room;
-      return this.db.doc(`chats/${roomId}`).collection<ChatMessage>("messages", ref => ref.orderBy('message_date')).snapshotChanges().pipe(
+      return this.db.doc(`chats/${roomId}`).collection<ChatMessage>("messages", (ref) => ref.orderBy("message_date")).snapshotChanges().pipe(
         map((data) => {
           const m: ChatMessage[] = new Array<ChatMessage>();
           if (data.length !== 0) {

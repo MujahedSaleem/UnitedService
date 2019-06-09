@@ -27,10 +27,10 @@ export class ChatFooterComponent implements OnInit {
   public mediaRecorder: any;
   public user: User;
   constructor(private chatSvc: ChatService,
-    public snackBar: MatSnackBar,
-    public storage: AngularFireStorage,
-    private Activatedrouter: ActivatedRoute,
-    public sentimentSvc: SentimentService) {
+              public snackBar: MatSnackBar,
+              public storage: AngularFireStorage,
+              private Activatedrouter: ActivatedRoute,
+              public sentimentSvc: SentimentService) {
   }
 
   public ngOnInit() {
@@ -60,7 +60,7 @@ export class ChatFooterComponent implements OnInit {
 
   public onMessage() {
     if (typeof (this.name) !== "undefined") {
-      
+
       console.log("messaged send");
       if (this.messageValue !== "") {
         const reciverId = this.Activatedrouter.snapshot.params.id;

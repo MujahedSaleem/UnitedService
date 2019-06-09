@@ -5,9 +5,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { WebCamComponent } from "ack-angular-webcam";
 import { finalize } from "rxjs/operators";
 import { LoggerService } from "src/app/core/services/logger.service";
+import { UserAuthService } from "src/app/core/services/user-auth.service";
 import { environment } from "src/environments/environment.prod";
 import { ChatService } from "../services/chat.service";
-import { UserAuthService } from "src/app/core/services/user-auth.service";
 
 export interface WebcamDialogData {
   name: string;
@@ -26,11 +26,11 @@ export class ChatHeaderComponent implements OnInit {
   @Output() public catch = new EventEmitter();
 
   constructor(public chatSvc: ChatService,
-    public storage: AngularFireStorage,
-    public auth: UserAuthService,
-    private Activatedrouter: ActivatedRoute,
-    public dialog: MatDialog,
-    private route: Router) {
+              public storage: AngularFireStorage,
+              public auth: UserAuthService,
+              private Activatedrouter: ActivatedRoute,
+              public dialog: MatDialog,
+              private route: Router) {
     this.user = JSON.parse(localStorage.getItem("user"));
 
   }
@@ -101,7 +101,7 @@ export class ChatHeaderComponent implements OnInit {
 
 class Guid {
   public static newGuid() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
       const r = Math.random() * 16 | 0, v = c == "x" ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });

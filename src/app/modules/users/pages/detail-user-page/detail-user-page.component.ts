@@ -6,9 +6,9 @@ import { NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions } from "ngx-gal
 import { LoggerService } from "src/app/core/services/logger.service";
 import { PresenceService } from "src/app/core/services/presence.service";
 import { ProgressBarService } from "src/app/core/services/progress-bar.service";
-import { User } from "../../shared/user.model";
-import { Review } from "../../../../shared/components/review-card/review-card";
 import { UserUtilsService } from "../../../../core/services/user-utils.service";
+import { Review } from "../../../../shared/components/review-card/review-card";
+import { User } from "../../shared/user.model";
 
 @Component({
   selector: "app-detail-user-page",
@@ -26,15 +26,15 @@ export class DetailUserPageComponent implements OnInit {
   public galleryOptions: NgxGalleryOptions[];
   public galleryImages: NgxGalleryImage[];
   constructor(private userService: UserUtilsService,
-    public presence: PresenceService,
-    private log: LoggerService,
-    private progressBarService: ProgressBarService,
+              public presence: PresenceService,
+              private log: LoggerService,
+              private progressBarService: ProgressBarService,
 
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
+              private activatedRoute: ActivatedRoute,
+              private router: Router,
   ) {
     // override the route reuse strategy
-    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+    this.router.routeReuseStrategy.shouldReuseRoute = function() {
       return false;
     };
   }
@@ -73,8 +73,8 @@ export class DetailUserPageComponent implements OnInit {
       this.userService.getReviews(this.user.uid).subscribe((data) => {
         console.log(data);
         let count: number = 0;
-       
-        let user: User = JSON.parse(localStorage.getItem("user"));
+
+        const user: User = JSON.parse(localStorage.getItem("user"));
         data.forEach((review) => {
           this.reviews.push(review);
         });
