@@ -7,8 +7,9 @@ import { Subject } from "rxjs";
   providedIn: "root",
 })
 export class MessagingService {
+  private messageSource = new Subject();
+
   public currentMessage = this.messageSource.asObservable(); // message observable to show in Angular component
-private messageSource = new Subject();
   private messaging = firebase.messaging();
 
   constructor(private afs: AngularFirestore) { }
