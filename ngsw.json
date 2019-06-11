@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1559976447520,
+  "timestamp": 1560289525935,
   "index": "https://MujahedSaleem.github.io/UnitedService/index.html",
   "assetGroups": [
     {
@@ -248,9 +248,9 @@
     "https://MujahedSaleem.github.io/UnitedService/fontello.ttf": "feb10f7921458ddd03ae05d02201f7237c26d27c",
     "https://MujahedSaleem.github.io/UnitedService/fontello.woff": "3f0557b53bac51de706e89f9515845385e78bdd4",
     "https://MujahedSaleem.github.io/UnitedService/fontello.woff2": "e9dc549a4aa40869628330d49308758874d32fa6",
-    "https://MujahedSaleem.github.io/UnitedService/index.html": "a86a3c4981909faa22c9fc2036a10437474482df",
-    "https://MujahedSaleem.github.io/UnitedService/main.js": "54f61bc183777bed2395537c2ef72c8078ab7762",
-    "https://MujahedSaleem.github.io/UnitedService/modules-messages-chat-module.js": "659c44aef1b67deb8447553feae14e1e2f8bf19f",
+    "https://MujahedSaleem.github.io/UnitedService/index.html": "36db0c58083d1ec8c579cbe2596ac983ea0d853b",
+    "https://MujahedSaleem.github.io/UnitedService/main.js": "234485bf7d5930d6fca5331271e0723e45f5a214",
+    "https://MujahedSaleem.github.io/UnitedService/modules-messages-chat-module.js": "4c388836760b17d497c904e7f349b22387621c1f",
     "https://MujahedSaleem.github.io/UnitedService/modules-posts-post-module.js": "cbabe983fff6a15ced3bb6b602726a0e043d22fd",
     "https://MujahedSaleem.github.io/UnitedService/polyfills-es5.js": "09fb817d4c95491e08bb6a5c524ce5ea5ec844d9",
     "https://MujahedSaleem.github.io/UnitedService/polyfills.js": "b07dda3e3360f415cae86c2b867f2a76f5289f7b",

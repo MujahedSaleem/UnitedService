@@ -1198,10 +1198,10 @@ var PostService = /** @class */ (function () {
         });
     };
     PostService.prototype.getPosts = function (uid) {
-        if (uid) {
-            return this.http.
-                get("http://mujshrf-001-site1.etempurl.com/api/values/" + uid, { headers: { "Access-Control-Allow-Origin": "*" } });
-        }
+        // if (uid) {
+        //   return this.http.
+        //     get<Post[]>(`http://mujshrf-001-site1.etempurl.com/api/values/${uid}`, { headers: { "Access-Control-Allow-Origin": "*" } });
+        // }
         return this.postsCollection.snapshotChanges([])
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["map"])(function (actions) {
             return actions.map(function (action) {
@@ -2258,7 +2258,7 @@ var User = /** @class */ (function () {
         this.intrest = User.intrest || " ";
         this.displayName = User.displayName;
         this.email = User.email;
-        this.rate = User.rate;
+        this.rate = User.rate || 0;
         this.age = User.age;
         this.lastActive = User.lastActive;
         this.isActive = User.isActive || false;

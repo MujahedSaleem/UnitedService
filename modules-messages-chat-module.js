@@ -26905,8 +26905,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 /* harmony import */ var src_app_core_services_logger_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/app/core/services/logger.service */ "./src/app/core/services/logger.service.ts");
-/* harmony import */ var _services_chat_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../services/chat.service */ "./src/app/modules/messages/services/chat.service.ts");
-/* harmony import */ var src_app_core_services_user_auth_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/app/core/services/user-auth.service */ "./src/app/core/services/user-auth.service.ts");
+/* harmony import */ var src_app_core_services_user_auth_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! src/app/core/services/user-auth.service */ "./src/app/core/services/user-auth.service.ts");
+/* harmony import */ var _services_chat_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../services/chat.service */ "./src/app/modules/messages/services/chat.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -27011,9 +27011,9 @@ var ChatHeaderComponent = /** @class */ (function () {
             template: __webpack_require__(/*! raw-loader!./chat-header.component.html */ "./node_modules/raw-loader/index.js!./src/app/modules/messages/chat-header/chat-header.component.html"),
             styles: [__webpack_require__(/*! ./chat-header.component.css */ "./src/app/modules/messages/chat-header/chat-header.component.css")]
         }),
-        __metadata("design:paramtypes", [_services_chat_service__WEBPACK_IMPORTED_MODULE_6__["ChatService"],
+        __metadata("design:paramtypes", [_services_chat_service__WEBPACK_IMPORTED_MODULE_7__["ChatService"],
             _angular_fire_storage__WEBPACK_IMPORTED_MODULE_1__["AngularFireStorage"],
-            src_app_core_services_user_auth_service__WEBPACK_IMPORTED_MODULE_7__["UserAuthService"],
+            src_app_core_services_user_auth_service__WEBPACK_IMPORTED_MODULE_6__["UserAuthService"],
             _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"],
             _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialog"],
             _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"]])
@@ -27072,7 +27072,7 @@ var WebcamDialog = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./chat-header.component.css */ "./src/app/modules/messages/chat-header/chat-header.component.css")]
         }),
         __param(1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_DIALOG_DATA"])),
-        __metadata("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogRef"], Object, _services_chat_service__WEBPACK_IMPORTED_MODULE_6__["ChatService"]])
+        __metadata("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogRef"], Object, _services_chat_service__WEBPACK_IMPORTED_MODULE_7__["ChatService"]])
     ], WebcamDialog);
     return WebcamDialog;
 }());
@@ -27860,7 +27860,7 @@ var ChatService = /** @class */ (function () {
                         data = _a.sent();
                         if (!data.empty) {
                             roomId_1 = data.docs[0].data().room;
-                            return [2 /*return*/, this.db.doc("chats/" + roomId_1).collection("messages", function (ref) { return ref.orderBy('message_date'); }).snapshotChanges().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
+                            return [2 /*return*/, this.db.doc("chats/" + roomId_1).collection("messages", function (ref) { return ref.orderBy("message_date"); }).snapshotChanges().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
                                     var m = new Array();
                                     if (data.length !== 0) {
                                         data.forEach(function (item) {
