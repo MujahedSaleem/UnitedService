@@ -20,7 +20,7 @@
         "firebase-admin": "~7.0.0",
         "firebase-functions": "^2.3.0",
         "firebase-functions-test": "^0.1.6",
-        "lodash": "^4.17.11"
+        "lodash": "^4.17.21"
     },
     "devDependencies": {
         "tslint": "^5.12.0",
